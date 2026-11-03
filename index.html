@@ -1,1242 +1,607 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>VibeHub • Personal OS</title>
-  
-  <!-- Apple Web App Meta & PWA styling -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="VibeHub">
-  <meta name="theme-color" content="#090d16">
+  <title>Personal Hub • Life OS</title>
   
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   
-  <!-- Google Fonts: Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-          },
-          screens: {
-            'duo': '768px',
-          }
-        }
-      }
-    }
-  </script>
-
   <style>
+    /* Safe Area insets for Dynamic Island, notch, and iOS home indicator */
     :root {
-      --sat: env(safe-area-inset-top, 20px);
-      --sab: env(safe-area-inset-bottom, 20px);
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
       --sal: env(safe-area-inset-left, 0px);
       --sar: env(safe-area-inset-right, 0px);
-      --app-bg: #080a0f;
-      --app-surface: rgba(23, 27, 38, 0.72);
-      --app-border: rgba(255, 255, 255, 0.08);
-      --app-text: #f1f5f9;
-      --app-text-muted: #94a3b8;
-      --app-accent: #38bdf8;
-      --app-accent-rgb: 56, 189, 248;
-      --app-radius: 1rem;
+      --accent: #38bdf8;
     }
 
-    /* Dynamic Theme Palettes */
-    body[data-theme="dark-glass"] {
-      --app-bg: #080a0f;
-      --app-surface: rgba(23, 27, 38, 0.75);
-      --app-border: rgba(255, 255, 255, 0.09);
-      --app-text: #f1f5f9;
-      --app-text-muted: #94a3b8;
-    }
-    body[data-theme="oled-black"] {
-      --app-bg: #000000;
-      --app-surface: #0c0c0e;
-      --app-border: #1f1f23;
-      --app-text: #ffffff;
-      --app-text-muted: #71717a;
-    }
-    body[data-theme="light-canvas"] {
-      --app-bg: #f8fafc;
-      --app-surface: rgba(255, 255, 255, 0.88);
-      --app-border: rgba(0, 0, 0, 0.08);
-      --app-text: #0f172a;
-      --app-text-muted: #64748b;
-    }
-    body[data-theme="frosted-titanium"] {
-      --app-bg: #1c1d21;
-      --app-surface: rgba(40, 42, 49, 0.75);
-      --app-border: rgba(255, 255, 255, 0.12);
-      --app-text: #f3f4f6;
-      --app-text-muted: #9ca3af;
-    }
-    body[data-theme="neon-cyber"] {
-      --app-bg: #050510;
-      --app-surface: rgba(18, 16, 38, 0.85);
-      --app-border: rgba(168, 85, 247, 0.25);
-      --app-text: #faf5ff;
-      --app-text-muted: #c084fc;
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(135deg, #070a12 0%, #0c1322 45%, #131b2e 75%, #080d18 100%);
     }
 
     body {
-      background-color: var(--app-bg);
-      color: var(--app-text);
+      padding-top: var(--sat);
+      padding-bottom: var(--sab);
+      padding-left: var(--sal);
+      padding-right: var(--sar);
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
-      font-family: 'Inter', -apple-system, sans-serif;
-      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    input, textarea, [contenteditable="true"] {
+    input, textarea {
       user-select: text;
       -webkit-user-select: text;
     }
 
-    ::-webkit-scrollbar { display: none; }
-    * { -ms-overflow-style: none; scrollbar-width: none; }
-
-    .glass-card {
-      background: var(--app-surface);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--app-border);
-      border-radius: var(--app-radius);
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
-    .glass-nav {
-      background: var(--app-surface);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-top: 1px solid var(--app-border);
-    }
-
-    .glass-pill {
-      background: rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--app-border);
-    }
-
-    .snap-carousel {
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-    }
-    .snap-card {
-      scroll-snap-align: center;
-      scroll-snap-stop: always;
-    }
-
-    .touch-bounce:active {
-      transform: scale(0.97);
-      transition: transform 0.1s ease;
-    }
-
-    /* Foldable / Duo Center Hinge Separation */
-    .duo-hinge-divider {
-      position: relative;
-    }
-    .duo-hinge-divider::before {
-      content: "";
+    /* Ambient Subtle Gradient Glow Orbs */
+    .ambient-glow {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      width: 12px;
-      margin-left: -6px;
-      background: linear-gradient(90deg, rgba(0,0,0,0.5) 0%, rgba(255,255,255,0.06) 50%, rgba(0,0,0,0.5) 100%);
       pointer-events: none;
-      z-index: 30;
-      border-radius: 6px;
+      border-radius: 9999px;
+      filter: blur(80px);
+      opacity: 0.28;
+      z-index: 0;
     }
 
-    /* Dynamic accent styling */
-    .accent-bg { background-color: var(--app-accent) !important; color: #000 !important; }
-    .accent-text { color: var(--app-accent) !important; }
-    .accent-border { border-color: var(--app-accent) !important; }
-    .accent-ring:focus { outline: 2px solid var(--app-accent) !important; }
+    /* iOS Liquid Glass Rounded Squares (Squircle Aesthetic) */
+    .liquid-glass-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 
+        0 10px 30px -10px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25);
+      border-radius: 28px;
+    }
+
+    .liquid-glass-card:active {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+    }
+
+    /* Right-side floating action rail */
+    .right-glass-rail {
+      background: linear-gradient(180deg, rgba(22, 30, 48, 0.88) 0%, rgba(12, 17, 30, 0.92) 100%);
+      backdrop-filter: blur(36px) saturate(200%);
+      -webkit-backdrop-filter: blur(36px) saturate(200%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 
+        -4px 12px 36px 0 rgba(0, 0, 0, 0.6),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
+      border-radius: 28px;
+    }
+
+    .squircle-btn {
+      border-radius: 20px;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .squircle-btn:active {
+      transform: scale(0.92);
+    }
+
+    .touch-spring {
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.15s ease, color 0.15s ease;
+    }
+    .touch-spring:active {
+      transform: scale(0.94);
+    }
   </style>
 </head>
-<body data-theme="dark-glass" class="min-h-screen antialiased flex flex-col items-center justify-between overflow-x-hidden">
+<body id="bodyRoot" class="text-slate-100 flex flex-col font-sans transition-colors duration-300 relative overflow-hidden">
 
-  <!-- Main Root Layout Container: Transforms dynamically between single mobile view and iPhone Duo Dual-Pane view -->
-  <div id="app-root" class="relative w-full max-w-md duo:max-w-6xl min-h-screen flex flex-col justify-between pb-[calc(76px+var(--sab))] pt-[max(12px,var(--sat))] pl-[max(12px,var(--sal))] pr-[max(12px,var(--sar))] transition-all duration-300">
-    
-    <!-- Top Global App Bar with Dual Mode Status & Settings Trigger -->
-    <header class="w-full flex items-center justify-between px-2 mb-3">
-      <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full accent-bg animate-pulse"></span>
-        <span class="text-xs font-black tracking-widest uppercase opacity-80">VIBEHUB</span>
-        <span id="duo-indicator" class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-white/10 opacity-75 border border-white/10 hidden sm:inline-block">SINGLE PANE</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="toggleDualPaneModeQuick()" id="btn-toggle-duo-quick" title="Toggle Duo Mode" class="px-2.5 py-1 text-[11px] font-bold rounded-full glass-pill touch-bounce flex items-center gap-1.5 opacity-80 hover:opacity-100">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
-          <span id="quick-duo-label">Duo View</span>
-        </button>
-        <button onclick="openSettingsModal()" class="w-8 h-8 rounded-full glass-pill flex items-center justify-center touch-bounce hover:opacity-100 text-slate-300" title="App Settings">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        </button>
-      </div>
-    </header>
+  <!-- Subtle Ambient Glow Orbs -->
+  <div class="ambient-glow w-96 h-96 bg-indigo-500/30 -top-20 -left-20"></div>
+  <div class="ambient-glow w-96 h-96 bg-sky-500/25 bottom-10 right-0"></div>
+  <div class="ambient-glow w-80 h-80 bg-cyan-600/20 top-1/2 left-1/3"></div>
 
-    <!-- Toast Feedback System -->
-    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-4 px-4 py-2.5 rounded-full glass-pill border border-white/20 shadow-xl flex items-center gap-2 text-xs font-semibold tracking-wide text-white">
-      <span id="toast-icon">✨</span>
-      <span id="toast-message">Action saved</span>
+  <!-- TOP HEADER (Edge-to-edge flush bar) -->
+  <header class="w-full px-5 py-3.5 flex items-center justify-between border-b border-white/[0.08] bg-[#070b14]/70 backdrop-blur-xl z-30 shrink-0">
+    <div class="flex items-center space-x-3">
+      <div id="statusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]"></div>
+      <h1 class="text-sm font-bold tracking-tight text-white flex items-center gap-2">
+        <span>Personal Hub</span>
+        <span class="text-[9px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/10">Full Canvas</span>
+      </h1>
     </div>
 
-    <!-- Dual Pane Content Grid: 1 Column on Single Screen, 2 Balanced Columns with iPhone Duo Hinge Gutter on Duo Mode -->
-    <main id="panes-container" class="flex-1 w-full grid grid-cols-1 gap-5">
+    <div class="flex items-center space-x-2 text-xs">
+      <span id="liveClock" class="font-mono text-slate-300">12:00 PM</span>
+    </div>
+  </header>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-4 px-4 py-2.5 liquid-glass-card shadow-2xl flex items-center gap-2 text-xs font-medium text-white">
+    <span id="toastIcon">✓</span>
+    <span id="toastMsg">Action saved</span>
+  </div>
+
+  <!-- MAIN EXPANSIVE CANVAS (Never split-screen, fills entire display) -->
+  <main id="appContainer" class="flex-1 w-full h-full overflow-y-auto no-scrollbar p-4 sm:p-6 lg:p-8 space-y-6 pr-20 sm:pr-24 relative z-10">
+    
+    <!-- DASHBOARD VIEW -->
+    <div id="viewDashboard" class="space-y-6 max-w-6xl mx-auto">
       
-      <!-- PANE 1: Left Screen / Primary View -->
-      <div id="pane-primary" class="w-full flex flex-col space-y-5">
-        
-        <!-- ========================================================================= -->
-        <!-- 1. DASHBOARD SCREEN (Can live in Pane 1)                                   -->
-        <!-- ========================================================================= -->
-        <section id="screen-dashboard" class="screen-view flex-1 flex flex-col space-y-5">
-          
-          <!-- Top Dynamic Greeting & Status Header -->
-          <div class="flex items-center justify-between pt-1">
-            <div>
-              <p id="dashboard-date" class="text-[11px] font-semibold uppercase tracking-wider font-mono opacity-80">MONDAY, NOV 2</p>
-              <h1 id="dashboard-greeting" class="text-2xl font-bold tracking-tight flex items-center gap-2">
-                Hey, Boss
-                <span class="inline-block animate-pulse text-xl">⚡</span>
-              </h1>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="switchScreen('planner')" class="w-10 h-10 rounded-full glass-pill flex items-center justify-center opacity-80 hover:opacity-100 touch-bounce">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-              </button>
-              <div class="w-10 h-10 rounded-full accent-bg flex items-center justify-center text-xs font-extrabold shadow-lg">
-                ME
-              </div>
-            </div>
-          </div>
-
-          <!-- CAROUSEL SECTION: Hobbies, Interests & Favorites -->
-          <div class="relative">
-            <div class="flex items-center justify-between mb-2 px-1">
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-bold tracking-wider uppercase opacity-75">Glance & Passions</span>
-                <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-white/10 border border-white/10">LIVE</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <button onclick="openCustomCardModal()" class="text-[11px] accent-text font-bold hover:underline">+ New Card</button>
-                <div id="carousel-dots" class="flex gap-1.5 ml-2"></div>
-              </div>
-            </div>
-
-            <!-- Touch Swipeable Container -->
-            <div id="interest-carousel" class="snap-carousel flex overflow-x-auto gap-3.5 pb-2 pt-1 -mx-2 px-2 scroll-smooth">
-              <!-- Rendered dynamically via renderCarouselCards() -->
-            </div>
-          </div>
-
-          <!-- Quick Capture Floating Panel -->
-          <div class="glass-card p-3.5 shadow-lg">
-            <div class="flex items-center gap-2 mb-2">
-              <svg class="w-4 h-4 accent-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-              <span class="text-xs font-bold tracking-wide uppercase opacity-80">Instant Quick-Capture</span>
-            </div>
-            <div class="flex gap-2">
-              <input id="quick-capture-input" type="text" placeholder="Idea, grocery, or task..." class="flex-1 bg-black/30 border border-white/10 rounded-xl px-3.5 py-2 text-xs placeholder-slate-500 focus:outline-none accent-ring transition-colors">
-              <button onclick="quickCapture('task')" class="px-3 py-2 accent-bg font-bold rounded-xl text-xs touch-bounce shadow-md">
-                + Task
-              </button>
-              <button onclick="quickCapture('note')" class="px-3 py-2 bg-white/10 hover:bg-white/20 text-xs font-semibold rounded-xl touch-bounce">
-                + Note
-              </button>
-            </div>
-          </div>
-
-          <!-- Today's Priority Snapshot -->
-          <div class="space-y-2">
-            <div class="flex items-center justify-between px-1">
-              <span class="text-xs font-bold uppercase tracking-wider opacity-70">Top Priorities Today</span>
-              <button onclick="switchScreen('planner')" class="text-[11px] accent-text font-semibold hover:underline">View All</button>
-            </div>
-            <div id="dashboard-priority-list" class="space-y-2"></div>
-          </div>
-
-          <!-- Pinned Notebook Glance -->
-          <div class="space-y-2 pb-4">
-            <div class="flex items-center justify-between px-1">
-              <span class="text-xs font-bold uppercase tracking-wider opacity-70">Pinned Notebook Highlight</span>
-              <button onclick="switchScreen('notebook')" class="text-[11px] accent-text font-semibold hover:underline">Open Notes</button>
-            </div>
-            <div id="dashboard-pinned-note" class="glass-card p-4 cursor-pointer touch-bounce" onclick="switchScreen('notebook')"></div>
-          </div>
-
-        </section>
-
-        <!-- ========================================================================= -->
-        <!-- 2. PLANNER SCREEN (Can live in Pane 1 or single mode)                     -->
-        <!-- ========================================================================= -->
-        <section id="screen-planner" class="screen-view hidden flex-1 flex flex-col space-y-4">
-          <div class="flex items-center justify-between pt-1">
-            <div>
-              <h1 class="text-2xl font-bold tracking-tight">Planner & Focus</h1>
-              <p class="text-xs opacity-70">Organize your commitments & goals</p>
-            </div>
-            <button onclick="openNewTaskModal()" class="w-9 h-9 rounded-full accent-bg font-bold flex items-center justify-center touch-bounce">
-              <svg class="w-5 h-5 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-            </button>
-          </div>
-
-          <!-- Mini Week Strip -->
-          <div class="glass-card p-2">
-            <div id="planner-week-strip" class="grid grid-cols-7 gap-1 text-center"></div>
-          </div>
-
-          <!-- Filter Chips -->
-          <div class="flex items-center justify-between gap-1 overflow-x-auto pb-1">
-            <div class="flex gap-1.5" id="task-filter-chips">
-              <button onclick="setTaskFilter('all')" class="task-filter-btn px-3 py-1 rounded-full text-xs font-semibold accent-bg">All</button>
-              <button onclick="setTaskFilter('today')" class="task-filter-btn px-3 py-1 rounded-full text-xs font-semibold bg-white/5 opacity-80">Today</button>
-              <button onclick="setTaskFilter('priority')" class="task-filter-btn px-3 py-1 rounded-full text-xs font-semibold bg-white/5 opacity-80">High Star</button>
-              <button onclick="setTaskFilter('completed')" class="task-filter-btn px-3 py-1 rounded-full text-xs font-semibold bg-white/5 opacity-80">Done</button>
-            </div>
-            <span id="planner-task-count" class="text-[11px] font-mono opacity-70 whitespace-nowrap pl-2">0 tasks</span>
-          </div>
-
-          <!-- Task Container -->
-          <div id="planner-tasks-container" class="space-y-2 flex-1 pb-4"></div>
-        </section>
-
-      </div>
-
-      <!-- PANE 2: Right Screen on Duo Mode (Notebook, Secondary Planner or Settings) -->
-      <div id="pane-secondary" class="w-full flex flex-col space-y-5">
-        
-        <!-- ========================================================================= -->
-        <!-- 3. NOTEBOOK SCREEN                                                       -->
-        <!-- ========================================================================= -->
-        <section id="screen-notebook" class="screen-view hidden duo-auto-visible flex-1 flex flex-col space-y-4">
-          <div class="flex items-center justify-between pt-1">
-            <div>
-              <h1 class="text-2xl font-bold tracking-tight">Notebook & Logs</h1>
-              <p class="text-xs opacity-70">Recipes, range notes, thoughts & specs</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="exportNotesJSON()" title="Export JSON backup" class="w-9 h-9 rounded-full glass-pill flex items-center justify-center opacity-80 touch-bounce">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-              </button>
-              <button onclick="openNoteEditor()" class="w-9 h-9 rounded-full accent-bg font-bold flex items-center justify-center touch-bounce">
-                <svg class="w-5 h-5 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Search & Filters -->
-          <div class="space-y-2">
-            <div class="relative">
-              <input id="note-search-input" oninput="renderNotes()" type="text" placeholder="Search notes, ingredients, tags..." class="w-full bg-black/30 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs placeholder-slate-500 focus:outline-none accent-ring transition-colors">
-              <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            </div>
-            <div id="note-tags-container" class="flex gap-1.5 overflow-x-auto pb-1 text-xs"></div>
-          </div>
-
-          <!-- Notes Container -->
-          <div id="notes-list-container" class="space-y-3 pb-6"></div>
-        </section>
-
-      </div>
-
-    </main>
-
-    <!-- ========================================================================= -->
-    <!-- 4. BOTTOM DOCK (Responsive for Single and Duo)                            -->
-    <!-- ========================================================================= -->
-    <nav id="bottom-dock" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md duo:max-w-6xl glass-nav pb-[calc(10px+var(--sab))] pt-2.5 px-6 z-40 flex items-center justify-around transition-all">
-      <button onclick="switchScreen('dashboard')" id="nav-btn-dashboard" class="nav-item group flex flex-col items-center gap-1 tab-active touch-bounce">
-        <svg class="w-6 h-6 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        <span class="text-[10px] font-semibold tracking-tight">Dashboard</span>
-      </button>
-
-      <button onclick="switchScreen('planner')" id="nav-btn-planner" class="nav-item group flex flex-col items-center gap-1 opacity-70 hover:opacity-100 touch-bounce">
-        <div class="relative">
-          <svg class="w-6 h-6 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          <span id="nav-badge-tasks" class="hidden absolute top-0 right-0 w-2 h-2 rounded-full accent-bg"></span>
+      <!-- Focus Carousel of Rounded Squares -->
+      <div class="space-y-2.5">
+        <div class="flex items-center justify-between px-1">
+          <span class="text-[11px] font-semibold text-slate-300 tracking-wider uppercase">Live Focus Cards</span>
+          <span class="text-[10px] text-slate-400 font-mono">Swipe →</span>
         </div>
-        <span class="text-[10px] font-semibold tracking-tight">Planner</span>
+
+        <div id="carouselTrack" class="flex space-x-4 overflow-x-auto no-scrollbar pb-1 snap-x snap-mandatory">
+          
+          <!-- Card 1: Sports Radar (Squircle Liquid Glass) -->
+          <div class="min-w-[85%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass-card flex flex-col justify-between border-red-500/25">
+            <div>
+              <div class="flex justify-between items-center text-xs text-red-400 font-semibold mb-2.5">
+                <span class="flex items-center gap-1.5">🏈 <span>49ers & OKC Radar</span></span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-red-500/20 text-red-300 border border-red-500/20">Active</span>
+              </div>
+              <p class="text-sm font-semibold text-white">SF 49ers vs Rams • Sunday 4:25 PM</p>
+              <p class="text-xs text-slate-300 mt-1.5">OKC Thunder 118 - 110 DAL (Final)</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>Streak: W4</span>
+              <span class="text-red-300">Next: vs KC Chiefs</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Smoker & Cooking -->
+          <div class="min-w-[85%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass-card flex flex-col justify-between border-amber-500/25">
+            <div>
+              <div class="flex justify-between items-center text-xs text-amber-400 font-semibold mb-2.5">
+                <span class="flex items-center gap-1.5">🔥 <span>Smoker & Griddle</span></span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/20">Checklist</span>
+              </div>
+              <p class="text-sm font-semibold text-white">Brisket Target: 203°F (Wrap 165°F)</p>
+              <p class="text-xs text-slate-300 mt-1.5">Smash Burger Griddle: 450°F - 475°F</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>Wood: Post Oak</span>
+              <span class="text-amber-300">Rest: 3+ Hours</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Golf Yardages -->
+          <div class="min-w-[85%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass-card flex flex-col justify-between border-emerald-500/25">
+            <div>
+              <div class="flex justify-between items-center text-xs text-emerald-400 font-semibold mb-2.5">
+                <span class="flex items-center gap-1.5">⛳ <span>Golf Yardages</span></span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/20">HDCP 11</span>
+              </div>
+              <p class="text-sm font-semibold text-white">Driver: 260-275y (Target Right Center)</p>
+              <p class="text-xs text-slate-300 mt-1.5">56° Wedge: 90y Full / 65y Half</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>7-Iron: 165y</span>
+              <span class="text-emerald-300">Putts: 31/rd</span>
+            </div>
+          </div>
+
+          <!-- Card 4: 3D Workbench -->
+          <div class="min-w-[85%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass-card flex flex-col justify-between border-sky-500/25">
+            <div>
+              <div class="flex justify-between items-center text-xs text-sky-400 font-semibold mb-2.5">
+                <span class="flex items-center gap-1.5">🛠️ <span>Workbench & 3D Print</span></span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-sky-500/20 text-sky-300 border border-sky-500/20">ASA Specs</span>
+              </div>
+              <p class="text-sm font-semibold text-white">ASA: Nozzle 255°C • Bed 100°C</p>
+              <p class="text-xs text-slate-300 mt-1.5">Chamber pre-heat: 45°C enclosure</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>Fan: 15%</span>
+              <span class="text-sky-300">ESP32 Enclosure</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Quick Capture Liquid Glass Capsule -->
+      <div class="p-2.5 liquid-glass-card flex items-center space-x-2">
+        <input id="quickCaptureInput" type="text" placeholder="Quick idea, task, or note..." class="bg-transparent flex-1 text-xs outline-none placeholder:text-slate-400 px-3 text-white">
+        <button onclick="quickCapture('task')" class="px-3.5 py-2 squircle-btn bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold shadow-md">+ Task</button>
+        <button onclick="quickCapture('note')" class="px-3.5 py-2 squircle-btn bg-white/10 hover:bg-white/15 text-white text-xs font-semibold border border-white/10">+ Note</button>
+      </div>
+
+      <!-- Grid for Expansive Landscape/Duo Layout (Adaptive Columns) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        <!-- Top Priorities Section -->
+        <div class="space-y-2.5">
+          <div class="flex justify-between items-center px-1">
+            <span class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Top Priorities</span>
+            <button onclick="switchTab('planner')" class="text-xs text-sky-400 font-medium hover:underline">View All</button>
+          </div>
+          <div id="dashboardTaskList" class="space-y-2.5">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Pinned Note Highlight -->
+        <div class="space-y-2.5">
+          <div class="flex justify-between items-center px-1">
+            <span class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Pinned Note Highlight</span>
+            <button onclick="switchTab('notebook')" class="text-xs text-sky-400 font-medium hover:underline">Open Notes</button>
+          </div>
+          <div id="dashboardPinnedNote" class="liquid-glass-card p-5 cursor-pointer hover:border-white/25 transition-all touch-spring" onclick="switchTab('notebook')">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- PLANNER VIEW -->
+    <div id="viewPlanner" class="space-y-5 max-w-4xl mx-auto hidden">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-bold text-white">Planner & Schedule</h2>
+          <p class="text-xs text-slate-400">Milestones and actionable items</p>
+        </div>
+        <button onclick="openNewTaskDialog()" class="px-4 py-2 squircle-btn bg-sky-500 text-xs font-semibold text-white flex items-center space-x-1.5 shadow-lg">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          <span>Add Task</span>
+        </button>
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
+        <button onclick="setTaskFilter('all')" id="filter-all" class="filter-btn px-3.5 py-1.5 squircle-btn bg-sky-500 text-white font-semibold">All</button>
+        <button onclick="setTaskFilter('pending')" id="filter-pending" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">Pending</button>
+        <button onclick="setTaskFilter('priority')" id="filter-priority" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">High Priority</button>
+        <button onclick="setTaskFilter('done')" id="filter-done" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">Done</button>
+      </div>
+
+      <div id="plannerTaskList" class="space-y-2.5">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- NOTEBOOK VIEW -->
+    <div id="viewNotebook" class="space-y-5 max-w-4xl mx-auto hidden">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-bold text-white">Notebook</h2>
+          <p class="text-xs text-slate-400">Reference logs, recipes & yardages</p>
+        </div>
+        <button onclick="openNewNoteDialog()" class="px-4 py-2 squircle-btn bg-sky-500 text-xs font-semibold text-white flex items-center space-x-1.5 shadow-lg">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          <span>New Note</span>
+        </button>
+      </div>
+
+      <!-- Category Tags -->
+      <div id="noteCategoryChips" class="flex gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Notes List -->
+      <div id="notesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================================== -->
+  <!-- RIGHT-SIDE LIQUID GLASS APP CONTROLS                        -->
+  <!-- ========================================================== -->
+  <aside class="fixed right-3 sm:right-5 top-1/2 -translate-y-1/2 z-40 flex flex-col items-center">
+    <nav class="right-glass-rail p-1.5 sm:p-2 flex flex-col items-center space-y-2">
+      <!-- Dashboard Button -->
+      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-sky-400 bg-white/10" title="Dashboard">
+        <i data-lucide="layout-grid" class="w-5 h-5"></i>
+        <span class="text-[9px] font-medium mt-0.5">Dash</span>
       </button>
 
-      <button onclick="switchScreen('notebook')" id="nav-btn-notebook" class="nav-item group flex flex-col items-center gap-1 opacity-70 hover:opacity-100 touch-bounce">
-        <svg class="w-6 h-6 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-        <span class="text-[10px] font-semibold tracking-tight">Notebook</span>
+      <!-- Planner Button -->
+      <button onclick="switchTab('planner')" id="nav-planner" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-slate-400 hover:text-white" title="Planner">
+        <i data-lucide="calendar" class="w-5 h-5"></i>
+        <span class="text-[9px] font-medium mt-0.5">Plan</span>
       </button>
 
-      <button onclick="openSettingsModal()" id="nav-btn-settings" class="nav-item group flex flex-col items-center gap-1 opacity-70 hover:opacity-100 touch-bounce">
-        <svg class="w-6 h-6 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-        <span class="text-[10px] font-semibold tracking-tight">Settings</span>
+      <!-- Notebook Button -->
+      <button onclick="switchTab('notebook')" id="nav-notebook" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-slate-400 hover:text-white" title="Notebook">
+        <i data-lucide="book-open" class="w-5 h-5"></i>
+        <span class="text-[9px] font-medium mt-0.5">Notes</span>
+      </button>
+
+      <div class="w-6 h-[1px] bg-white/15 my-0.5"></div>
+
+      <!-- Settings Button -->
+      <button onclick="toggleSettingsModal(true)" id="nav-settings" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-slate-400 hover:text-white" title="Settings">
+        <i data-lucide="sliders" class="w-5 h-5"></i>
+        <span class="text-[9px] font-medium mt-0.5">Set</span>
       </button>
     </nav>
+  </aside>
 
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- 5. COMPREHENSIVE SETTINGS MODAL / SUITE                                  -->
-  <!-- ========================================================================= -->
-  <div id="settings-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-end sm:items-center justify-center p-0 sm:p-4 transition-all">
-    <div class="w-full max-w-lg bg-[#111624] border-t sm:border border-white/10 rounded-t-3xl sm:rounded-2xl p-5 space-y-5 max-h-[92vh] flex flex-col overflow-y-auto">
-      
+  <!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="liquid-glass-card bg-[#0b101c]/95 border border-white/20 w-full max-w-md p-6 space-y-4 max-h-[85vh] overflow-y-auto no-scrollbar shadow-2xl">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-lg">⚙️</span>
-          <h2 class="text-base font-bold text-white">App & Appearance Settings</h2>
-        </div>
-        <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-full bg-white/10 text-slate-400 hover:text-white flex items-center justify-center">✕</button>
+        <h3 class="text-sm font-bold text-white flex items-center space-x-2">
+          <i data-lucide="sliders" class="w-4 h-4 text-sky-400"></i>
+          <span>App Controls & Appearance</span>
+        </h3>
+        <button onclick="toggleSettingsModal(false)" class="p-1 rounded-lg text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
       </div>
 
-      <!-- Settings Sections Tabs -->
-      <div class="space-y-4">
-        
-        <!-- SECTION 1: APPEARANCE -->
-        <div class="space-y-3">
-          <span class="text-xs font-bold tracking-wider uppercase opacity-70">1. Theme & Appearance</span>
-          
-          <!-- Palette Presets -->
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            <button onclick="updateTheme('dark-glass')" class="theme-select-btn p-2 rounded-xl text-left border border-white/10 bg-slate-900/80 hover:border-white/30 text-xs">
-              <span class="block font-bold">🌙 Dark Glass</span>
-              <span class="text-[10px] opacity-60">Classic blurred iOS</span>
-            </button>
-            <button onclick="updateTheme('oled-black')" class="theme-select-btn p-2 rounded-xl text-left border border-white/10 bg-black hover:border-white/30 text-xs">
-              <span class="block font-bold">🌑 OLED True</span>
-              <span class="text-[10px] opacity-60">Pitch black battery-saver</span>
-            </button>
-            <button onclick="updateTheme('light-canvas')" class="theme-select-btn p-2 rounded-xl text-left border border-white/10 bg-slate-100 text-slate-900 hover:border-slate-400 text-xs">
-              <span class="block font-bold">☀️ Light Canvas</span>
-              <span class="text-[10px] opacity-70">Clean daylight mode</span>
-            </button>
-            <button onclick="updateTheme('frosted-titanium')" class="theme-select-btn p-2 rounded-xl text-left border border-white/10 bg-[#23252b] hover:border-white/30 text-xs">
-              <span class="block font-bold">⚙️ Titanium</span>
-              <span class="text-[10px] opacity-60">Apple neutral brushed</span>
-            </button>
-            <button onclick="updateTheme('neon-cyber')" class="theme-select-btn p-2 rounded-xl text-left border border-white/10 bg-[#0d091e] hover:border-white/30 text-xs">
-              <span class="block font-bold">⚡ Neon Cyber</span>
-              <span class="text-[10px] opacity-60">Deep indigo & glow</span>
-            </button>
-          </div>
-
-          <!-- Accent Color Swatches -->
-          <div>
-            <label class="text-[11px] font-semibold uppercase tracking-wider opacity-75 block mb-1.5">Accent Color</label>
-            <div class="flex gap-2">
-              <button onclick="updateAccent('#38bdf8')" class="w-8 h-8 rounded-full bg-sky-400 border-2 border-white/30 touch-bounce" title="iOS Sky"></button>
-              <button onclick="updateAccent('#10b981')" class="w-8 h-8 rounded-full bg-emerald-500 border-2 border-transparent hover:border-white/30 touch-bounce" title="Range Emerald"></button>
-              <button onclick="updateAccent('#f59e0b')" class="w-8 h-8 rounded-full bg-amber-400 border-2 border-transparent hover:border-white/30 touch-bounce" title="Warm Amber"></button>
-              <button onclick="updateAccent('#ef4444')" class="w-8 h-8 rounded-full bg-rose-500 border-2 border-transparent hover:border-white/30 touch-bounce" title="Crimson"></button>
-              <button onclick="updateAccent('#a855f7')" class="w-8 h-8 rounded-full bg-purple-500 border-2 border-transparent hover:border-white/30 touch-bounce" title="Neon Purple"></button>
-              <button onclick="updateAccent('#ec4899')" class="w-8 h-8 rounded-full bg-pink-500 border-2 border-transparent hover:border-white/30 touch-bounce" title="Sunset Pink"></button>
-            </div>
-          </div>
-
-          <!-- Corner Radius & Visual Density -->
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="text-[11px] font-semibold uppercase tracking-wider opacity-75 block mb-1">Corner Curvature</label>
-              <select id="setting-radius" onchange="updateCornerRadius(this.value)" class="w-full bg-black/40 border border-white/10 rounded-xl px-2.5 py-2 text-xs focus:outline-none accent-ring">
-                <option value="0.5rem">Subtle (8px)</option>
-                <option value="1rem" selected>Standard iOS (16px)</option>
-                <option value="1.5rem">Extra Round (24px)</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-[11px] font-semibold uppercase tracking-wider opacity-75 block mb-1">Dual-Screen / Duo Mode</label>
-              <select id="setting-duo-mode" onchange="updateDuoLayoutPreference(this.value)" class="w-full bg-black/40 border border-white/10 rounded-xl px-2.5 py-2 text-xs focus:outline-none accent-ring">
-                <option value="auto">Auto (Detect Duo/Fold)</option>
-                <option value="force-duo">Force Dual Pane</option>
-                <option value="single">Force Single Pane</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECTION 2: CAROUSEL CARDS MANAGEMENT -->
-        <div class="space-y-3 pt-2 border-t border-white/10">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold tracking-wider uppercase opacity-70">2. Dashboard Carousel Cards</span>
-            <button onclick="openCustomCardModal()" class="text-xs accent-text font-bold">+ Custom Card</button>
-          </div>
-          <div id="settings-cards-list" class="space-y-2">
-            <!-- Injected via renderSettingsCardsList() -->
-          </div>
-        </div>
-
-        <!-- SECTION 3: APP PREFERENCES -->
-        <div class="space-y-3 pt-2 border-t border-white/10">
-          <span class="text-xs font-bold tracking-wider uppercase opacity-70">3. Startup & General</span>
-          <div class="flex items-center justify-between">
-            <span class="text-xs">Default Startup Screen</span>
-            <select id="setting-default-screen" onchange="updateDefaultScreen(this.value)" class="bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 text-xs focus:outline-none">
-              <option value="dashboard">Dashboard</option>
-              <option value="planner">Planner</option>
-              <option value="notebook">Notebook</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- SECTION 4: DATA EXPORT, IMPORT & RESET -->
-        <div class="space-y-3 pt-2 border-t border-white/10">
-          <span class="text-xs font-bold tracking-wider uppercase opacity-70">4. Backup, Restore & Reset</span>
-          <div class="grid grid-cols-2 gap-2">
-            <button onclick="exportAllAppData()" class="py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-semibold flex items-center justify-center gap-1.5">
-              <span>⬇️</span> Backup JSON
-            </button>
-            <label class="py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer">
-              <span>⬆️</span> Restore JSON
-              <input type="file" id="import-json-input" accept=".json" onchange="importAllAppData(event)" class="hidden">
-            </label>
-          </div>
-          <button onclick="confirmResetAllData()" class="w-full py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-bold transition-colors">
-            Reset Everything to Factory Defaults
-          </button>
-        </div>
-
+      <div class="space-y-1 text-xs text-slate-300 bg-white/5 p-3.5 liquid-glass-card border border-white/10">
+        <div class="font-semibold text-white">Full-Screen Display Canvas</div>
+        <p class="text-slate-400">When opened or unfolded on an iPhone Duo, the canvas spans full screen without split-view partitions. Controls stay anchored on the right for thumb reach.</p>
       </div>
 
-      <div class="pt-2">
-        <button onclick="closeSettingsModal()" class="w-full py-2.5 rounded-xl accent-bg font-bold text-xs touch-bounce shadow-lg">Done & Save</button>
+      <!-- Themes -->
+      <div class="space-y-2">
+        <label class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Gradient Theme</label>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <button onclick="setTheme('twilight-gradient')" class="p-3.5 liquid-glass-card text-left font-medium text-slate-200">Twilight Gradient</button>
+          <button onclick="setTheme('oled')" class="p-3.5 squircle-btn bg-black border border-white/15 text-left font-medium text-slate-200">OLED Pitch Black</button>
+        </div>
       </div>
 
+      <!-- Data Export & Reset -->
+      <div class="pt-2 border-t border-white/10 flex justify-between items-center text-xs">
+        <button onclick="exportDataJSON()" class="text-sky-400 hover:underline">Export Backup</button>
+        <button onclick="resetDefaults()" class="text-red-400 hover:underline">Reset Defaults</button>
+      </div>
+
+      <button onclick="toggleSettingsModal(false)" class="w-full py-3 squircle-btn bg-sky-500 text-xs font-semibold text-white shadow-lg">Done</button>
     </div>
   </div>
 
-  <!-- Custom Card Creator / Editor Modal -->
-  <div id="custom-card-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="w-full max-w-sm bg-[#111624] border border-white/10 rounded-2xl p-5 space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 id="custom-card-modal-title" class="text-sm font-bold text-white">Create Dashboard Card</h3>
-        <button onclick="closeCustomCardModal()" class="text-slate-400">✕</button>
-      </div>
-      <div class="space-y-2.5">
-        <input type="hidden" id="custom-card-id">
-        <div>
-          <label class="text-[10px] font-semibold uppercase opacity-70 block mb-1">Card Title & Emoji</label>
-          <div class="flex gap-2">
-            <input id="custom-card-icon" type="text" placeholder="⚽" class="w-12 text-center bg-black/40 border border-white/10 rounded-xl py-2 text-xs">
-            <input id="custom-card-title" type="text" placeholder="e.g. Champions League" class="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs">
-          </div>
-        </div>
-        <div>
-          <label class="text-[10px] font-semibold uppercase opacity-70 block mb-1">Badge Tag</label>
-          <input id="custom-card-badge" type="text" placeholder="e.g. Madrid vs Bayern" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs">
-        </div>
-        <div>
-          <label class="text-[10px] font-semibold uppercase opacity-70 block mb-1">Card Content / Stats</label>
-          <textarea id="custom-card-content" rows="3" placeholder="Key stats, yardages, checklist or schedule..." class="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs resize-none"></textarea>
-        </div>
-      </div>
-      <div class="flex gap-2 pt-1">
-        <button onclick="closeCustomCardModal()" class="flex-1 py-2 rounded-xl bg-white/5 text-xs font-semibold">Cancel</button>
-        <button onclick="saveCustomCard()" class="flex-1 py-2 rounded-xl accent-bg font-bold text-xs">Save Card</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 1: Add/Edit Task Modal -->
-  <div id="task-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4 transition-all">
-    <div class="w-full max-w-md bg-[#111624] border-t sm:border border-white/10 rounded-t-3xl sm:rounded-2xl p-5 space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="text-base font-bold text-white">Create New Task</h3>
-        <button onclick="closeTaskModal()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center">✕</button>
-      </div>
-
-      <div class="space-y-3">
-        <div>
-          <label class="text-[11px] font-semibold uppercase tracking-wider opacity-70 block mb-1">Task Title</label>
-          <input id="task-title-input" type="text" placeholder="e.g. Clean smoker grates & prep pork butt" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none accent-ring">
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-[11px] font-semibold uppercase tracking-wider opacity-70 block mb-1">Tag / Category</label>
-            <select id="task-tag-input" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none accent-ring">
-              <option value="Home & Grill">🔥 Home & Grill</option>
-              <option value="Golf & Fitness">⛳ Golf & Fitness</option>
-              <option value="Tech & Maker">🛠️ Tech & Maker</option>
-              <option value="Work / Focus">💼 Work / Focus</option>
-              <option value="Personal">⭐ Personal</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[11px] font-semibold uppercase tracking-wider opacity-70 block mb-1">Priority</label>
-            <select id="task-priority-input" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none accent-ring">
-              <option value="high">🔴 High Priority</option>
-              <option value="normal" selected>🟡 Normal</option>
-              <option value="low">🟢 Relaxed</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label class="text-[11px] font-semibold uppercase tracking-wider opacity-70 block mb-1">Time / Note</label>
-          <input id="task-time-input" type="text" placeholder="e.g. 7:30 AM or Saturday morning" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none accent-ring">
-        </div>
-      </div>
-
-      <div class="flex gap-2 pt-2">
-        <button onclick="closeTaskModal()" class="w-1/3 py-2.5 rounded-xl bg-white/5 text-xs font-semibold">Cancel</button>
-        <button onclick="saveNewTask()" class="w-2/3 py-2.5 rounded-xl accent-bg font-bold text-xs">Save Task</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 2: Note Editor Modal -->
-  <div id="note-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4 transition-all">
-    <div class="w-full max-w-md bg-[#111624] border-t sm:border border-white/10 rounded-t-3xl sm:rounded-2xl p-5 space-y-4 max-h-[90vh] flex flex-col">
-      <div class="flex items-center justify-between">
-        <h3 id="note-modal-title" class="text-base font-bold text-white">Write Note</h3>
-        <button onclick="closeNoteModal()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white flex items-center justify-center">✕</button>
-      </div>
-
-      <div class="space-y-3 flex-1 overflow-y-auto">
-        <input type="hidden" id="editing-note-id">
-        <div>
-          <label class="text-[11px] font-semibold uppercase tracking-wider opacity-70 block mb-1">Title</label>
-          <input id="note-title-input" type="text" placeholder="Note or recipe title..." class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none accent-ring font-bold">
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-[11px] font-semibold uppercase tracking-wider opacity-70 block mb-1">Category</label>
-            <select id="note-category-input" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none accent-ring">
-              <option value="Smoker & Cooking">🔥 Smoker & Cooking</option>
-              <option value="Golf Log">⛳ Golf Log</option>
-              <option value="Sports & Teams">🏈 Sports & Teams</option>
-              <option value="DIY & Code">🛠️ DIY & Code</option>
-              <option value="Life & Thoughts">💡 Life & Thoughts</option>
-            </select>
-          </div>
-          <div class="flex items-center pt-5 pl-2">
-            <label class="flex items-center gap-2 text-xs opacity-90 cursor-pointer">
-              <input id="note-pin-checkbox" type="checkbox" class="w-4 h-4 rounded accent-bg">
-              <span>📌 Pin to Top</span>
-            </label>
-          </div>
-        </div>
-
-        <div>
-          <label class="text-[11px] font-semibold uppercase tracking-wider opacity-70 block mb-1">Content</label>
-          <textarea id="note-content-input" rows="7" placeholder="Write recipe steps, range thoughts, or specs..." class="w-full bg-black/40 border border-white/10 rounded-xl p-3.5 text-xs focus:outline-none accent-ring font-mono leading-relaxed resize-none"></textarea>
-        </div>
-      </div>
-
-      <div class="flex gap-2 pt-1 border-t border-white/10">
-        <button id="note-delete-btn" onclick="deleteCurrentEditingNote()" class="hidden px-3 py-2.5 rounded-xl bg-red-500/20 text-red-300 text-xs font-semibold">Delete</button>
-        <button onclick="closeNoteModal()" class="flex-1 py-2.5 rounded-xl bg-white/5 text-xs font-semibold">Cancel</button>
-        <button onclick="saveNote()" class="flex-1 py-2.5 rounded-xl accent-bg font-bold text-xs">Save Entry</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================================= -->
-  <!-- JAVASCRIPT LOGIC & STATE ENGINE                                          -->
-  <!-- ========================================================================= -->
   <script>
-    // --- Storage Keys ---
-    const STORAGE_TASKS = 'vibehub_tasks_v3';
-    const STORAGE_NOTES = 'vibehub_notes_v3';
-    const STORAGE_CARDS = 'vibehub_carousel_cards_v3';
-    const STORAGE_SETTINGS = 'vibehub_settings_v3';
-
-    // Default System State
-    const DEFAULT_SETTINGS = {
-      theme: 'dark-glass',
-      accent: '#38bdf8',
-      radius: '1rem',
-      duoMode: 'auto', // 'auto', 'force-duo', 'single'
-      defaultScreen: 'dashboard'
-    };
-
-    const DEFAULT_CARDS = [
-      {
-        id: 'c1',
-        title: 'Gameday Radar',
-        icon: '🏈',
-        badge: 'Sports Live',
-        visible: true,
-        content: "SF 49ers (11-4) vs Rams Sunday 4:25 PM • OKC Thunder 118 - 110 DAL (SGA 34 PTS)",
-        template: 'sports'
-      },
-      {
-        id: 'c2',
-        title: 'Smoker & Griddle Hub',
-        icon: '🔥',
-        badge: 'Traeger / Stone',
-        visible: true,
-        content: "Brisket target 203°F (Wrap 165°F peach paper) • Smash Burgers cast-iron 475°F",
-        template: 'bbq'
-      },
-      {
-        id: 'c3',
-        title: 'Links & Range Tracker',
-        icon: '⛳',
-        badge: 'HDCP 11.4',
-        visible: true,
-        content: "Last round: 82 (+10) Presidio • Swing thought: Smooth takeaway, finish tall",
-        template: 'golf'
-      },
-      {
-        id: 'c4',
-        title: 'Workbench & Labs',
-        icon: '🛠️',
-        badge: '3D / IoT',
-        visible: true,
-        content: "ASA filament: Nozzle 255°C, Bed 100°C • ESP32 Smart Sprinkler Node in progress",
-        template: 'maker'
-      }
-    ];
+    // --- Application State Engine ---
+    const STORAGE_KEY_TASKS = 'vibehub_tasks_v3';
+    const STORAGE_KEY_NOTES = 'vibehub_notes_v3';
+    const STORAGE_KEY_THEME = 'vibehub_theme_v3';
 
     const DEFAULT_TASKS = [
-      { id: 't1', title: 'Prep brisket dry rub (16 mesh black pepper + kosher salt)', tag: 'Home & Grill', priority: 'high', time: 'Friday 6:00 PM', completed: false, date: 'today' },
-      { id: 't2', title: 'Range session: practice 50yd wedge touch & alignment', tag: 'Golf & Fitness', priority: 'normal', time: 'Saturday 9:00 AM', completed: false, date: 'today' },
-      { id: 't3', title: 'Print custom ASA cable housing for 3D printer', tag: 'Tech & Maker', priority: 'low', time: 'Sunday', completed: false, date: 'upcoming' },
-      { id: 't4', title: 'Tune fantasy football lineup before Sunday kickoffs', tag: 'Sports & Teams', priority: 'high', time: 'Sunday 9:00 AM', completed: true, date: 'today' }
+      { id: 1, text: "Prep brisket dry rub (16 mesh pepper + kosher salt)", category: "HOME & GRILL", time: "Friday 6:00 PM", done: false, highPriority: true },
+      { id: 2, text: "Range session: 50yd wedge touch & tempo drills", category: "GOLF", time: "Saturday 9:00 AM", done: false, highPriority: false },
+      { id: 3, text: "Calibrate ASA 3D printer bed level at 100°C", category: "WORKBENCH", time: "Sunday 11:00 AM", done: false, highPriority: true }
     ];
 
     const DEFAULT_NOTES = [
-      {
-        id: 'n1',
-        title: 'Texas Style Smoked Brisket Master Checklist',
-        category: 'Smoker & Cooking',
-        content: "• Trim hard fat to 1/4 inch uniform flat layer.\n• Rub: 50% coarse butcher pepper (16-mesh), 45% Diamond Crystal salt, 5% granulated garlic.\n• Traeger temp: 225°F with Post Oak or Pecan.\n• Spritz: 50/50 Apple cider vinegar + water after bark sets at 3 hrs.\n• Foil boat or peach butcher paper wrap at 165°F stall.\n• Pull probe-tender at 203°F internal; rest minimum 3 hours in Yeti cooler wrapped in towel.",
-        pinned: true,
-        updatedAt: 'Today, 2:15 PM'
+      { 
+        id: 1, 
+        title: "Texas Style Smoked Brisket Master Checklist", 
+        tag: "Smoker & Cooking", 
+        pinned: true, 
+        content: "• Trim hard fat to uniform 1/4 inch flat layer.\n• Rub: 50% coarse butcher pepper (16-mesh), 45% kosher salt, 5% granulated garlic.\n• Temperature: 225°F Traeger with Post Oak.\n• Peach butcher paper boat wrap at 165°F bark stall.\n• Pull probe-tender at 203°F internal. Rest minimum 3 hours in Yeti cooler." 
       },
-      {
-        id: 'n2',
-        title: 'Golf Bag Yardages & Wedge Matrix',
-        category: 'Golf Log',
-        content: "• Driver: 260-275y (Aim right edge of fairway)\n• 3-Wood: 235y\n• 4-Hybrid: 215y\n• 7-Iron: 165y\n• 52° Gap Wedge: Full 115y, 3/4 Swing 95y\n• 56° Sand Wedge: Full 95y, Bunker touch focus\n• 60° Lob: Green side flops & tight lies only",
-        pinned: false,
-        updatedAt: 'Yesterday'
+      { 
+        id: 2, 
+        title: "Golf Bag Yardages & Wedge Matrix", 
+        tag: "Golf Log", 
+        pinned: false, 
+        content: "• Driver: 260-275y (Aim right center fairway)\n• 3-Wood: 235y\n• 4-Hybrid: 215y\n• 7-Iron: 165y\n• 56° Sand Wedge: 90y Full, 65y Half" 
+      },
+      { 
+        id: 3, 
+        title: "ASA 3D Printing Specs", 
+        tag: "Workbench", 
+        pinned: false, 
+        content: "• Nozzle: 255°C\n• Bed: 100°C\n• Chamber pre-heat: 45°C\n• Fan: 15% max for layer adhesion." 
       }
     ];
 
-    // Reactive State
-    let settings = { ...DEFAULT_SETTINGS };
-    let carouselCards = [];
-    let tasks = [];
-    let notes = [];
-    let currentTaskFilter = 'all';
-    let currentNoteTagFilter = 'All';
-    let isDualPaneActive = false;
+    let state = {
+      activeTab: 'dashboard',
+      taskFilter: 'all',
+      noteCategory: 'All',
+      tasks: [],
+      notes: []
+    };
 
-    // Load initial data
-    function initData() {
+    function loadState() {
       try {
-        const storedSettings = localStorage.getItem(STORAGE_SETTINGS);
-        settings = storedSettings ? { ...DEFAULT_SETTINGS, ...JSON.parse(storedSettings) } : DEFAULT_SETTINGS;
+        const storedTasks = localStorage.getItem(STORAGE_KEY_TASKS);
+        state.tasks = storedTasks ? JSON.parse(storedTasks) : [...DEFAULT_TASKS];
 
-        const storedCards = localStorage.getItem(STORAGE_CARDS);
-        carouselCards = storedCards ? JSON.parse(storedCards) : DEFAULT_CARDS;
+        const storedNotes = localStorage.getItem(STORAGE_KEY_NOTES);
+        state.notes = storedNotes ? JSON.parse(storedNotes) : [...DEFAULT_NOTES];
 
-        const storedTasks = localStorage.getItem(STORAGE_TASKS);
-        tasks = storedTasks ? JSON.parse(storedTasks) : DEFAULT_TASKS;
-
-        const storedNotes = localStorage.getItem(STORAGE_NOTES);
-        notes = storedNotes ? JSON.parse(storedNotes) : DEFAULT_NOTES;
+        const theme = localStorage.getItem(STORAGE_KEY_THEME) || 'twilight-gradient';
+        setTheme(theme);
       } catch (e) {
-        console.error("Storage load error:", e);
+        state.tasks = [...DEFAULT_TASKS];
+        state.notes = [...DEFAULT_NOTES];
       }
-
-      applySettingsToDOM();
-      detectAndApplyDuoLayout();
-      window.addEventListener('resize', detectAndApplyDuoLayout);
     }
 
     function saveState() {
-      try {
-        localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
-        localStorage.setItem(STORAGE_CARDS, JSON.stringify(carouselCards));
-        localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
-        localStorage.setItem(STORAGE_NOTES, JSON.stringify(notes));
-      } catch (e) {
-        console.error("Storage save error:", e);
-      }
-      updatePlannerBadge();
+      localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(state.tasks));
+      localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(state.notes));
     }
 
-    // --- Dynamic Settings & Appearance Engine ---
-    function applySettingsToDOM() {
-      document.body.setAttribute('data-theme', settings.theme);
-      document.documentElement.style.setProperty('--app-accent', settings.accent);
-      document.documentElement.style.setProperty('--app-radius', settings.radius);
+    // Single unified full-screen view (No split-screen)
+    function switchTab(tab) {
+      state.activeTab = tab;
 
-      const radSelect = document.getElementById('setting-radius');
-      if (radSelect) radSelect.value = settings.radius;
+      const vDash = document.getElementById('viewDashboard');
+      const vPlan = document.getElementById('viewPlanner');
+      const vNote = document.getElementById('viewNotebook');
 
-      const duoSelect = document.getElementById('setting-duo-mode');
-      if (duoSelect) duoSelect.value = settings.duoMode;
+      vDash.classList.toggle('hidden', tab !== 'dashboard');
+      vPlan.classList.toggle('hidden', tab !== 'planner');
+      vNote.classList.toggle('hidden', tab !== 'notebook');
 
-      const screenSelect = document.getElementById('setting-default-screen');
-      if (screenSelect) screenSelect.value = settings.defaultScreen;
-    }
-
-    function updateTheme(themeName) {
-      settings.theme = themeName;
-      saveState();
-      applySettingsToDOM();
-      showToast(`Theme switched to ${themeName}`, '🎨');
-    }
-
-    function updateAccent(colorHex) {
-      settings.accent = colorHex;
-      saveState();
-      applySettingsToDOM();
-      showToast('Accent updated', '✨');
-    }
-
-    function updateCornerRadius(val) {
-      settings.radius = val;
-      saveState();
-      applySettingsToDOM();
-    }
-
-    function updateDefaultScreen(screen) {
-      settings.defaultScreen = screen;
-      saveState();
-      showToast('Default screen saved', '✓');
-    }
-
-    function updateDuoLayoutPreference(mode) {
-      settings.duoMode = mode;
-      saveState();
-      detectAndApplyDuoLayout();
-      showToast(`Layout preference: ${mode}`, '📱');
-    }
-
-    // --- iPhone Duo & Foldable Responsive Logic ---
-    function detectAndApplyDuoLayout() {
-      const container = document.getElementById('panes-container');
-      const root = document.getElementById('app-root');
-      const indicator = document.getElementById('duo-indicator');
-      const paneSecondary = document.getElementById('pane-secondary');
-      const quickDuoLabel = document.getElementById('quick-duo-label');
-
-      const screenW = window.innerWidth;
-      const isFoldW = screenW >= 768;
-
-      let shouldUseDuo = false;
-      if (settings.duoMode === 'force-duo') {
-        shouldUseDuo = true;
-      } else if (settings.duoMode === 'single') {
-        shouldUseDuo = false;
-      } else {
-        shouldUseDuo = isFoldW;
-      }
-
-      isDualPaneActive = shouldUseDuo;
-
-      if (shouldUseDuo) {
-        // Duo Side-by-Side Dual Pane Active
-        container.className = "flex-1 w-full grid grid-cols-2 gap-8 duo-hinge-divider";
-        indicator.textContent = "DUO DUAL-PANE";
-        quickDuoLabel.textContent = "Single";
-        paneSecondary.classList.remove('hidden');
-        
-        // Show Left = Dashboard or Planner, Right = Notebook
-        document.getElementById('screen-dashboard').classList.remove('hidden');
-        document.getElementById('screen-notebook').classList.remove('hidden');
-      } else {
-        // Standard Single-Screen Mobile Phone View
-        container.className = "flex-1 w-full grid grid-cols-1 gap-5";
-        indicator.textContent = "SINGLE PANE";
-        quickDuoLabel.textContent = "Duo View";
-        paneSecondary.classList.add('hidden');
-      }
-    }
-
-    function toggleDualPaneModeQuick() {
-      if (settings.duoMode === 'force-duo') {
-        settings.duoMode = 'single';
-      } else {
-        settings.duoMode = 'force-duo';
-      }
-      saveState();
-      detectAndApplyDuoLayout();
-      showToast(settings.duoMode === 'force-duo' ? 'Duo Dual-Screen Mode Active' : 'Single Pane Active', '📱');
-    }
-
-    // --- Toast Alerts ---
-    let toastTimeout;
-    function showToast(message, icon = '✓') {
-      const toast = document.getElementById('toast');
-      const toastMsg = document.getElementById('toast-message');
-      const toastIcon = document.getElementById('toast-icon');
-      
-      toastMsg.textContent = message;
-      toastIcon.textContent = icon;
-
-      toast.classList.remove('opacity-0', '-translate-y-4');
-      toast.classList.add('opacity-100', 'translate-y-0');
-
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        toast.classList.remove('opacity-100', 'translate-y-0');
-        toast.classList.add('opacity-0', '-translate-y-4');
-      }, 2000);
-    }
-
-    // --- Screen Navigation Engine ---
-    function switchScreen(screenName) {
-      if (isDualPaneActive) {
-        // On Duo mode, pane 1 toggles between Dashboard & Planner; pane 2 displays Notebook or Settings
-        if (screenName === 'dashboard' || screenName === 'planner') {
-          document.getElementById('screen-dashboard').classList.toggle('hidden', screenName !== 'dashboard');
-          document.getElementById('screen-planner').classList.toggle('hidden', screenName !== 'planner');
-        } else {
-          document.getElementById('screen-notebook').classList.remove('hidden');
-        }
-      } else {
-        // Single pane mode
-        document.querySelectorAll('.screen-view').forEach(el => el.classList.add('hidden'));
-        const targetScreen = document.getElementById(`screen-${screenName}`);
-        if (targetScreen) {
-          targetScreen.classList.remove('hidden');
-          // If in pane-secondary, ensure pane-secondary is visible
-          if (targetScreen.parentElement.id === 'pane-secondary') {
-            document.getElementById('pane-secondary').classList.remove('hidden');
+      ['dashboard', 'planner', 'notebook'].forEach(t => {
+        const btn = document.getElementById(`nav-${t}`);
+        if (btn) {
+          if (t === tab) {
+            btn.className = "w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-sky-400 bg-white/15 shadow-inner";
           } else {
-            document.getElementById('pane-secondary').classList.add('hidden');
+            btn.className = "w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-slate-400 hover:text-white";
           }
         }
-      }
+      });
 
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('tab-active', 'accent-text'));
-      const activeNav = document.getElementById(`nav-btn-${screenName}`);
-      if (activeNav) activeNav.classList.add('tab-active', 'accent-text');
-
-      if (screenName === 'dashboard') renderDashboard();
-      if (screenName === 'planner') renderPlanner();
-      if (screenName === 'notebook') renderNotes();
-    }
-
-    // --- Carousel Management & Dynamic Rendering ---
-    function renderCarouselCards() {
-      const container = document.getElementById('interest-carousel');
-      const visibleCards = carouselCards.filter(c => c.visible !== false);
-
-      if (visibleCards.length === 0) {
-        container.innerHTML = `
-          <div class="snap-card min-w-[280px] glass-card p-4 text-center">
-            <p class="text-xs opacity-60">All cards hidden. Add one in settings!</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = visibleCards.map(c => `
-        <div class="snap-card min-w-[305px] sm:min-w-[335px] glass-card p-4 flex flex-col justify-between relative overflow-hidden group shadow-md">
-          <div class="flex items-center justify-between border-b border-white/5 pb-2.5 mb-2.5">
-            <div class="flex items-center gap-2">
-              <span class="text-base">${c.icon || '📌'}</span>
-              <span class="font-bold text-xs tracking-tight text-white">${escapeHtml(c.title)}</span>
-            </div>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 opacity-80 border border-white/10">${escapeHtml(c.badge || 'Live')}</span>
-          </div>
-          <div class="text-xs opacity-90 leading-relaxed font-sans mb-3 whitespace-pre-line">${escapeHtml(c.content)}</div>
-          <div class="flex items-center justify-between text-[11px] opacity-75 pt-2 border-t border-white/5">
-            <button onclick="editCard('${c.id}')" class="accent-text font-bold hover:underline">Edit Card</button>
-            <span class="opacity-60 text-[10px]">Swipe ➔</span>
-          </div>
-        </div>
-      `).join('');
-
-      renderCarouselDots(visibleCards.length);
-    }
-
-    function renderCarouselDots(count) {
-      const dots = document.getElementById('carousel-dots');
-      dots.innerHTML = Array.from({ length: count }).map((_, i) => `
-        <div class="w-1.5 h-1.5 rounded-full ${i === 0 ? 'w-4 accent-bg' : 'bg-white/20'} transition-all"></div>
-      `).join('');
-    }
-
-    // Custom Card Actions
-    function openCustomCardModal(cardId = null) {
-      const modal = document.getElementById('custom-card-modal');
-      const idInput = document.getElementById('custom-card-id');
-      const iconInput = document.getElementById('custom-card-icon');
-      const titleInput = document.getElementById('custom-card-title');
-      const badgeInput = document.getElementById('custom-card-badge');
-      const contentInput = document.getElementById('custom-card-content');
-      const titleHeader = document.getElementById('custom-card-modal-title');
-
-      if (cardId) {
-        const card = carouselCards.find(c => c.id === cardId);
-        if (card) {
-          idInput.value = card.id;
-          iconInput.value = card.icon || '⭐';
-          titleInput.value = card.title;
-          badgeInput.value = card.badge || '';
-          contentInput.value = card.content;
-          titleHeader.textContent = 'Edit Dashboard Card';
-        }
-      } else {
-        idInput.value = '';
-        iconInput.value = '⚡';
-        titleInput.value = '';
-        badgeInput.value = 'Status';
-        contentInput.value = '';
-        titleHeader.textContent = 'Create Dashboard Card';
-      }
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
-    function closeCustomCardModal() {
-      document.getElementById('custom-card-modal').classList.add('hidden');
-      document.getElementById('custom-card-modal').classList.remove('flex');
-    }
-
-    function editCard(id) {
-      openCustomCardModal(id);
-    }
-
-    function saveCustomCard() {
-      const id = document.getElementById('custom-card-id').value;
-      const icon = document.getElementById('custom-card-icon').value.trim() || '📌';
-      const title = document.getElementById('custom-card-title').value.trim();
-      const badge = document.getElementById('custom-card-badge').value.trim();
-      const content = document.getElementById('custom-card-content').value.trim();
-
-      if (!title) {
-        showToast('Please provide a title', '⚠️');
-        return;
-      }
-
-      if (id) {
-        carouselCards = carouselCards.map(c => c.id === id ? { ...c, icon, title, badge, content } : c);
-      } else {
-        carouselCards.push({
-          id: 'card_' + Date.now(),
-          icon,
-          title,
-          badge,
-          content,
-          visible: true
-        });
-      }
-
-      saveState();
-      closeCustomCardModal();
-      renderCarouselCards();
-      renderSettingsCardsList();
-      showToast('Card updated', '✓');
-    }
-
-    function toggleCardVisibility(id) {
-      carouselCards = carouselCards.map(c => c.id === id ? { ...c, visible: !c.visible } : c);
-      saveState();
-      renderCarouselCards();
-      renderSettingsCardsList();
-    }
-
-    function deleteCard(id) {
-      carouselCards = carouselCards.filter(c => c.id !== id);
-      saveState();
-      renderCarouselCards();
-      renderSettingsCardsList();
-      showToast('Card removed', '🗑️');
-    }
-
-    function renderSettingsCardsList() {
-      const list = document.getElementById('settings-cards-list');
-      list.innerHTML = carouselCards.map(c => `
-        <div class="flex items-center justify-between p-2 rounded-xl bg-black/30 border border-white/5">
-          <div class="flex items-center gap-2">
-            <span>${c.icon}</span>
-            <span class="text-xs font-semibold text-white">${escapeHtml(c.title)}</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <button onclick="toggleCardVisibility('${c.id}')" class="text-[10px] px-2 py-0.5 rounded ${c.visible !== false ? 'accent-bg font-bold' : 'bg-white/10 opacity-50'}">
-              ${c.visible !== false ? 'Shown' : 'Hidden'}
-            </button>
-            <button onclick="deleteCard('${c.id}')" class="text-xs text-red-400 p-1">✕</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // --- Settings Modal Trigger ---
-    function openSettingsModal() {
-      renderSettingsCardsList();
-      document.getElementById('settings-modal').classList.remove('hidden');
-      document.getElementById('settings-modal').classList.add('flex');
-    }
-
-    function closeSettingsModal() {
-      document.getElementById('settings-modal').classList.add('hidden');
-      document.getElementById('settings-modal').classList.remove('flex');
-    }
-
-    // Backup & Restore
-    function exportAllAppData() {
-      const bundle = {
-        version: '3.0-duo',
-        exportedAt: new Date().toISOString(),
-        settings,
-        carouselCards,
-        tasks,
-        notes
-      };
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(bundle, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `vibehub_backup_full_${new Date().toISOString().slice(0, 10)}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-      showToast('All app data exported', '💾');
-    }
-
-    function importAllAppData(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const imported = JSON.parse(e.target.result);
-          if (imported.settings) settings = { ...DEFAULT_SETTINGS, ...imported.settings };
-          if (imported.carouselCards) carouselCards = imported.carouselCards;
-          if (imported.tasks) tasks = imported.tasks;
-          if (imported.notes) notes = imported.notes;
-
-          saveState();
-          applySettingsToDOM();
-          detectAndApplyDuoLayout();
-          renderDashboard();
-          renderPlanner();
-          renderNotes();
-          renderCarouselCards();
-          renderSettingsCardsList();
-          showToast('App restored successfully!', '🚀');
-        } catch (err) {
-          showToast('Invalid backup file', '⚠️');
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    function confirmResetAllData() {
-      settings = { ...DEFAULT_SETTINGS };
-      carouselCards = [...DEFAULT_CARDS];
-      tasks = [...DEFAULT_TASKS];
-      notes = [...DEFAULT_NOTES];
-      saveState();
-      applySettingsToDOM();
-      detectAndApplyDuoLayout();
-      renderDashboard();
-      renderPlanner();
-      renderNotes();
-      closeSettingsModal();
-      showToast('Factory reset complete', '🔄');
-    }
-
-    // --- Dashboard & Planner & Notebook Utilities ---
-    function updateDateGreeting() {
-      const dateEl = document.getElementById('dashboard-date');
-      const greetingEl = document.getElementById('dashboard-greeting');
-      const now = new Date();
-      const options = { weekday: 'long', month: 'short', day: 'numeric' };
-      dateEl.textContent = now.toLocaleDateString('en-US', options).toUpperCase();
-
-      const hour = now.getHours();
-      let greeting = 'Good Evening';
-      if (hour < 12) greeting = 'Good Morning';
-      else if (hour < 18) greeting = 'Good Afternoon';
-      greetingEl.innerHTML = `${greeting}, Legend <span class="inline-block animate-pulse text-xl">⚡</span>`;
+      if (tab === 'dashboard') renderDashboard();
+      if (tab === 'planner') renderTasks();
+      if (tab === 'notebook') renderNotes();
     }
 
     function renderDashboard() {
-      renderCarouselCards();
-      const priorityContainer = document.getElementById('dashboard-priority-list');
-      const pinnedContainer = document.getElementById('dashboard-pinned-note');
+      const dbList = document.getElementById('dashboardTaskList');
+      const activeTasks = state.tasks.filter(t => !t.done).slice(0, 4);
 
-      const activeTasks = tasks.filter(t => !t.completed).slice(0, 3);
       if (activeTasks.length === 0) {
-        priorityContainer.innerHTML = `
-          <div class="glass-card p-4 text-center">
-            <p class="text-xs opacity-60">All clear today! Enjoy your hobbies.</p>
-          </div>
-        `;
+        dbList.innerHTML = `<div class="p-4 text-xs text-slate-400 liquid-glass-card text-center">All caught up for today!</div>`;
       } else {
-        priorityContainer.innerHTML = activeTasks.map(t => `
-          <div class="glass-card p-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <button onclick="toggleTask('${t.id}')" class="w-5 h-5 rounded-md border border-slate-500 flex items-center justify-center"></button>
-              <div>
-                <p class="text-xs font-semibold text-white">${escapeHtml(t.title)}</p>
-                <div class="flex items-center gap-2 mt-0.5">
-                  <span class="text-[9px] uppercase font-mono px-1.5 py-0.2 rounded bg-white/5 opacity-80">${t.tag}</span>
-                  ${t.time ? `<span class="text-[10px] accent-text">${t.time}</span>` : ''}
-                </div>
+        dbList.innerHTML = activeTasks.map(t => `
+          <div class="p-3.5 liquid-glass-card flex items-center justify-between">
+            <div class="flex items-center space-x-3 min-w-0">
+              <button onclick="toggleTask(${t.id})" class="w-5 h-5 rounded-lg border border-white/30 flex items-center justify-center shrink-0 hover:border-sky-400 touch-spring"></button>
+              <div class="min-w-0">
+                <p class="text-xs font-medium text-slate-200 truncate">${escapeHtml(t.text)}</p>
+                <span class="text-[9px] uppercase font-mono text-slate-400">${t.category} • ${t.time}</span>
               </div>
             </div>
-            ${t.priority === 'high' ? '<span class="text-[10px] text-rose-400 font-bold px-1.5 py-0.5 rounded bg-rose-500/10">HIGH</span>' : ''}
+            ${t.highPriority ? '<span class="text-[9px] font-bold text-red-400 bg-red-400/15 px-2 py-0.5 rounded-full border border-red-500/20 shrink-0">HIGH</span>' : ''}
           </div>
         `).join('');
       }
 
-      const pinnedNote = notes.find(n => n.pinned) || notes[0];
-      if (pinnedNote) {
+      const pinned = state.notes.find(n => n.pinned) || state.notes[0];
+      const pinnedContainer = document.getElementById('dashboardPinnedNote');
+      if (pinned) {
         pinnedContainer.innerHTML = `
-          <div class="flex items-start justify-between">
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 opacity-80">${pinnedNote.category}</span>
-            <span class="text-xs">📌</span>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-mono uppercase text-sky-400 font-bold">${pinned.tag}</span>
+            <span class="text-xs text-rose-400">📌 Pinned</span>
           </div>
-          <h4 class="text-sm font-bold text-white mt-1.5">${escapeHtml(pinnedNote.title)}</h4>
-          <p class="text-xs opacity-75 line-clamp-2 mt-1 leading-relaxed">${escapeHtml(pinnedNote.content)}</p>
+          <h4 class="text-xs font-semibold text-white mb-1.5">${escapeHtml(pinned.title)}</h4>
+          <p class="text-[11px] text-slate-300 font-mono leading-relaxed line-clamp-4">${escapeHtml(pinned.content)}</p>
         `;
-      } else {
-        pinnedContainer.innerHTML = `<p class="text-xs opacity-60">No notes yet. Tap + to write your first recipe or range checklist.</p>`;
       }
     }
 
+    function renderTasks() {
+      const plList = document.getElementById('plannerTaskList');
+      let filtered = state.tasks;
+      if (state.taskFilter === 'pending') filtered = state.tasks.filter(t => !t.done);
+      if (state.taskFilter === 'priority') filtered = state.tasks.filter(t => t.highPriority && !t.done);
+      if (state.taskFilter === 'done') filtered = state.tasks.filter(t => t.done);
+
+      if (filtered.length === 0) {
+        plList.innerHTML = `<div class="p-8 text-center text-xs text-slate-400 liquid-glass-card">No tasks found.</div>`;
+        return;
+      }
+
+      plList.innerHTML = filtered.map(t => `
+        <div class="p-3.5 liquid-glass-card flex items-center justify-between gap-3 ${t.done ? 'opacity-40' : ''}">
+          <div class="flex items-center space-x-3 flex-1 min-w-0">
+            <button onclick="toggleTask(${t.id})" class="w-5 h-5 rounded-lg border ${t.done ? 'bg-sky-500 border-sky-500 text-white' : 'border-white/30'} flex items-center justify-center shrink-0 font-bold text-xs touch-spring">
+              ${t.done ? '✓' : ''}
+            </button>
+            <div class="min-w-0">
+              <p class="text-xs font-medium ${t.done ? 'line-through text-slate-400' : 'text-slate-200'} truncate">${escapeHtml(t.text)}</p>
+              <div class="flex items-center space-x-2 mt-0.5">
+                <span class="text-[9px] uppercase font-mono text-slate-400">${t.category}</span>
+                <span class="text-[9px] text-slate-500">• ${t.time}</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 shrink-0">
+            ${t.highPriority ? '<span class="text-[9px] font-bold text-red-400 bg-red-400/15 px-2 py-0.5 rounded-full border border-red-500/20">HIGH</span>' : ''}
+            <button onclick="deleteTask(${t.id})" class="text-slate-500 hover:text-red-400 text-xs p-1">✕</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderNotes() {
+      const catContainer = document.getElementById('noteCategoryChips');
+      const notesContainer = document.getElementById('notesList');
+
+      const categories = ['All', 'Smoker & Cooking', 'Golf Log', 'Workbench'];
+      catContainer.innerHTML = categories.map(cat => `
+        <button onclick="setNoteCategory('${cat}')" class="px-3.5 py-1.5 squircle-btn whitespace-nowrap font-medium text-xs touch-spring ${state.noteCategory === cat ? 'bg-sky-500 text-white' : 'bg-white/5 text-slate-300 border border-white/10'}">
+          ${cat}
+        </button>
+      `).join('');
+
+      let filtered = state.notes;
+      if (state.noteCategory !== 'All') {
+        filtered = state.notes.filter(n => n.tag === state.noteCategory);
+      }
+      filtered.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+
+      if (filtered.length === 0) {
+        notesContainer.innerHTML = `<div class="p-8 text-center text-xs text-slate-400 liquid-glass-card col-span-full">No notes found.</div>`;
+        return;
+      }
+
+      notesContainer.innerHTML = filtered.map(n => `
+        <div class="p-5 liquid-glass-card space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono uppercase text-sky-400 font-bold">${n.tag}</span>
+            <div class="flex items-center space-x-2">
+              <button onclick="togglePinNote(${n.id})" class="text-xs ${n.pinned ? 'text-rose-400' : 'text-slate-500 hover:text-rose-400'} p-0.5">📌</button>
+              <button onclick="deleteNote(${n.id})" class="text-slate-500 hover:text-red-400 text-xs p-0.5">✕</button>
+            </div>
+          </div>
+          <h3 class="text-sm font-semibold text-white">${escapeHtml(n.title)}</h3>
+          <p class="text-xs text-slate-300 whitespace-pre-line font-mono leading-relaxed bg-black/30 p-3.5 rounded-2xl border border-white/5">${escapeHtml(n.content)}</p>
+        </div>
+      `).join('');
+    }
+
     function quickCapture(type) {
-      const input = document.getElementById('quick-capture-input');
-      const text = input.value.trim();
-      if (!text) {
-        showToast('Please type something first!', '⚠️');
+      const input = document.getElementById('quickCaptureInput');
+      const val = input.value.trim();
+      if (!val) {
+        showToast('Type something first', '⚠️');
         return;
       }
 
       if (type === 'task') {
-        tasks.unshift({
-          id: 't_' + Date.now(),
-          title: text,
-          tag: 'Quick Log',
-          priority: 'normal',
-          time: 'Today',
-          completed: false,
-          date: 'today'
+        state.tasks.unshift({
+          id: Date.now(),
+          text: val,
+          category: "QUICK CAPTURE",
+          time: "Today",
+          done: false,
+          highPriority: false
         });
         showToast('Task added to Planner', '✓');
       } else {
-        notes.unshift({
-          id: 'n_' + Date.now(),
-          title: text.length > 28 ? text.slice(0, 28) + '...' : text,
-          category: 'Quick Thought',
-          content: text,
+        state.notes.unshift({
+          id: Date.now(),
+          title: val.length > 25 ? val.substring(0, 25) + '...' : val,
+          tag: "General",
           pinned: false,
-          updatedAt: 'Just now'
+          content: val
         });
         showToast('Saved to Notebook', '📝');
       }
@@ -1244,282 +609,147 @@
       input.value = '';
       saveState();
       renderDashboard();
-      renderPlanner();
+      renderTasks();
       renderNotes();
     }
 
-    function renderPlanner() {
-      renderWeekStrip();
-      const container = document.getElementById('planner-tasks-container');
-      const countEl = document.getElementById('planner-task-count');
-
-      let filtered = tasks;
-      if (currentTaskFilter === 'today') filtered = tasks.filter(t => t.date === 'today' || !t.completed);
-      if (currentTaskFilter === 'priority') filtered = tasks.filter(t => t.priority === 'high');
-      if (currentTaskFilter === 'completed') filtered = tasks.filter(t => t.completed);
-
-      countEl.textContent = `${filtered.length} tasks`;
-
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="glass-card p-8 text-center my-4">
-            <span class="text-3xl block mb-2">🎉</span>
-            <p class="text-sm font-semibold">No tasks found</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = filtered.map(t => `
-        <div class="glass-card p-3.5 flex items-start justify-between gap-3 ${t.completed ? 'opacity-50' : ''}">
-          <div class="flex items-start gap-3 flex-1">
-            <button onclick="toggleTask('${t.id}')" class="mt-0.5 w-5 h-5 rounded-md border ${t.completed ? 'accent-bg text-black' : 'border-slate-500'} flex items-center justify-center shrink-0">
-              ${t.completed ? '✓' : ''}
-            </button>
-            <div>
-              <p class="text-xs font-semibold ${t.completed ? 'line-through opacity-70' : 'text-white'}">${escapeHtml(t.title)}</p>
-              <div class="flex items-center gap-2 mt-1.5">
-                <span class="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-white/5 opacity-80">${t.tag}</span>
-                ${t.time ? `<span class="text-[10px] opacity-70">⏰ ${t.time}</span>` : ''}
-              </div>
-            </div>
-          </div>
-          <button onclick="deleteTask('${t.id}')" class="text-slate-400 hover:text-red-400 text-xs">✕</button>
-        </div>
-      `).join('');
-    }
-
-    function renderWeekStrip() {
-      const container = document.getElementById('planner-week-strip');
-      const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-      const now = new Date();
-      const currentDay = now.getDay();
-      let html = '';
-      for (let i = 0; i < 7; i++) {
-        const isToday = i === currentDay;
-        const dateNum = now.getDate() - currentDay + i;
-        html += `
-          <div class="p-1.5 rounded-xl flex flex-col items-center ${isToday ? 'accent-bg font-bold' : 'opacity-70'}">
-            <span class="text-[9px] uppercase">${days[i]}</span>
-            <span class="text-xs font-mono font-semibold mt-0.5">${dateNum > 0 ? dateNum : (30 + dateNum)}</span>
-          </div>
-        `;
-      }
-      container.innerHTML = html;
-    }
-
-    function setTaskFilter(filter) {
-      currentTaskFilter = filter;
-      document.querySelectorAll('.task-filter-btn').forEach(b => {
-        b.classList.remove('accent-bg');
-        b.classList.add('bg-white/5');
-      });
-      event.target.classList.remove('bg-white/5');
-      event.target.classList.add('accent-bg');
-      renderPlanner();
-    }
-
-    function toggleTask(taskId) {
-      tasks = tasks.map(t => t.id === taskId ? { ...t, completed: !t.completed } : t);
+    function toggleTask(id) {
+      const t = state.tasks.find(x => x.id === id);
+      if (t) t.done = !t.done;
       saveState();
-      renderPlanner();
       renderDashboard();
+      renderTasks();
     }
 
-    function deleteTask(taskId) {
-      tasks = tasks.filter(t => t.id !== taskId);
+    function deleteTask(id) {
+      state.tasks = state.tasks.filter(x => x.id !== id);
       saveState();
-      renderPlanner();
       renderDashboard();
+      renderTasks();
       showToast('Task removed', '🗑️');
     }
 
-    function openNewTaskModal() {
-      document.getElementById('task-title-input').value = '';
-      document.getElementById('task-time-input').value = '';
-      document.getElementById('task-modal').classList.remove('hidden');
-      document.getElementById('task-modal').classList.add('flex');
-    }
-
-    function closeTaskModal() {
-      document.getElementById('task-modal').classList.add('hidden');
-      document.getElementById('task-modal').classList.remove('flex');
-    }
-
-    function saveNewTask() {
-      const title = document.getElementById('task-title-input').value.trim();
-      const tag = document.getElementById('task-tag-input').value;
-      const priority = document.getElementById('task-priority-input').value;
-      const time = document.getElementById('task-time-input').value.trim();
-
-      if (!title) {
-        showToast('Please enter a task title', '⚠️');
-        return;
-      }
-
-      tasks.unshift({
-        id: 't_' + Date.now(),
-        title,
-        tag,
-        priority,
-        time,
-        completed: false,
-        date: 'today'
-      });
-
+    function togglePinNote(id) {
+      const n = state.notes.find(x => x.id === id);
+      if (n) n.pinned = !n.pinned;
       saveState();
-      closeTaskModal();
-      renderPlanner();
-      showToast('Task scheduled', '✓');
+      renderDashboard();
+      renderNotes();
     }
 
-    // --- Notebook Logic ---
-    function renderNotes() {
-      const container = document.getElementById('notes-list-container');
-      const searchQuery = (document.getElementById('note-search-input')?.value || '').toLowerCase();
-      
-      const categories = ['All', 'Smoker & Cooking', 'Golf Log', 'Sports & Teams', 'DIY & Code', 'Life & Thoughts'];
-      const tagsContainer = document.getElementById('note-tags-container');
-      tagsContainer.innerHTML = categories.map(cat => `
-        <button onclick="setNoteCategory('${cat}')" class="px-3 py-1 rounded-full whitespace-nowrap text-xs font-semibold ${currentNoteTagFilter === cat ? 'accent-bg' : 'bg-white/5 opacity-80'}">
-          ${cat}
-        </button>
-      `).join('');
+    function deleteNote(id) {
+      state.notes = state.notes.filter(x => x.id !== id);
+      saveState();
+      renderDashboard();
+      renderNotes();
+      showToast('Note deleted', '🗑️');
+    }
 
-      let filtered = notes.filter(n => {
-        const matchesCategory = currentNoteTagFilter === 'All' || n.category === currentNoteTagFilter;
-        const matchesSearch = n.title.toLowerCase().includes(searchQuery) || n.content.toLowerCase().includes(searchQuery);
-        return matchesCategory && matchesSearch;
+    function setTaskFilter(filter) {
+      state.taskFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.className = "filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium";
       });
-
-      filtered.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-
-      if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="glass-card p-8 text-center my-4">
-            <span class="text-3xl block mb-2">📓</span>
-            <p class="text-sm font-semibold">No notes found</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = filtered.map(n => `
-        <div onclick="openNoteEditor('${n.id}')" class="glass-card p-4 hover:border-white/30 cursor-pointer touch-bounce">
-          <div class="flex items-start justify-between">
-            <div class="flex items-center gap-2">
-              <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-white/10 opacity-80">${n.category}</span>
-              ${n.pinned ? '<span class="text-[11px] font-semibold accent-text">📌 Pinned</span>' : ''}
-            </div>
-            <span class="text-[10px] opacity-60 font-mono">${n.updatedAt || 'Recent'}</span>
-          </div>
-          <h3 class="text-sm font-bold text-white mt-2 mb-1">${escapeHtml(n.title)}</h3>
-          <p class="text-xs opacity-80 line-clamp-3 leading-relaxed whitespace-pre-line">${escapeHtml(n.content)}</p>
-        </div>
-      `).join('');
+      const activeBtn = document.getElementById(`filter-${filter}`);
+      if (activeBtn) activeBtn.className = "filter-btn px-3.5 py-1.5 squircle-btn bg-sky-500 text-white font-semibold";
+      renderTasks();
     }
 
     function setNoteCategory(cat) {
-      currentNoteTagFilter = cat;
+      state.noteCategory = cat;
       renderNotes();
     }
 
-    function openNoteEditor(noteId = null) {
-      const modal = document.getElementById('note-modal');
-      const titleInput = document.getElementById('note-title-input');
-      const categoryInput = document.getElementById('note-category-input');
-      const contentInput = document.getElementById('note-content-input');
-      const pinCheckbox = document.getElementById('note-pin-checkbox');
-      const editingIdInput = document.getElementById('editing-note-id');
-      const deleteBtn = document.getElementById('note-delete-btn');
-      const modalTitle = document.getElementById('note-modal-title');
-
-      if (noteId) {
-        const note = notes.find(n => n.id === noteId);
-        if (note) {
-          editingIdInput.value = note.id;
-          titleInput.value = note.title;
-          categoryInput.value = note.category;
-          contentInput.value = note.content;
-          pinCheckbox.checked = !!note.pinned;
-          deleteBtn.classList.remove('hidden');
-          modalTitle.textContent = 'Edit Note';
-        }
-      } else {
-        editingIdInput.value = '';
-        titleInput.value = '';
-        categoryInput.value = 'Smoker & Cooking';
-        contentInput.value = '';
-        pinCheckbox.checked = false;
-        deleteBtn.classList.add('hidden');
-        modalTitle.textContent = 'New Note';
-      }
-
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    }
-
-    function closeNoteModal() {
-      document.getElementById('note-modal').classList.add('hidden');
-      document.getElementById('note-modal').classList.remove('flex');
-    }
-
-    function saveNote() {
-      const id = document.getElementById('editing-note-id').value;
-      const title = document.getElementById('note-title-input').value.trim();
-      const category = document.getElementById('note-category-input').value;
-      const content = document.getElementById('note-content-input').value.trim();
-      const pinned = document.getElementById('note-pin-checkbox').checked;
-
-      if (!title) {
-        showToast('Please provide a title', '⚠️');
-        return;
-      }
-
-      if (id) {
-        notes = notes.map(n => n.id === id ? { ...n, title, category, content, pinned, updatedAt: 'Just now' } : n);
-      } else {
-        notes.unshift({
-          id: 'n_' + Date.now(),
-          title,
-          category,
-          content,
-          pinned,
-          updatedAt: 'Just now'
-        });
-      }
-
+    function openNewTaskDialog() {
+      const text = prompt("Task title:");
+      if (!text) return;
+      state.tasks.unshift({
+        id: Date.now(),
+        text,
+        category: "GENERAL",
+        time: "Upcoming",
+        done: false,
+        highPriority: false
+      });
       saveState();
-      closeNoteModal();
+      renderTasks();
+      renderDashboard();
+      showToast('Task created', '✓');
+    }
+
+    function openNewNoteDialog() {
+      const title = prompt("Note title:");
+      if (!title) return;
+      const content = prompt("Content:") || "";
+      state.notes.unshift({
+        id: Date.now(),
+        title,
+        tag: "General",
+        pinned: false,
+        content
+      });
+      saveState();
       renderNotes();
       renderDashboard();
-      showToast('Note saved', '📝');
+      showToast('Note created', '📝');
     }
 
-    function deleteCurrentEditingNote() {
-      const id = document.getElementById('editing-note-id').value;
-      if (id) {
-        notes = notes.filter(n => n.id !== id);
-        saveState();
-        closeNoteModal();
-        renderNotes();
-        renderDashboard();
-        showToast('Note deleted', '🗑️');
-      }
+    function toggleSettingsModal(open) {
+      document.getElementById('settingsModal').classList.toggle('hidden', !open);
     }
 
-    function exportNotesJSON() {
-      exportAllAppData();
-    }
-
-    function updatePlannerBadge() {
-      const badge = document.getElementById('nav-badge-tasks');
-      const uncompleted = tasks.filter(t => !t.completed).length;
-      if (uncompleted > 0) {
-        badge.classList.remove('hidden');
+    function setTheme(theme) {
+      const body = document.getElementById('bodyRoot');
+      if (theme === 'oled') {
+        body.style.background = '#000000';
       } else {
-        badge.classList.add('hidden');
+        body.style.background = 'linear-gradient(135deg, #070a12 0%, #0c1322 45%, #131b2e 75%, #080d18 100%)';
       }
+      localStorage.setItem(STORAGE_KEY_THEME, theme);
+    }
+
+    function exportDataJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+        tasks: state.tasks,
+        notes: state.notes
+      }, null, 2));
+      const a = document.createElement('a');
+      a.setAttribute("href", dataStr);
+      a.setAttribute("download", `hub_backup.json`);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('Backup saved', '💾');
+    }
+
+    function resetDefaults() {
+      state.tasks = [...DEFAULT_TASKS];
+      state.notes = [...DEFAULT_NOTES];
+      saveState();
+      renderDashboard();
+      renderTasks();
+      renderNotes();
+      toggleSettingsModal(false);
+      showToast('Defaults restored', '🔄');
+    }
+
+    let toastTimer;
+    function showToast(msg, icon = '✓') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').innerText = msg;
+      document.getElementById('toastIcon').innerText = icon;
+      toast.classList.remove('opacity-0', '-translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', '-translate-y-4');
+      }, 1800);
+    }
+
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('liveClock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
     function escapeHtml(str) {
@@ -1527,11 +757,12 @@
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
-    // --- App Launch Lifecycle ---
     window.onload = function() {
-      initData();
-      updateDateGreeting();
-      switchScreen(settings.defaultScreen || 'dashboard');
+      loadState();
+      lucide.createIcons();
+      updateClock();
+      setInterval(updateClock, 1000);
+      switchTab('dashboard');
     };
   </script>
 </body>
