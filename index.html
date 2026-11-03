@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="VibeHub">
+  <meta name="theme-color" content="#050811">
+  <meta name="apple-mobile-web-app-title" content="PersonalHub">
   <title>Personal Hub • Life OS</title>
   
   <!-- Tailwind CSS & Lucide Icons -->
@@ -13,33 +14,39 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <style>
-    /* Safe Area insets for Dynamic Island, notch, and iOS home indicator */
+    /* Complete edge-to-edge bleed fix: Prevents Safari & webview letterboxing/white bars */
     :root {
-      --sat: env(safe-area-inset-top, 0px);
-      --sab: env(safe-area-inset-bottom, 0px);
-      --sal: env(safe-area-inset-left, 0px);
-      --sar: env(safe-area-inset-right, 0px);
+      --bg-midnight: #050811;
       --accent: #38bdf8;
     }
 
-    html, body {
-      width: 100vw;
-      height: 100vh;
-      height: 100dvh;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      overflow: hidden;
-      background: linear-gradient(135deg, #070a12 0%, #0c1322 45%, #131b2e 75%, #080d18 100%);
+    }
+
+    html {
+      background-color: var(--bg-midnight) !important;
+      color-scheme: dark;
+      width: 100% !important;
+      height: 100% !important;
     }
 
     body {
-      padding-top: var(--sat);
-      padding-bottom: var(--sab);
-      padding-left: var(--sal);
-      padding-right: var(--sar);
+      background: radial-gradient(circle at 15% 15%, #0b1429 0%, #060a16 50%, #03050a 100%) !important;
+      background-color: var(--bg-midnight) !important;
+      color: #f1f5f9;
+      width: 100% !important;
+      min-height: 100vh !important;
+      min-height: 100dvh !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      margin: 0 !important;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
     input, textarea {
@@ -47,6 +54,7 @@
       -webkit-user-select: text;
     }
 
+    /* Scrollbar suppression for clean app feel */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -55,42 +63,46 @@
       scrollbar-width: none;
     }
 
-    /* Ambient Subtle Gradient Glow Orbs */
+    /* Ambient Subtle Refraction Glows */
     .ambient-glow {
-      position: absolute;
+      position: fixed;
       pointer-events: none;
       border-radius: 9999px;
-      filter: blur(80px);
-      opacity: 0.28;
+      filter: blur(90px);
+      opacity: 0.22;
       z-index: 0;
     }
 
     /* iOS Liquid Glass Rounded Squares (Squircle Aesthetic) */
-    .liquid-glass-card {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+    .liquid-glass {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.065) 0%, rgba(255, 255, 255, 0.02) 100%);
       backdrop-filter: blur(28px) saturate(190%);
       -webkit-backdrop-filter: blur(28px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: 
-        0 10px 30px -10px rgba(0, 0, 0, 0.5),
-        inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
-        inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25);
+        0 14px 34px -10px rgba(0, 0, 0, 0.65),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
       border-radius: 28px;
     }
 
-    .liquid-glass-card:active {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+    .liquid-glass-subtle {
+      background: rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
     }
 
     /* Right-side floating action rail */
     .right-glass-rail {
-      background: linear-gradient(180deg, rgba(22, 30, 48, 0.88) 0%, rgba(12, 17, 30, 0.92) 100%);
-      backdrop-filter: blur(36px) saturate(200%);
-      -webkit-backdrop-filter: blur(36px) saturate(200%);
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.88) 0%, rgba(8, 12, 22, 0.94) 100%);
+      backdrop-filter: blur(32px) saturate(210%);
+      -webkit-backdrop-filter: blur(32px) saturate(210%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       box-shadow: 
-        -4px 12px 36px 0 rgba(0, 0, 0, 0.6),
-        inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
+        -4px 14px 35px 0 rgba(0, 0, 0, 0.65),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
       border-radius: 28px;
     }
 
@@ -99,222 +111,236 @@
       transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .squircle-btn:active {
-      transform: scale(0.92);
+      transform: scale(0.91);
     }
 
     .touch-spring {
       transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.15s ease, color 0.15s ease;
     }
     .touch-spring:active {
-      transform: scale(0.94);
+      transform: scale(0.95);
+    }
+
+    /* Bleed-to-edge content container with hardware-aware clearance */
+    .viewport-content {
+      padding-top: max(14px, env(safe-area-inset-top));
+      padding-bottom: max(24px, calc(env(safe-area-inset-bottom) + 16px));
+      padding-left: max(16px, env(safe-area-inset-left));
+      padding-right: max(74px, calc(env(safe-area-inset-right) + 68px));
     }
   </style>
 </head>
-<body id="bodyRoot" class="text-slate-100 flex flex-col font-sans transition-colors duration-300 relative overflow-hidden">
+<body id="bodyRoot" class="relative">
 
-  <!-- Subtle Ambient Glow Orbs -->
-  <div class="ambient-glow w-96 h-96 bg-indigo-500/30 -top-20 -left-20"></div>
-  <div class="ambient-glow w-96 h-96 bg-sky-500/25 bottom-10 right-0"></div>
-  <div class="ambient-glow w-80 h-80 bg-cyan-600/20 top-1/2 left-1/3"></div>
+  <!-- Ambient Light Orbs for Glass Refraction -->
+  <div class="ambient-glow w-96 h-96 bg-indigo-500 -top-24 -left-20"></div>
+  <div class="ambient-glow w-96 h-96 bg-sky-500 bottom-12 right-0"></div>
+  <div class="ambient-glow w-80 h-80 bg-cyan-600 top-1/2 left-1/4"></div>
 
-  <!-- TOP HEADER (Edge-to-edge flush bar) -->
-  <header class="w-full px-5 py-3.5 flex items-center justify-between border-b border-white/[0.08] bg-[#070b14]/70 backdrop-blur-xl z-30 shrink-0">
-    <div class="flex items-center space-x-3">
-      <div id="statusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]"></div>
-      <h1 class="text-sm font-bold tracking-tight text-white flex items-center gap-2">
-        <span>Personal Hub</span>
-        <span class="text-[9px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/10">Full Canvas</span>
-      </h1>
+  <!-- ROOT BLEED WRAPPER -->
+  <div class="w-full min-h-screen flex flex-col relative z-10">
+
+    <!-- TOP HEADER BAR -->
+    <header class="w-full px-5 py-3 flex items-center justify-between border-b border-white/[0.08] bg-[#050811]/70 backdrop-blur-xl shrink-0" style="padding-top: max(10px, env(safe-area-inset-top)); padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(74px, calc(env(safe-area-inset-right) + 68px));">
+      <div class="flex items-center space-x-3">
+        <div id="statusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.85)]"></div>
+        <h1 class="text-sm font-bold tracking-tight text-white flex items-center gap-2">
+          <span>Personal Hub</span>
+          <span class="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/10">Full Canvas</span>
+        </h1>
+      </div>
+
+      <div class="flex items-center space-x-2 text-xs font-mono text-slate-400">
+        <span id="liveClock">12:00 PM</span>
+      </div>
+    </header>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-4 px-4 py-2 liquid-glass shadow-2xl flex items-center gap-2 text-xs font-medium text-white">
+      <span id="toastIcon">✓</span>
+      <span id="toastMsg">Action saved</span>
     </div>
 
-    <div class="flex items-center space-x-2 text-xs">
-      <span id="liveClock" class="font-mono text-slate-300">12:00 PM</span>
-    </div>
-  </header>
+    <!-- MAIN PANORAMIC SCROLLABLE CANVAS (Never split-pane) -->
+    <main class="flex-1 w-full viewport-content space-y-6">
 
-  <!-- TOAST NOTIFICATION -->
-  <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-4 px-4 py-2.5 liquid-glass-card shadow-2xl flex items-center gap-2 text-xs font-medium text-white">
-    <span id="toastIcon">✓</span>
-    <span id="toastMsg">Action saved</span>
-  </div>
+      <!-- ================= DASHBOARD VIEW ================= -->
+      <div id="viewDashboard" class="space-y-6 max-w-6xl mx-auto">
 
-  <!-- MAIN EXPANSIVE CANVAS (Never split-screen, fills entire display) -->
-  <main id="appContainer" class="flex-1 w-full h-full overflow-y-auto no-scrollbar p-4 sm:p-6 lg:p-8 space-y-6 pr-20 sm:pr-24 relative z-10">
-    
-    <!-- DASHBOARD VIEW -->
-    <div id="viewDashboard" class="space-y-6 max-w-6xl mx-auto">
-      
-      <!-- Focus Carousel of Rounded Squares -->
-      <div class="space-y-2.5">
-        <div class="flex items-center justify-between px-1">
-          <span class="text-[11px] font-semibold text-slate-300 tracking-wider uppercase">Live Focus Cards</span>
-          <span class="text-[10px] text-slate-400 font-mono">Swipe →</span>
+        <!-- Focus Carousel Header -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between px-1">
+            <span class="text-[11px] font-semibold text-slate-400 tracking-wider uppercase">Live Focus Cards</span>
+            <span class="text-[10px] text-slate-500 font-mono">Swipe cards →</span>
+          </div>
+
+          <!-- Carousel Track -->
+          <div id="carouselTrack" class="flex space-x-4 overflow-x-auto no-scrollbar pb-1 snap-x snap-mandatory">
+            
+            <!-- Card 1: Sports Radar -->
+            <div class="min-w-[86%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass flex flex-col justify-between border-red-500/25">
+              <div>
+                <div class="flex justify-between items-center text-xs text-red-400 font-semibold mb-2.5">
+                  <span class="flex items-center gap-1.5">🏈 <span>49ers & OKC Thunder</span></span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-red-500/20 text-red-300 border border-red-500/20">Live Radar</span>
+                </div>
+                <p class="text-sm font-semibold text-white">SF 49ers vs Rams • Sunday 4:25 PM</p>
+                <p class="text-xs text-slate-300 mt-1">OKC Thunder 118 - 110 DAL (Final)</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
+                <span>Streak: W4</span>
+                <span class="text-red-300">Next: vs KC Chiefs</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Smoker & Cooking -->
+            <div class="min-w-[86%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass flex flex-col justify-between border-amber-500/25">
+              <div>
+                <div class="flex justify-between items-center text-xs text-amber-400 font-semibold mb-2.5">
+                  <span class="flex items-center gap-1.5">🔥 <span>Smoker & Griddle Hub</span></span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/20">Checklist</span>
+                </div>
+                <p class="text-sm font-semibold text-white">Brisket Target: 203°F (Wrap at 165°F)</p>
+                <p class="text-xs text-slate-300 mt-1">Smash Burger Griddle: 450°F - 475°F</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
+                <span>Wood: Post Oak</span>
+                <span class="text-amber-300">Rest: 3+ Hours</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Golf Yardages -->
+            <div class="min-w-[86%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass flex flex-col justify-between border-emerald-500/25">
+              <div>
+                <div class="flex justify-between items-center text-xs text-emerald-400 font-semibold mb-2.5">
+                  <span class="flex items-center gap-1.5">⛳ <span>Golf Yardages</span></span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/20">HDCP 11</span>
+                </div>
+                <p class="text-sm font-semibold text-white">Driver: 260-275y (Target Right Center)</p>
+                <p class="text-xs text-slate-300 mt-1">56° Sand Wedge: 90y Full / 65y Half</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
+                <span>7-Iron: 165y</span>
+                <span class="text-emerald-300">Putts: 31/rd</span>
+              </div>
+            </div>
+
+            <!-- Card 4: 3D Workbench -->
+            <div class="min-w-[86%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass flex flex-col justify-between border-sky-500/25">
+              <div>
+                <div class="flex justify-between items-center text-xs text-sky-400 font-semibold mb-2.5">
+                  <span class="flex items-center gap-1.5">🛠️ <span>Workbench & 3D Print</span></span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-sky-500/20 text-sky-300 border border-sky-500/20">ASA Specs</span>
+                </div>
+                <p class="text-sm font-semibold text-white">ASA: Nozzle 255°C • Bed 100°C</p>
+                <p class="text-xs text-slate-300 mt-1">Chamber pre-heat: 45°C enclosure</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
+                <span>Fan: 15%</span>
+                <span class="text-sky-300">ESP32 Enclosure</span>
+              </div>
+            </div>
+
+          </div>
         </div>
 
-        <div id="carouselTrack" class="flex space-x-4 overflow-x-auto no-scrollbar pb-1 snap-x snap-mandatory">
+        <!-- Quick Capture Capsule -->
+        <div class="p-2.5 liquid-glass flex items-center space-x-2">
+          <input id="quickCaptureInput" type="text" placeholder="Quick idea, task, or brisket log..." class="bg-transparent flex-1 text-xs outline-none placeholder:text-slate-400 px-3 text-white">
+          <button onclick="quickCapture('task')" class="px-3.5 py-2 squircle-btn bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold shadow-md">+ Task</button>
+          <button onclick="quickCapture('note')" class="px-3.5 py-2 squircle-btn bg-white/10 hover:bg-white/15 text-white text-xs font-semibold border border-white/10">+ Note</button>
+        </div>
+
+        <!-- Adaptive Panoramic Grid: Single column on narrow phone, clean dual-column grid on wide unfolded screen -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           
-          <!-- Card 1: Sports Radar (Squircle Liquid Glass) -->
-          <div class="min-w-[85%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass-card flex flex-col justify-between border-red-500/25">
-            <div>
-              <div class="flex justify-between items-center text-xs text-red-400 font-semibold mb-2.5">
-                <span class="flex items-center gap-1.5">🏈 <span>49ers & OKC Radar</span></span>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-red-500/20 text-red-300 border border-red-500/20">Active</span>
-              </div>
-              <p class="text-sm font-semibold text-white">SF 49ers vs Rams • Sunday 4:25 PM</p>
-              <p class="text-xs text-slate-300 mt-1.5">OKC Thunder 118 - 110 DAL (Final)</p>
+          <!-- Top Priorities List -->
+          <div class="space-y-2.5">
+            <div class="flex justify-between items-center px-1">
+              <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Top Priorities</span>
+              <button onclick="switchTab('planner')" class="text-xs text-sky-400 font-medium hover:underline">View All</button>
             </div>
-            <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>Streak: W4</span>
-              <span class="text-red-300">Next: vs KC Chiefs</span>
+            <div id="dashboardTaskList" class="space-y-2.5">
+              <!-- Rendered by JS -->
             </div>
           </div>
 
-          <!-- Card 2: Smoker & Cooking -->
-          <div class="min-w-[85%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass-card flex flex-col justify-between border-amber-500/25">
-            <div>
-              <div class="flex justify-between items-center text-xs text-amber-400 font-semibold mb-2.5">
-                <span class="flex items-center gap-1.5">🔥 <span>Smoker & Griddle</span></span>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/20">Checklist</span>
-              </div>
-              <p class="text-sm font-semibold text-white">Brisket Target: 203°F (Wrap 165°F)</p>
-              <p class="text-xs text-slate-300 mt-1.5">Smash Burger Griddle: 450°F - 475°F</p>
+          <!-- Pinned Note Highlight -->
+          <div class="space-y-2.5">
+            <div class="flex justify-between items-center px-1">
+              <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Pinned Note Highlight</span>
+              <button onclick="switchTab('notebook')" class="text-xs text-sky-400 font-medium hover:underline">Open Notes</button>
             </div>
-            <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>Wood: Post Oak</span>
-              <span class="text-amber-300">Rest: 3+ Hours</span>
-            </div>
-          </div>
-
-          <!-- Card 3: Golf Yardages -->
-          <div class="min-w-[85%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass-card flex flex-col justify-between border-emerald-500/25">
-            <div>
-              <div class="flex justify-between items-center text-xs text-emerald-400 font-semibold mb-2.5">
-                <span class="flex items-center gap-1.5">⛳ <span>Golf Yardages</span></span>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/20">HDCP 11</span>
-              </div>
-              <p class="text-sm font-semibold text-white">Driver: 260-275y (Target Right Center)</p>
-              <p class="text-xs text-slate-300 mt-1.5">56° Wedge: 90y Full / 65y Half</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>7-Iron: 165y</span>
-              <span class="text-emerald-300">Putts: 31/rd</span>
-            </div>
-          </div>
-
-          <!-- Card 4: 3D Workbench -->
-          <div class="min-w-[85%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass-card flex flex-col justify-between border-sky-500/25">
-            <div>
-              <div class="flex justify-between items-center text-xs text-sky-400 font-semibold mb-2.5">
-                <span class="flex items-center gap-1.5">🛠️ <span>Workbench & 3D Print</span></span>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-sky-500/20 text-sky-300 border border-sky-500/20">ASA Specs</span>
-              </div>
-              <p class="text-sm font-semibold text-white">ASA: Nozzle 255°C • Bed 100°C</p>
-              <p class="text-xs text-slate-300 mt-1.5">Chamber pre-heat: 45°C enclosure</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>Fan: 15%</span>
-              <span class="text-sky-300">ESP32 Enclosure</span>
+            <div id="dashboardPinnedNote" class="liquid-glass p-5 cursor-pointer hover:border-white/25 transition-all touch-spring" onclick="switchTab('notebook')">
+              <!-- Rendered by JS -->
             </div>
           </div>
 
         </div>
+
       </div>
 
-      <!-- Quick Capture Liquid Glass Capsule -->
-      <div class="p-2.5 liquid-glass-card flex items-center space-x-2">
-        <input id="quickCaptureInput" type="text" placeholder="Quick idea, task, or note..." class="bg-transparent flex-1 text-xs outline-none placeholder:text-slate-400 px-3 text-white">
-        <button onclick="quickCapture('task')" class="px-3.5 py-2 squircle-btn bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold shadow-md">+ Task</button>
-        <button onclick="quickCapture('note')" class="px-3.5 py-2 squircle-btn bg-white/10 hover:bg-white/15 text-white text-xs font-semibold border border-white/10">+ Note</button>
-      </div>
-
-      <!-- Grid for Expansive Landscape/Duo Layout (Adaptive Columns) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        
-        <!-- Top Priorities Section -->
-        <div class="space-y-2.5">
-          <div class="flex justify-between items-center px-1">
-            <span class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Top Priorities</span>
-            <button onclick="switchTab('planner')" class="text-xs text-sky-400 font-medium hover:underline">View All</button>
+      <!-- ================= PLANNER VIEW ================= -->
+      <div id="viewPlanner" class="space-y-5 max-w-4xl mx-auto hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-bold text-white">Planner & Schedule</h2>
+            <p class="text-xs text-slate-400">Milestones and actionable items</p>
           </div>
-          <div id="dashboardTaskList" class="space-y-2.5">
-            <!-- Rendered by JS -->
-          </div>
+          <button onclick="openNewTaskDialog()" class="px-4 py-2 squircle-btn bg-sky-500 text-xs font-semibold text-white flex items-center space-x-1.5 shadow-lg">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>Add Task</span>
+          </button>
         </div>
 
-        <!-- Pinned Note Highlight -->
-        <div class="space-y-2.5">
-          <div class="flex justify-between items-center px-1">
-            <span class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Pinned Note Highlight</span>
-            <button onclick="switchTab('notebook')" class="text-xs text-sky-400 font-medium hover:underline">Open Notes</button>
+        <!-- Filter Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
+          <button onclick="setTaskFilter('all')" id="filter-all" class="filter-btn px-3.5 py-1.5 squircle-btn bg-sky-500 text-white font-semibold">All</button>
+          <button onclick="setTaskFilter('pending')" id="filter-pending" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">Pending</button>
+          <button onclick="setTaskFilter('priority')" id="filter-priority" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">High Priority</button>
+          <button onclick="setTaskFilter('done')" id="filter-done" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">Done</button>
+        </div>
+
+        <div id="plannerTaskList" class="space-y-2.5">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- ================= NOTEBOOK VIEW ================= -->
+      <div id="viewNotebook" class="space-y-5 max-w-4xl mx-auto hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-bold text-white">Notebook</h2>
+            <p class="text-xs text-slate-400">Reference logs, recipes & yardages</p>
           </div>
-          <div id="dashboardPinnedNote" class="liquid-glass-card p-5 cursor-pointer hover:border-white/25 transition-all touch-spring" onclick="switchTab('notebook')">
-            <!-- Rendered by JS -->
-          </div>
+          <button onclick="openNewNoteDialog()" class="px-4 py-2 squircle-btn bg-sky-500 text-xs font-semibold text-white flex items-center space-x-1.5 shadow-lg">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>New Note</span>
+          </button>
         </div>
 
-      </div>
-
-    </div>
-
-    <!-- PLANNER VIEW -->
-    <div id="viewPlanner" class="space-y-5 max-w-4xl mx-auto hidden">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-bold text-white">Planner & Schedule</h2>
-          <p class="text-xs text-slate-400">Milestones and actionable items</p>
+        <!-- Category Tags -->
+        <div id="noteCategoryChips" class="flex gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
+          <!-- Rendered by JS -->
         </div>
-        <button onclick="openNewTaskDialog()" class="px-4 py-2 squircle-btn bg-sky-500 text-xs font-semibold text-white flex items-center space-x-1.5 shadow-lg">
-          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-          <span>Add Task</span>
-        </button>
-      </div>
 
-      <!-- Filter Chips -->
-      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-        <button onclick="setTaskFilter('all')" id="filter-all" class="filter-btn px-3.5 py-1.5 squircle-btn bg-sky-500 text-white font-semibold">All</button>
-        <button onclick="setTaskFilter('pending')" id="filter-pending" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">Pending</button>
-        <button onclick="setTaskFilter('priority')" id="filter-priority" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">High Priority</button>
-        <button onclick="setTaskFilter('done')" id="filter-done" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">Done</button>
-      </div>
-
-      <div id="plannerTaskList" class="space-y-2.5">
-        <!-- Rendered by JS -->
-      </div>
-    </div>
-
-    <!-- NOTEBOOK VIEW -->
-    <div id="viewNotebook" class="space-y-5 max-w-4xl mx-auto hidden">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-bold text-white">Notebook</h2>
-          <p class="text-xs text-slate-400">Reference logs, recipes & yardages</p>
+        <!-- Notes Grid -->
+        <div id="notesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Rendered by JS -->
         </div>
-        <button onclick="openNewNoteDialog()" class="px-4 py-2 squircle-btn bg-sky-500 text-xs font-semibold text-white flex items-center space-x-1.5 shadow-lg">
-          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-          <span>New Note</span>
-        </button>
       </div>
 
-      <!-- Category Tags -->
-      <div id="noteCategoryChips" class="flex gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-        <!-- Rendered by JS -->
-      </div>
+    </main>
 
-      <!-- Notes List -->
-      <div id="notesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Rendered by JS -->
-      </div>
-    </div>
-
-  </main>
+  </div>
 
   <!-- ========================================================== -->
   <!-- RIGHT-SIDE LIQUID GLASS APP CONTROLS                        -->
   <!-- ========================================================== -->
-  <aside class="fixed right-3 sm:right-5 top-1/2 -translate-y-1/2 z-40 flex flex-col items-center">
+  <aside class="fixed right-3 sm:right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center">
     <nav class="right-glass-rail p-1.5 sm:p-2 flex flex-col items-center space-y-2">
       <!-- Dashboard Button -->
-      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-sky-400 bg-white/10" title="Dashboard">
+      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-sky-400 bg-white/15" title="Dashboard">
         <i data-lucide="layout-grid" class="w-5 h-5"></i>
         <span class="text-[9px] font-medium mt-0.5">Dash</span>
       </button>
@@ -341,9 +367,9 @@
     </nav>
   </aside>
 
-  <!-- SETTINGS MODAL -->
-  <div id="settingsModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="liquid-glass-card bg-[#0b101c]/95 border border-white/20 w-full max-w-md p-6 space-y-4 max-h-[85vh] overflow-y-auto no-scrollbar shadow-2xl">
+  <!-- ================= SETTINGS MODAL ================= -->
+  <div id="settingsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="liquid-glass bg-[#080d1a]/95 border border-white/20 w-full max-w-md p-6 space-y-4 max-h-[85vh] overflow-y-auto no-scrollbar shadow-2xl">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <h3 class="text-sm font-bold text-white flex items-center space-x-2">
           <i data-lucide="sliders" class="w-4 h-4 text-sky-400"></i>
@@ -354,21 +380,21 @@
         </button>
       </div>
 
-      <div class="space-y-1 text-xs text-slate-300 bg-white/5 p-3.5 liquid-glass-card border border-white/10">
-        <div class="font-semibold text-white">Full-Screen Display Canvas</div>
-        <p class="text-slate-400">When opened or unfolded on an iPhone Duo, the canvas spans full screen without split-view partitions. Controls stay anchored on the right for thumb reach.</p>
+      <div class="space-y-1 text-xs text-slate-300 bg-white/5 p-3.5 liquid-glass-subtle">
+        <div class="font-semibold text-white">Full-Bleed Canvas</div>
+        <p class="text-slate-400">The viewport extends edge-to-edge across both folded and opened screen postures. Hardware safe-area insets prevent letterboxing or white borders.</p>
       </div>
 
       <!-- Themes -->
       <div class="space-y-2">
-        <label class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Gradient Theme</label>
+        <label class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Appearance Mode</label>
         <div class="grid grid-cols-2 gap-2 text-xs">
-          <button onclick="setTheme('twilight-gradient')" class="p-3.5 liquid-glass-card text-left font-medium text-slate-200">Twilight Gradient</button>
-          <button onclick="setTheme('oled')" class="p-3.5 squircle-btn bg-black border border-white/15 text-left font-medium text-slate-200">OLED Pitch Black</button>
+          <button onclick="setTheme('twilight')" class="p-3.5 liquid-glass-subtle text-left font-medium text-slate-200">Twilight Radial</button>
+          <button onclick="setTheme('oled')" class="p-3.5 squircle-btn bg-black border border-white/15 text-left font-medium text-slate-200">OLED Obsidian</button>
         </div>
       </div>
 
-      <!-- Data Export & Reset -->
+      <!-- Backup / Reset -->
       <div class="pt-2 border-t border-white/10 flex justify-between items-center text-xs">
         <button onclick="exportDataJSON()" class="text-sky-400 hover:underline">Export Backup</button>
         <button onclick="resetDefaults()" class="text-red-400 hover:underline">Reset Defaults</button>
@@ -379,10 +405,9 @@
   </div>
 
   <script>
-    // --- Application State Engine ---
-    const STORAGE_KEY_TASKS = 'vibehub_tasks_v3';
-    const STORAGE_KEY_NOTES = 'vibehub_notes_v3';
-    const STORAGE_KEY_THEME = 'vibehub_theme_v3';
+    const STORAGE_KEY_TASKS = 'vibehub_tasks_v4';
+    const STORAGE_KEY_NOTES = 'vibehub_notes_v4';
+    const STORAGE_KEY_THEME = 'vibehub_theme_v4';
 
     const DEFAULT_TASKS = [
       { id: 1, text: "Prep brisket dry rub (16 mesh pepper + kosher salt)", category: "HOME & GRILL", time: "Friday 6:00 PM", done: false, highPriority: true },
@@ -430,7 +455,7 @@
         const storedNotes = localStorage.getItem(STORAGE_KEY_NOTES);
         state.notes = storedNotes ? JSON.parse(storedNotes) : [...DEFAULT_NOTES];
 
-        const theme = localStorage.getItem(STORAGE_KEY_THEME) || 'twilight-gradient';
+        const theme = localStorage.getItem(STORAGE_KEY_THEME) || 'twilight';
         setTheme(theme);
       } catch (e) {
         state.tasks = [...DEFAULT_TASKS];
@@ -443,7 +468,6 @@
       localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(state.notes));
     }
 
-    // Single unified full-screen view (No split-screen)
     function switchTab(tab) {
       state.activeTab = tab;
 
@@ -476,10 +500,10 @@
       const activeTasks = state.tasks.filter(t => !t.done).slice(0, 4);
 
       if (activeTasks.length === 0) {
-        dbList.innerHTML = `<div class="p-4 text-xs text-slate-400 liquid-glass-card text-center">All caught up for today!</div>`;
+        dbList.innerHTML = `<div class="p-4 text-xs text-slate-400 liquid-glass text-center">All caught up for today!</div>`;
       } else {
         dbList.innerHTML = activeTasks.map(t => `
-          <div class="p-3.5 liquid-glass-card flex items-center justify-between">
+          <div class="p-3.5 liquid-glass flex items-center justify-between">
             <div class="flex items-center space-x-3 min-w-0">
               <button onclick="toggleTask(${t.id})" class="w-5 h-5 rounded-lg border border-white/30 flex items-center justify-center shrink-0 hover:border-sky-400 touch-spring"></button>
               <div class="min-w-0">
@@ -514,12 +538,12 @@
       if (state.taskFilter === 'done') filtered = state.tasks.filter(t => t.done);
 
       if (filtered.length === 0) {
-        plList.innerHTML = `<div class="p-8 text-center text-xs text-slate-400 liquid-glass-card">No tasks found.</div>`;
+        plList.innerHTML = `<div class="p-8 text-center text-xs text-slate-400 liquid-glass">No tasks found.</div>`;
         return;
       }
 
       plList.innerHTML = filtered.map(t => `
-        <div class="p-3.5 liquid-glass-card flex items-center justify-between gap-3 ${t.done ? 'opacity-40' : ''}">
+        <div class="p-3.5 liquid-glass flex items-center justify-between gap-3 ${t.done ? 'opacity-40' : ''}">
           <div class="flex items-center space-x-3 flex-1 min-w-0">
             <button onclick="toggleTask(${t.id})" class="w-5 h-5 rounded-lg border ${t.done ? 'bg-sky-500 border-sky-500 text-white' : 'border-white/30'} flex items-center justify-center shrink-0 font-bold text-xs touch-spring">
               ${t.done ? '✓' : ''}
@@ -558,12 +582,12 @@
       filtered.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
 
       if (filtered.length === 0) {
-        notesContainer.innerHTML = `<div class="p-8 text-center text-xs text-slate-400 liquid-glass-card col-span-full">No notes found.</div>`;
+        notesContainer.innerHTML = `<div class="p-8 text-center text-xs text-slate-400 liquid-glass col-span-full">No notes found.</div>`;
         return;
       }
 
       notesContainer.innerHTML = filtered.map(n => `
-        <div class="p-5 liquid-glass-card space-y-2.5">
+        <div class="p-5 liquid-glass space-y-2.5">
           <div class="flex items-center justify-between">
             <span class="text-[10px] font-mono uppercase text-sky-400 font-bold">${n.tag}</span>
             <div class="flex items-center space-x-2">
@@ -572,7 +596,7 @@
             </div>
           </div>
           <h3 class="text-sm font-semibold text-white">${escapeHtml(n.title)}</h3>
-          <p class="text-xs text-slate-300 whitespace-pre-line font-mono leading-relaxed bg-black/30 p-3.5 rounded-2xl border border-white/5">${escapeHtml(n.content)}</p>
+          <p class="text-xs text-slate-300 whitespace-pre-line font-mono leading-relaxed bg-black/40 p-3.5 rounded-2xl border border-white/5">${escapeHtml(n.content)}</p>
         </div>
       `).join('');
     }
@@ -703,7 +727,7 @@
       if (theme === 'oled') {
         body.style.background = '#000000';
       } else {
-        body.style.background = 'linear-gradient(135deg, #070a12 0%, #0c1322 45%, #131b2e 75%, #080d18 100%)';
+        body.style.background = 'radial-gradient(circle at 15% 15%, #0b1429 0%, #060a16 50%, #03050a 100%)';
       }
       localStorage.setItem(STORAGE_KEY_THEME, theme);
     }
