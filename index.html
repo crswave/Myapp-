@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#050811">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#FAF8F5">
   <meta name="apple-mobile-web-app-title" content="PersonalHub">
   <title>Personal Hub • Life OS</title>
   
@@ -13,11 +13,21 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   
+  <!-- Google Fonts: Editorial Serif and Monospace -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    /* Complete edge-to-edge bleed fix: Prevents Safari & webview letterboxing/white bars */
     :root {
-      --bg-midnight: #050811;
-      --accent: #38bdf8;
+      --bg-base: #FAF8F5;
+      --card-bg: #FFFFFF;
+      --card-border: #E8E4DC;
+      --card-shadow: 0 4px 20px -2px rgba(28, 25, 23, 0.05), 0 2px 6px -1px rgba(28, 25, 23, 0.03);
+      --ink-primary: #1C1917;
+      --ink-muted: #78716C;
+      --ink-light: #A8A29E;
+      --accent-warm: #B45309;
     }
 
     * {
@@ -27,26 +37,35 @@
     }
 
     html {
-      background-color: var(--bg-midnight) !important;
-      color-scheme: dark;
+      background-color: var(--bg-base) !important;
+      color-scheme: light;
       width: 100% !important;
       height: 100% !important;
     }
 
     body {
-      background: radial-gradient(circle at 15% 15%, #0b1429 0%, #060a16 50%, #03050a 100%) !important;
-      background-color: var(--bg-midnight) !important;
-      color: #f1f5f9;
+      background: #FAF8F5 !important;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(245, 240, 230, 0.8) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(240, 235, 224, 0.7) 0px, transparent 50%) !important;
+      color: #1C1917;
       width: 100% !important;
       min-height: 100vh !important;
       min-height: 100dvh !important;
       overflow-x: hidden !important;
       overflow-y: auto !important;
-      margin: 0 !important;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    }
+
+    .font-serif-title {
+      font-family: 'Newsreader', Georgia, serif;
+    }
+
+    .font-mono-ledger {
+      font-family: 'JetBrains Mono', SFMono-Regular, Menlo, monospace;
     }
 
     input, textarea {
@@ -54,7 +73,6 @@
       -webkit-user-select: text;
     }
 
-    /* Scrollbar suppression for clean app feel */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -63,68 +81,98 @@
       scrollbar-width: none;
     }
 
-    /* Ambient Subtle Refraction Glows */
-    .ambient-glow {
-      position: fixed;
-      pointer-events: none;
-      border-radius: 9999px;
-      filter: blur(90px);
-      opacity: 0.22;
-      z-index: 0;
-    }
-
-    /* iOS Liquid Glass Rounded Squares (Squircle Aesthetic) */
-    .liquid-glass {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.065) 0%, rgba(255, 255, 255, 0.02) 100%);
-      backdrop-filter: blur(28px) saturate(190%);
-      -webkit-backdrop-filter: blur(28px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+    /* Tactile Paper Cards with Fine Linen Depth */
+    .paper-card {
+      background: #FFFFFF;
+      border: 1px solid #ECE7DE;
       box-shadow: 
-        0 14px 34px -10px rgba(0, 0, 0, 0.65),
-        inset 0 1px 1px 0 rgba(255, 255, 255, 0.22),
-        inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
-      border-radius: 28px;
+        0 1px 3px 0 rgba(28, 25, 23, 0.03),
+        0 10px 24px -6px rgba(28, 25, 23, 0.05),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+      border-radius: 26px;
     }
 
-    .liquid-glass-subtle {
-      background: rgba(255, 255, 255, 0.035);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 22px;
+    .paper-card-subtle {
+      background: #F6F3EC;
+      border: 1px solid #EBE5DB;
+      border-radius: 20px;
+    }
+
+    /* ========================================================
+       COLLEGE-RULED BINDER PAPER STYLING FOR NOTEBOOK
+       ======================================================== */
+    .college-ruled-paper {
+      background-color: #FCFBF7;
+      /* Repeating light blue horizontal college ruled lines (28px height) */
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 27px,
+        rgba(164, 194, 222, 0.55) 28px
+      );
+      background-attachment: local;
+      position: relative;
+    }
+
+    /* Vertical Red/Pink Left Margin line */
+    .ruled-margin-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 54px;
+      width: 1.5px;
+      background-color: rgba(239, 68, 68, 0.45);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* 3-Hole Punch visual holes on the far left edge */
+    .hole-punch {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #EAE6DD;
+      box-shadow: inset 1px 1px 2px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.8);
+      border: 1px solid #D4CDC0;
+    }
+
+    /* Line-height matching the 28px ruled spacing for written text */
+    .ruled-text-content {
+      line-height: 28px;
+      font-size: 14px;
     }
 
     /* Right-side floating action rail */
-    .right-glass-rail {
-      background: linear-gradient(180deg, rgba(17, 24, 39, 0.88) 0%, rgba(8, 12, 22, 0.94) 100%);
-      backdrop-filter: blur(32px) saturate(210%);
-      -webkit-backdrop-filter: blur(32px) saturate(210%);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+    .paper-rail {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid #E5DFD5;
       box-shadow: 
-        -4px 14px 35px 0 rgba(0, 0, 0, 0.65),
-        inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
-      border-radius: 28px;
+        0 12px 32px -4px rgba(28, 25, 23, 0.12),
+        0 2px 6px -1px rgba(28, 25, 23, 0.05);
+      border-radius: 24px;
     }
 
     .squircle-btn {
-      border-radius: 20px;
+      border-radius: 18px;
       transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .squircle-btn:active {
-      transform: scale(0.91);
+      transform: scale(0.93);
     }
 
     .touch-spring {
-      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.15s ease, color 0.15s ease;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.15s ease, border-color 0.15s ease;
     }
     .touch-spring:active {
-      transform: scale(0.95);
+      transform: scale(0.96);
     }
 
-    /* Bleed-to-edge content container with hardware-aware clearance */
+    /* Fluid full-bleed viewport with hardware clearance */
     .viewport-content {
       padding-top: max(14px, env(safe-area-inset-top));
-      padding-bottom: max(24px, calc(env(safe-area-inset-bottom) + 16px));
+      padding-bottom: max(28px, calc(env(safe-area-inset-bottom) + 20px));
       padding-left: max(16px, env(safe-area-inset-left));
       padding-right: max(74px, calc(env(safe-area-inset-right) + 68px));
     }
@@ -132,133 +180,258 @@
 </head>
 <body id="bodyRoot" class="relative">
 
-  <!-- Ambient Light Orbs for Glass Refraction -->
-  <div class="ambient-glow w-96 h-96 bg-indigo-500 -top-24 -left-20"></div>
-  <div class="ambient-glow w-96 h-96 bg-sky-500 bottom-12 right-0"></div>
-  <div class="ambient-glow w-80 h-80 bg-cyan-600 top-1/2 left-1/4"></div>
-
-  <!-- ROOT BLEED WRAPPER -->
+  <!-- ROOT CONTAINER -->
   <div class="w-full min-h-screen flex flex-col relative z-10">
 
-    <!-- TOP HEADER BAR -->
-    <header class="w-full px-5 py-3 flex items-center justify-between border-b border-white/[0.08] bg-[#050811]/70 backdrop-blur-xl shrink-0" style="padding-top: max(10px, env(safe-area-inset-top)); padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(74px, calc(env(safe-area-inset-right) + 68px));">
+    <!-- TOP BAR -->
+    <header class="w-full px-5 py-3.5 flex items-center justify-between border-b border-[#ECE7DE] bg-[#FAF8F5]/90 backdrop-blur-xl shrink-0" style="padding-top: max(10px, env(safe-area-inset-top)); padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(74px, calc(env(safe-area-inset-right) + 68px));">
       <div class="flex items-center space-x-3">
-        <div id="statusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.85)]"></div>
-        <h1 class="text-sm font-bold tracking-tight text-white flex items-center gap-2">
-          <span>Personal Hub</span>
-          <span class="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/10">Full Canvas</span>
-        </h1>
+        <div id="statusDot" class="w-2.5 h-2.5 rounded-full bg-stone-800 shadow-sm"></div>
+        <div class="flex flex-col">
+          <h1 id="greetingHeading" class="text-xs sm:text-sm font-semibold tracking-tight text-stone-900 flex items-center gap-2">
+            <span>Good morning, legend</span>
+            <span class="text-[9px] font-mono font-medium px-2 py-0.5 rounded-full bg-[#EFEBE4] text-stone-700 border border-[#E2DCD2]">Edition</span>
+          </h1>
+          <span class="text-[10px] text-stone-500 tracking-wide font-medium">Personal Ledger & Notebook</span>
+        </div>
       </div>
 
-      <div class="flex items-center space-x-2 text-xs font-mono text-slate-400">
-        <span id="liveClock">12:00 PM</span>
+      <div class="flex items-center space-x-2 text-xs font-mono">
+        <span id="liveClock" class="px-2.5 py-1 rounded-xl bg-white border border-[#E5DFD5] text-stone-700 font-medium shadow-xs">12:00 PM</span>
       </div>
     </header>
 
     <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-4 px-4 py-2 liquid-glass shadow-2xl flex items-center gap-2 text-xs font-medium text-white">
+    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-4 px-4 py-2 rounded-2xl bg-stone-900 text-stone-50 shadow-xl flex items-center gap-2 text-xs font-medium border border-stone-800">
       <span id="toastIcon">✓</span>
       <span id="toastMsg">Action saved</span>
     </div>
 
-    <!-- MAIN PANORAMIC SCROLLABLE CANVAS (Never split-pane) -->
+    <!-- MAIN SCROLLABLE CONTENT -->
     <main class="flex-1 w-full viewport-content space-y-6">
 
       <!-- ================= DASHBOARD VIEW ================= -->
       <div id="viewDashboard" class="space-y-6 max-w-6xl mx-auto">
 
-        <!-- Focus Carousel Header -->
-        <div class="space-y-2">
+        <!-- Quick Hits Carousel -->
+        <div class="space-y-2.5">
           <div class="flex items-center justify-between px-1">
-            <span class="text-[11px] font-semibold text-slate-400 tracking-wider uppercase">Live Focus Cards</span>
-            <span class="text-[10px] text-slate-500 font-mono">Swipe cards →</span>
-          </div>
-
-          <!-- Carousel Track -->
-          <div id="carouselTrack" class="flex space-x-4 overflow-x-auto no-scrollbar pb-1 snap-x snap-mandatory">
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-semibold tracking-wider uppercase text-stone-600 font-mono-ledger flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-stone-800"></span> Quick Hits
+              </span>
+              <span id="carouselTimerTag" class="text-[9px] font-mono-ledger text-stone-500 bg-[#EFEBE4] px-2 py-0.5 rounded-full border border-[#E2DCD2]">Revolving</span>
+            </div>
             
-            <!-- Card 1: Sports Radar -->
-            <div class="min-w-[86%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass flex flex-col justify-between border-red-500/25">
-              <div>
-                <div class="flex justify-between items-center text-xs text-red-400 font-semibold mb-2.5">
-                  <span class="flex items-center gap-1.5">🏈 <span>49ers & OKC Thunder</span></span>
-                  <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-red-500/20 text-red-300 border border-red-500/20">Live Radar</span>
-                </div>
-                <p class="text-sm font-semibold text-white">SF 49ers vs Rams • Sunday 4:25 PM</p>
-                <p class="text-xs text-slate-300 mt-1">OKC Thunder 118 - 110 DAL (Final)</p>
+            <!-- Indicators & Arrow Nav -->
+            <div class="flex items-center space-x-2">
+              <div id="carouselDots" class="flex items-center space-x-1.5 mr-1">
+                <button onclick="goToSlide(0)" class="w-5 h-1.5 rounded-full bg-stone-800 transition-all duration-300" id="dot-0"></button>
+                <button onclick="goToSlide(1)" class="w-1.5 h-1.5 rounded-full bg-stone-300 transition-all duration-300" id="dot-1"></button>
+                <button onclick="goToSlide(2)" class="w-1.5 h-1.5 rounded-full bg-stone-300 transition-all duration-300" id="dot-2"></button>
+                <button onclick="goToSlide(3)" class="w-1.5 h-1.5 rounded-full bg-stone-300 transition-all duration-300" id="dot-3"></button>
               </div>
-              <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
-                <span>Streak: W4</span>
-                <span class="text-red-300">Next: vs KC Chiefs</span>
-              </div>
+              <button onclick="prevSlide()" class="p-1.5 rounded-xl bg-white hover:bg-stone-50 border border-[#E5DFD5] active:scale-90 text-stone-700 shadow-xs transition-all">
+                <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="nextSlide()" class="p-1.5 rounded-xl bg-white hover:bg-stone-50 border border-[#E5DFD5] active:scale-90 text-stone-700 shadow-xs transition-all">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </button>
             </div>
+          </div>
 
-            <!-- Card 2: Smoker & Cooking -->
-            <div class="min-w-[86%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass flex flex-col justify-between border-amber-500/25">
-              <div>
-                <div class="flex justify-between items-center text-xs text-amber-400 font-semibold mb-2.5">
-                  <span class="flex items-center gap-1.5">🔥 <span>Smoker & Griddle Hub</span></span>
-                  <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/20">Checklist</span>
+          <!-- Carousel Track Container -->
+          <div id="carouselViewport" class="relative overflow-hidden rounded-[26px]">
+            <div id="carouselTrack" class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth pb-1 snap-x snap-mandatory">
+              
+              <!-- CARD 1: Sports Radar -->
+              <div class="min-w-[90%] sm:min-w-[380px] md:min-w-[440px] snap-center p-5 paper-card flex flex-col justify-between shrink-0 min-h-[260px]">
+                <div>
+                  <div class="flex justify-between items-center text-xs font-semibold mb-3">
+                    <span class="flex items-center gap-1.5 text-stone-900 font-serif-title font-medium text-sm">
+                      <span>🏈</span> 
+                      <span id="sportsCardHeaderTitle">Sports Radar & Primetime</span>
+                    </span>
+                    <div class="flex items-center gap-2">
+                      <button onclick="fetchLiveSportsScores(true)" id="sportsRefreshBtn" class="p-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 border border-stone-200 active:scale-90 transition-transform text-stone-700" title="Refresh Scores">
+                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                      </button>
+                      <span id="sportsGlobalBadge" class="px-2 py-0.5 rounded-full text-[10px] bg-stone-100 text-stone-700 border border-stone-200 font-mono">Radar Active</span>
+                    </div>
+                  </div>
+
+                  <!-- Primetime Game Banner -->
+                  <div id="primetimeMarqueeBanner" class="mb-3">
+                    <!-- Populated by JS -->
+                  </div>
+
+                  <!-- Team Radar Feeds -->
+                  <div class="space-y-1.5">
+                    <div class="text-[10px] font-mono text-stone-500 uppercase tracking-wider px-1 font-semibold">Tracked Matchups</div>
+                    <div id="sportsFeedContent" class="space-y-2">
+                      <!-- Populated by JS -->
+                    </div>
+                  </div>
                 </div>
-                <p class="text-sm font-semibold text-white">Brisket Target: 203°F (Wrap at 165°F)</p>
-                <p class="text-xs text-slate-300 mt-1">Smash Burger Griddle: 450°F - 475°F</p>
-              </div>
-              <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
-                <span>Wood: Post Oak</span>
-                <span class="text-amber-300">Rest: 3+ Hours</span>
-              </div>
-            </div>
 
-            <!-- Card 3: Golf Yardages -->
-            <div class="min-w-[86%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass flex flex-col justify-between border-emerald-500/25">
-              <div>
-                <div class="flex justify-between items-center text-xs text-emerald-400 font-semibold mb-2.5">
-                  <span class="flex items-center gap-1.5">⛳ <span>Golf Yardages</span></span>
-                  <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/20">HDCP 11</span>
+                <div class="mt-3 pt-2.5 border-t border-[#ECE7DE] flex justify-between items-center text-[10px] text-stone-500 font-mono">
+                  <span id="sportsLastSync" class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Live Synced
+                  </span>
+                  <span>ESPN Wire • 1 / 4</span>
                 </div>
-                <p class="text-sm font-semibold text-white">Driver: 260-275y (Target Right Center)</p>
-                <p class="text-xs text-slate-300 mt-1">56° Sand Wedge: 90y Full / 65y Half</p>
               </div>
-              <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
-                <span>7-Iron: 165y</span>
-                <span class="text-emerald-300">Putts: 31/rd</span>
-              </div>
-            </div>
 
-            <!-- Card 4: 3D Workbench -->
-            <div class="min-w-[86%] sm:min-w-[340px] md:min-w-[380px] snap-center p-5 liquid-glass flex flex-col justify-between border-sky-500/25">
-              <div>
-                <div class="flex justify-between items-center text-xs text-sky-400 font-semibold mb-2.5">
-                  <span class="flex items-center gap-1.5">🛠️ <span>Workbench & 3D Print</span></span>
-                  <span class="px-2.5 py-0.5 rounded-full text-[10px] bg-sky-500/20 text-sky-300 border border-sky-500/20">ASA Specs</span>
+              <!-- CARD 2: Top News Pulse -->
+              <div class="min-w-[90%] sm:min-w-[380px] md:min-w-[440px] snap-center p-5 paper-card flex flex-col justify-between shrink-0 min-h-[260px]">
+                <div>
+                  <div class="flex justify-between items-center text-xs font-semibold mb-3">
+                    <span class="flex items-center gap-1.5 text-stone-900 font-serif-title font-medium text-sm">
+                      <span>📰</span> 
+                      <span>Top News Dispatch</span>
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] bg-stone-100 text-stone-700 border border-stone-200 font-mono">Briefing</span>
+                  </div>
+
+                  <div id="newsItemsContainer" class="space-y-2.5">
+                    <div class="p-3 rounded-2xl bg-[#F8F6F1] border border-[#E8E2D8] hover:border-stone-400 transition-all cursor-pointer shadow-xs" onclick="openNewsSnippet(0)">
+                      <div class="flex items-center justify-between text-[10px] font-mono text-stone-500 mb-1">
+                        <span class="text-amber-800 font-bold">TECH & AI</span>
+                        <span>15m ago</span>
+                      </div>
+                      <p class="text-xs font-medium text-stone-800 leading-snug">New Multimodal Reasoning Architectures Deliver Human-Grade Logic Verification in Laboratory Benchmarks</p>
+                    </div>
+
+                    <div class="p-3 rounded-2xl bg-[#F8F6F1] border border-[#E8E2D8] hover:border-stone-400 transition-all cursor-pointer shadow-xs" onclick="openNewsSnippet(1)">
+                      <div class="flex items-center justify-between text-[10px] font-mono text-stone-500 mb-1">
+                        <span class="text-stone-700 font-bold">ENERGY & MARKETS</span>
+                        <span>1h ago</span>
+                      </div>
+                      <p class="text-xs font-medium text-stone-800 leading-snug">Commercial Battery Storage Capacity Reaches Record Output Across Domestic Power Grids</p>
+                    </div>
+                  </div>
                 </div>
-                <p class="text-sm font-semibold text-white">ASA: Nozzle 255°C • Bed 100°C</p>
-                <p class="text-xs text-slate-300 mt-1">Chamber pre-heat: 45°C enclosure</p>
-              </div>
-              <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-[11px] text-slate-400 font-mono">
-                <span>Fan: 15%</span>
-                <span class="text-sky-300">ESP32 Enclosure</span>
-              </div>
-            </div>
 
+                <div class="mt-3 pt-2.5 border-t border-[#ECE7DE] flex justify-between items-center text-[10px] text-stone-500 font-mono">
+                  <span>Editorial Desk</span>
+                  <span>Briefing • 2 / 4</span>
+                </div>
+              </div>
+
+              <!-- CARD 3: Daily Comic & Humor -->
+              <div class="min-w-[90%] sm:min-w-[380px] md:min-w-[440px] snap-center p-5 paper-card flex flex-col justify-between shrink-0 min-h-[260px]">
+                <div>
+                  <div class="flex justify-between items-center text-xs font-semibold mb-3">
+                    <span class="flex items-center gap-1.5 text-stone-900 font-serif-title font-medium text-sm">
+                      <span>💡</span> 
+                      <span>Daily Strip & Humor</span>
+                    </span>
+                    <button onclick="rotateComic()" class="px-2.5 py-0.5 rounded-full text-[10px] bg-stone-100 text-stone-700 border border-stone-200 font-mono hover:bg-stone-200 active:scale-95 transition-all">Next Strip ↻</button>
+                  </div>
+
+                  <div id="comicPanelCard" class="p-4 rounded-2xl bg-[#F8F6F1] border border-[#E8E2D8] flex flex-col items-center justify-center text-center space-y-2">
+                    <div id="comicEmoji" class="text-2xl">☕ 💻 🔥</div>
+                    <h4 id="comicTitle" class="text-xs font-bold text-stone-900 font-serif">"Production Friday"</h4>
+                    <p id="comicDialogue" class="text-[11px] text-stone-600 italic font-mono leading-relaxed">"What could possibly go wrong? It worked on localhost perfectly fine."</p>
+                    <div id="comicPunchlineBox" class="w-full pt-2 border-t border-[#E8E2D8]">
+                      <span id="comicPunchline" class="text-[10px] text-stone-800 font-mono font-medium">Punchline: *5 minutes later, 47 PagerDuty alarms fire simultaneously.*</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-3 pt-2.5 border-t border-[#ECE7DE] flex justify-between items-center text-[10px] text-stone-500 font-mono">
+                  <span>Single Panel Strip</span>
+                  <span>Humor • 3 / 4</span>
+                </div>
+              </div>
+
+              <!-- CARD 4: Pit & Range Hub -->
+              <div class="min-w-[90%] sm:min-w-[380px] md:min-w-[440px] snap-center p-5 paper-card flex flex-col justify-between shrink-0 min-h-[260px]">
+                <div>
+                  <div class="flex justify-between items-center text-xs font-semibold mb-3">
+                    <span class="flex items-center gap-1.5 text-stone-900 font-serif-title font-medium text-sm">
+                      <span>🔥</span> 
+                      <span>Pit & Range Reference</span>
+                    </span>
+                    <!-- Mode Toggle Pill -->
+                    <div class="flex rounded-full bg-stone-100 p-0.5 border border-stone-200">
+                      <button onclick="togglePitRangeMode('bbq')" id="btn-mode-bbq" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-white text-stone-900 font-bold shadow-xs transition-all">Smoker</button>
+                      <button onclick="togglePitRangeMode('golf')" id="btn-mode-golf" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono text-stone-600 hover:text-stone-900 transition-all">Golf</button>
+                    </div>
+                  </div>
+
+                  <!-- Smoker Content -->
+                  <div id="pitContentBBQ" class="space-y-2">
+                    <div class="p-2.5 rounded-2xl bg-[#F8F6F1] border border-[#E8E2D8] flex justify-between items-center">
+                      <div>
+                        <span class="text-[10px] font-mono text-amber-800 uppercase font-bold tracking-wide">Brisket Protocol</span>
+                        <p class="text-xs font-semibold text-stone-900 mt-0.5">Wrap @ 165°F • Pull @ 203°F</p>
+                      </div>
+                      <span class="text-[10px] font-mono text-stone-700 bg-white border border-[#E5DFD5] px-2.5 py-1 rounded-xl shadow-xs">Post Oak</span>
+                    </div>
+                    <div class="p-2.5 rounded-2xl bg-[#F8F6F1] border border-[#E8E2D8] flex justify-between items-center">
+                      <div>
+                        <span class="text-[10px] font-mono text-stone-700 uppercase font-bold tracking-wide">Smash Burger Griddle</span>
+                        <p class="text-xs font-semibold text-stone-900 mt-0.5">Surface: 450°F – 475°F</p>
+                      </div>
+                      <span class="text-[10px] font-mono text-stone-700 bg-white border border-[#E5DFD5] px-2.5 py-1 rounded-xl shadow-xs font-medium">2m Sear</span>
+                    </div>
+                  </div>
+
+                  <!-- Golf Content -->
+                  <div id="pitContentGolf" class="space-y-2 hidden">
+                    <div class="p-2.5 rounded-2xl bg-[#F8F6F1] border border-[#E8E2D8] flex justify-between items-center">
+                      <div>
+                        <span class="text-[10px] font-mono text-emerald-800 uppercase font-bold tracking-wide">Wedge Matrix</span>
+                        <p class="text-xs font-semibold text-stone-900 mt-0.5">56° SW: 90y Full • 65y Pitch</p>
+                      </div>
+                      <span class="text-[10px] font-mono text-stone-700 bg-white border border-[#E5DFD5] px-2.5 py-1 rounded-xl shadow-xs">HDCP 11</span>
+                    </div>
+                    <div class="p-2.5 rounded-2xl bg-[#F8F6F1] border border-[#E8E2D8] flex justify-between items-center">
+                      <div>
+                        <span class="text-[10px] font-mono text-stone-700 uppercase font-bold tracking-wide">Driver Target</span>
+                        <p class="text-xs font-semibold text-stone-900 mt-0.5">265y Carry (Right Center)</p>
+                      </div>
+                      <span class="text-[10px] font-mono text-stone-700 bg-white border border-[#E5DFD5] px-2.5 py-1 rounded-xl shadow-xs font-medium">Tempo 3:1</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-3 pt-2.5 border-t border-[#ECE7DE] flex justify-between items-center text-[10px] text-stone-500 font-mono">
+                  <span id="pitRangeFooterTag">Field Notes</span>
+                  <span>Ledger • 4 / 4</span>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
 
-        <!-- Quick Capture Capsule -->
-        <div class="p-2.5 liquid-glass flex items-center space-x-2">
-          <input id="quickCaptureInput" type="text" placeholder="Quick idea, task, or brisket log..." class="bg-transparent flex-1 text-xs outline-none placeholder:text-slate-400 px-3 text-white">
-          <button onclick="quickCapture('task')" class="px-3.5 py-2 squircle-btn bg-sky-500 hover:bg-sky-400 text-white text-xs font-semibold shadow-md">+ Task</button>
-          <button onclick="quickCapture('note')" class="px-3.5 py-2 squircle-btn bg-white/10 hover:bg-white/15 text-white text-xs font-semibold border border-white/10">+ Note</button>
+        <!-- Quick Capture Bar: Tactile paper input that fits cleanly without clipping -->
+        <div class="p-2 sm:p-2.5 paper-card flex items-center gap-2">
+          <div class="flex-1 min-w-0 flex items-center pl-2 sm:pl-3">
+            <input id="quickCaptureInput" type="text" placeholder="Quick idea, task, or note..." class="w-full min-w-0 bg-transparent text-xs outline-none placeholder:text-stone-400 text-stone-900 font-normal truncate">
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="quickCapture('task')" class="px-3 sm:px-3.5 py-1.5 sm:py-2 squircle-btn bg-stone-900 text-white text-[11px] sm:text-xs font-medium hover:bg-stone-800 flex items-center gap-1 touch-spring whitespace-nowrap shadow-xs">
+              <span>+</span><span>Task</span>
+            </button>
+            <button onclick="quickCapture('note')" class="px-3 sm:px-3.5 py-1.5 sm:py-2 squircle-btn bg-stone-100 hover:bg-stone-200 text-stone-800 text-[11px] sm:text-xs font-medium border border-stone-200 flex items-center gap-1 touch-spring whitespace-nowrap">
+              <span>+</span><span>Note</span>
+            </button>
+          </div>
         </div>
 
-        <!-- Adaptive Panoramic Grid: Single column on narrow phone, clean dual-column grid on wide unfolded screen -->
+        <!-- Adaptive Panoramic Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           
           <!-- Top Priorities List -->
           <div class="space-y-2.5">
             <div class="flex justify-between items-center px-1">
-              <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Top Priorities</span>
-              <button onclick="switchTab('planner')" class="text-xs text-sky-400 font-medium hover:underline">View All</button>
+              <span class="text-[11px] font-semibold text-stone-600 uppercase tracking-wider font-mono flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-stone-800"></span> Top Priorities
+              </span>
+              <button onclick="switchTab('planner')" class="text-xs text-stone-800 font-medium hover:underline">View All</button>
             </div>
             <div id="dashboardTaskList" class="space-y-2.5">
               <!-- Rendered by JS -->
@@ -268,10 +441,12 @@
           <!-- Pinned Note Highlight -->
           <div class="space-y-2.5">
             <div class="flex justify-between items-center px-1">
-              <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Pinned Note Highlight</span>
-              <button onclick="switchTab('notebook')" class="text-xs text-sky-400 font-medium hover:underline">Open Notes</button>
+              <span class="text-[11px] font-semibold text-stone-600 uppercase tracking-wider font-mono flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-700"></span> Pinned Note Highlight
+              </span>
+              <button onclick="switchTab('notebook')" class="text-xs text-stone-800 font-medium hover:underline">Open Notes</button>
             </div>
-            <div id="dashboardPinnedNote" class="liquid-glass p-5 cursor-pointer hover:border-white/25 transition-all touch-spring" onclick="switchTab('notebook')">
+            <div id="dashboardPinnedNote" class="paper-card p-5 cursor-pointer hover:border-stone-400 transition-all touch-spring" onclick="switchTab('notebook')">
               <!-- Rendered by JS -->
             </div>
           </div>
@@ -280,134 +455,239 @@
 
       </div>
 
-      <!-- ================= PLANNER VIEW ================= -->
-      <div id="viewPlanner" class="space-y-5 max-w-4xl mx-auto hidden">
-        <div class="flex items-center justify-between">
+      <!-- ================= PLANNER VIEW (SPLIT-SCREEN EXECUTIVE AGENDA) ================= -->
+      <div id="viewPlanner" class="space-y-5 max-w-6xl mx-auto hidden">
+        <!-- Planner Top Bar with Date Indicator and Add Actions -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#ECE7DE]">
           <div>
-            <h2 class="text-lg font-bold text-white">Planner & Schedule</h2>
-            <p class="text-xs text-slate-400">Milestones and actionable items</p>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-mono-ledger font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-stone-900 text-white">Daily Split Plan</span>
+              <span id="plannerDateBadge" class="text-xs font-mono-ledger text-stone-600 font-medium">Schedule Agenda</span>
+            </div>
+            <h2 class="text-xl font-bold text-stone-900 font-serif-title tracking-tight mt-1">Executive Agenda & Time Block Ledger</h2>
           </div>
-          <button onclick="openNewTaskDialog()" class="px-4 py-2 squircle-btn bg-sky-500 text-xs font-semibold text-white flex items-center space-x-1.5 shadow-lg">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-            <span>Add Task</span>
-          </button>
+            <h2 class="text-xl font-bold text-stone-900 font-serif tracking-tight mt-1">Executive Agenda & Time Block Ledger</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="addScheduleSlot()" class="px-3.5 py-2 squircle-btn bg-white hover:bg-stone-50 border border-[#E5DFD5] text-stone-800 text-xs font-semibold flex items-center space-x-1.5 shadow-xs touch-spring">
+              <i data-lucide="clock" class="w-3.5 h-3.5 text-stone-600"></i>
+              <span>+ Time Slot</span>
+            </button>
+            <button onclick="openNewTaskDialog()" class="px-3.5 py-2 squircle-btn bg-stone-900 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-xs touch-spring">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>+ Priority Task</span>
+            </button>
+          </div>
         </div>
 
-        <!-- Filter Chips -->
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-          <button onclick="setTaskFilter('all')" id="filter-all" class="filter-btn px-3.5 py-1.5 squircle-btn bg-sky-500 text-white font-semibold">All</button>
-          <button onclick="setTaskFilter('pending')" id="filter-pending" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">Pending</button>
-          <button onclick="setTaskFilter('priority')" id="filter-priority" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">High Priority</button>
-          <button onclick="setTaskFilter('done')" id="filter-done" class="filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium">Done</button>
-        </div>
+        <!-- Split Screen Layout: Left Day Calendar vs Right Priorities Master Ledger -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          
+          <!-- LEFT PANEL (7 Cols on desktop): Hourly Scrollable Day Calendar -->
+          <div class="lg:col-span-7 paper-card p-5 space-y-3.5 bg-gradient-to-b from-white to-[#FAF8F5]">
+            <div class="flex items-center justify-between pb-2.5 border-b border-[#ECE7DE]">
+              <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-700"></span>
+                <h3 class="text-xs font-bold font-mono uppercase tracking-wider text-stone-900">Hourly Day Schedule (7 AM – 10 PM)</h3>
+              </div>
+              <span class="text-[10px] font-mono text-stone-500 bg-[#EFEBE4] px-2 py-0.5 rounded-full">Tap text to edit</span>
+            </div>
 
-        <div id="plannerTaskList" class="space-y-2.5">
-          <!-- Rendered by JS -->
+            <!-- Scrollable Timeline -->
+            <div id="dayScheduleTimeline" class="space-y-2 max-h-[620px] overflow-y-auto no-scrollbar pr-1">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- RIGHT PANEL (5 Cols on desktop): Editable Priorities & Master Ledger -->
+          <div class="lg:col-span-5 paper-card p-5 space-y-4 bg-white">
+            <div class="flex items-center justify-between pb-2.5 border-b border-[#ECE7DE]">
+              <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-stone-900"></span>
+                <h3 class="text-xs font-bold font-mono uppercase tracking-wider text-stone-900">Priorities Master List</h3>
+              </div>
+              <span id="prioritySummaryCount" class="text-[10px] font-mono font-bold text-stone-700 bg-stone-100 px-2 py-0.5 rounded-full">0 Pending</span>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex items-center gap-1.5 text-xs overflow-x-auto no-scrollbar pb-1">
+              <button onclick="setTaskFilter('all')" id="filter-all" class="filter-btn px-3 py-1 squircle-btn bg-stone-900 text-white font-bold text-[11px]">All</button>
+              <button onclick="setTaskFilter('pending')" id="filter-pending" class="filter-btn px-3 py-1 squircle-btn bg-[#F6F3EC] text-stone-700 border border-[#EBE5DB] font-medium text-[11px]">Active</button>
+              <button onclick="setTaskFilter('priority')" id="filter-priority" class="filter-btn px-3 py-1 squircle-btn bg-[#F6F3EC] text-stone-700 border border-[#EBE5DB] font-medium text-[11px]">High Only</button>
+              <button onclick="setTaskFilter('done')" id="filter-done" class="filter-btn px-3 py-1 squircle-btn bg-[#F6F3EC] text-stone-700 border border-[#EBE5DB] font-medium text-[11px]">Done</button>
+            </div>
+
+            <!-- Priority Task List with Inline Edit & Priority Toggles -->
+            <div id="plannerTaskList" class="space-y-2 max-h-[560px] overflow-y-auto no-scrollbar pr-1">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <!-- ================= NOTEBOOK VIEW ================= -->
-      <div id="viewNotebook" class="space-y-5 max-w-4xl mx-auto hidden">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="text-lg font-bold text-white">Notebook</h2>
-            <p class="text-xs text-slate-400">Reference logs, recipes & yardages</p>
+      <!-- ================= NOTEBOOK VIEW (COLLEGE-RULED BINDER PAPER) ================= -->
+      <div id="viewNotebook" class="space-y-4 max-w-5xl mx-auto hidden">
+        <!-- Notebook Toolbar & Binder Tabs -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#ECE7DE]">
+          <div class="flex items-center space-x-2.5">
+            <span class="text-base">📓</span>
+            <div>
+              <h2 class="text-lg font-bold text-stone-900 font-serif-title tracking-tight">College-Ruled Notebook & Field Log</h2>
+              <p class="text-[11px] text-stone-500 font-mono-ledger">3-Hole Punch Loose-Leaf Ledger with Margin Guideline</p>
+            </div>
           </div>
-          <button onclick="openNewNoteDialog()" class="px-4 py-2 squircle-btn bg-sky-500 text-xs font-semibold text-white flex items-center space-x-1.5 shadow-lg">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-            <span>New Note</span>
-          </button>
+          
+          <div class="flex items-center gap-2">
+            <button onclick="openNewNoteDialog()" class="px-3.5 py-2 squircle-btn bg-stone-900 text-white text-xs font-semibold flex items-center space-x-1.5 shadow-xs touch-spring">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>+ New Loose Leaf</span>
+            </button>
+          </div>
         </div>
 
-        <!-- Category Tags -->
+        <!-- Section Dividers / Binder Tabs -->
         <div id="noteCategoryChips" class="flex gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-          <!-- Rendered by JS -->
+          <!-- Rendered by JS as Binder Tabs -->
         </div>
 
-        <!-- Notes Grid -->
-        <div id="notesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Rendered by JS -->
+        <!-- Authentic Binder Paper Sheet Container -->
+        <div class="paper-card college-ruled-paper p-0 relative overflow-hidden border border-[#DCD5C8] shadow-lg rounded-[22px]">
+          
+          <!-- Vertical Left Red Margin Guideline -->
+          <div class="ruled-margin-line"></div>
+
+          <!-- 3-Hole Punch visual holes on the paper binding edge -->
+          <div class="absolute left-4 top-12 z-20 hole-punch"></div>
+          <div class="absolute left-4 top-1/2 -translate-y-1/2 z-20 hole-punch"></div>
+          <div class="absolute left-4 bottom-12 z-20 hole-punch"></div>
+
+          <!-- Active Note Ruled Page -->
+          <div class="pl-[68px] pr-6 py-6 min-h-[580px] flex flex-col justify-between relative z-10">
+            <div class="space-y-2">
+              <!-- Header on Ruled Line -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-rose-300/40 pb-2 mb-3">
+                <input id="activeNoteTitleInput" type="text" placeholder="Note Subject / Title..." oninput="updateActiveNoteTitle(this.value)" class="text-base sm:text-lg font-bold text-stone-900 bg-transparent outline-none font-serif-title placeholder:text-stone-400 w-full">
+                
+                <div class="flex items-center space-x-2 shrink-0">
+                  <span id="activeNoteTagBadge" class="text-[10px] font-mono-ledger uppercase font-bold px-2 py-0.5 rounded-full bg-stone-200/70 text-stone-700">Smoker & Cooking</span>
+                  <button id="activeNotePinBtn" onclick="toggleActiveNotePin()" class="text-xs px-2 py-0.5 rounded-md hover:bg-stone-200/50 transition-colors" title="Pin Note">📌</button>
+                  <button onclick="deleteActiveNote()" class="text-xs px-2 py-0.5 text-stone-400 hover:text-rose-600 transition-colors" title="Delete Page">🗑️</button>
+                </div>
+              </div>
+
+              <!-- Ruled Lines Content Area -->
+              <textarea id="activeNoteContentTextarea" oninput="updateActiveNoteContent(this.value)" placeholder="Write your notes here along the college-ruled lines..." class="w-full h-[420px] bg-transparent outline-none resize-none ruled-text-content font-mono-ledger text-stone-800 placeholder:text-stone-400 border-none p-0 overflow-y-auto no-scrollbar"></textarea>
+            </div>
+              </div>
+
+              <!-- Ruled Lines Content Area -->
+              <textarea id="activeNoteContentTextarea" oninput="updateActiveNoteContent(this.value)" placeholder="Write your notes here along the college-ruled lines..." class="w-full h-[420px] bg-transparent outline-none resize-none ruled-text-content font-mono text-stone-800 placeholder:text-stone-400 border-none p-0 overflow-y-auto no-scrollbar"></textarea>
+            </div>
+
+            <!-- Page Footer Ledger Line -->
+            <div class="pt-3 border-t border-rose-300/40 flex justify-between items-center text-[10px] font-mono text-stone-500">
+              <span id="activeNoteWordCount">0 words • Auto-saved to device</span>
+              <span id="activeNoteIndexTag">Sheet 1 of 3</span>
+            </div>
+          </div>
         </div>
+
+        <!-- Notes Drawer / Quick Switcher Strip below the paper -->
+        <div class="space-y-2 pt-2">
+          <div class="text-[10px] font-mono font-bold uppercase text-stone-500 tracking-wider px-1">Binder Index (Select Sheet)</div>
+          <div id="binderNotesIndexStrip" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
       </div>
 
     </main>
 
   </div>
 
-  <!-- ========================================================== -->
-  <!-- RIGHT-SIDE LIQUID GLASS APP CONTROLS                        -->
-  <!-- ========================================================== -->
+  <!-- RIGHT-SIDE TACTILE FLOATING NAV RAIL -->
   <aside class="fixed right-3 sm:right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center">
-    <nav class="right-glass-rail p-1.5 sm:p-2 flex flex-col items-center space-y-2">
-      <!-- Dashboard Button -->
-      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-sky-400 bg-white/15" title="Dashboard">
-        <i data-lucide="layout-grid" class="w-5 h-5"></i>
-        <span class="text-[9px] font-medium mt-0.5">Dash</span>
+    <nav class="paper-rail p-1.5 sm:p-2 flex flex-col items-center space-y-2.5">
+      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-stone-900 bg-stone-100 border border-stone-200 shadow-xs" title="Dashboard">
+        <i data-lucide="layout-grid" class="w-5 h-5 text-stone-900"></i>
+        <span class="text-[9px] font-semibold mt-0.5 tracking-tight">Dash</span>
       </button>
 
-      <!-- Planner Button -->
-      <button onclick="switchTab('planner')" id="nav-planner" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-slate-400 hover:text-white" title="Planner">
+      <button onclick="switchTab('planner')" id="nav-planner" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-stone-500 hover:text-stone-900" title="Planner">
         <i data-lucide="calendar" class="w-5 h-5"></i>
-        <span class="text-[9px] font-medium mt-0.5">Plan</span>
+        <span class="text-[9px] font-medium mt-0.5 tracking-tight">Plan</span>
       </button>
 
-      <!-- Notebook Button -->
-      <button onclick="switchTab('notebook')" id="nav-notebook" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-slate-400 hover:text-white" title="Notebook">
+      <button onclick="switchTab('notebook')" id="nav-notebook" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-stone-500 hover:text-stone-900" title="Notebook">
         <i data-lucide="book-open" class="w-5 h-5"></i>
-        <span class="text-[9px] font-medium mt-0.5">Notes</span>
+        <span class="text-[9px] font-medium mt-0.5 tracking-tight">Notes</span>
       </button>
 
-      <div class="w-6 h-[1px] bg-white/15 my-0.5"></div>
+      <div class="w-6 h-[1px] bg-stone-200 my-0.5"></div>
 
-      <!-- Settings Button -->
-      <button onclick="toggleSettingsModal(true)" id="nav-settings" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-slate-400 hover:text-white" title="Settings">
+      <button onclick="toggleSettingsModal(true)" id="nav-settings" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-stone-500 hover:text-stone-900" title="Settings">
         <i data-lucide="sliders" class="w-5 h-5"></i>
-        <span class="text-[9px] font-medium mt-0.5">Set</span>
+        <span class="text-[9px] font-medium mt-0.5 tracking-tight">Set</span>
       </button>
     </nav>
   </aside>
 
-  <!-- ================= SETTINGS MODAL ================= -->
-  <div id="settingsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="liquid-glass bg-[#080d1a]/95 border border-white/20 w-full max-w-md p-6 space-y-4 max-h-[85vh] overflow-y-auto no-scrollbar shadow-2xl">
-      <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <h3 class="text-sm font-bold text-white flex items-center space-x-2">
-          <i data-lucide="sliders" class="w-4 h-4 text-sky-400"></i>
-          <span>App Controls & Appearance</span>
+  <!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="fixed inset-0 z-50 bg-stone-900/40 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="paper-card bg-[#FAF8F5] border border-[#E5DFD5] w-full max-w-md p-6 space-y-4 max-h-[85vh] overflow-y-auto no-scrollbar shadow-2xl">
+      <div class="flex items-center justify-between border-b border-[#ECE7DE] pb-3">
+        <h3 class="text-sm font-bold text-stone-900 flex items-center space-x-2 font-serif">
+          <i data-lucide="sliders" class="w-4 h-4 text-stone-700"></i>
+          <span>Theme & Paper Preferences</span>
         </h3>
-        <button onclick="toggleSettingsModal(false)" class="p-1 rounded-lg text-slate-400 hover:text-white">
+        <button onclick="toggleSettingsModal(false)" class="p-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-600 hover:text-stone-900 transition-all">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <div class="space-y-1 text-xs text-slate-300 bg-white/5 p-3.5 liquid-glass-subtle">
-        <div class="font-semibold text-white">Full-Bleed Canvas</div>
-        <p class="text-slate-400">The viewport extends edge-to-edge across both folded and opened screen postures. Hardware safe-area insets prevent letterboxing or white borders.</p>
+      <div class="space-y-1 text-xs text-stone-700 bg-white border border-[#ECE7DE] p-3.5 rounded-2xl shadow-xs">
+        <div class="font-bold text-stone-900 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-stone-800"></span> Warm Linen Edition
+        </div>
+        <p class="text-stone-500 text-[11px] leading-relaxed">Natural tactile cream parchment with dark ink typography, designed for comfortable daylight reading and zero eye strain.</p>
       </div>
 
-      <!-- Themes -->
+      <!-- Paper Tones -->
       <div class="space-y-2">
-        <label class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Appearance Mode</label>
+        <label class="text-[10px] font-bold text-stone-500 uppercase tracking-wider font-mono">Paper Tones</label>
         <div class="grid grid-cols-2 gap-2 text-xs">
-          <button onclick="setTheme('twilight')" class="p-3.5 liquid-glass-subtle text-left font-medium text-slate-200">Twilight Radial</button>
-          <button onclick="setTheme('oled')" class="p-3.5 squircle-btn bg-black border border-white/15 text-left font-medium text-slate-200">OLED Obsidian</button>
+          <button onclick="setTheme('parchment')" class="p-3.5 squircle-btn bg-white border border-[#E5DFD5] text-left font-semibold text-stone-900 shadow-xs">
+            📜 Warm Linen (Default)
+          </button>
+          <button onclick="setTheme('kraft')" class="p-3.5 squircle-btn bg-[#F3EFE6] border border-[#E0D8C8] text-left font-semibold text-stone-900 shadow-xs">
+            ✉️ Muted Kraft
+          </button>
+          <button onclick="setTheme('alabaster')" class="p-3.5 squircle-btn bg-[#FFFFFF] border border-[#E8E6E1] text-left font-semibold text-stone-900 shadow-xs">
+            🏛️ Alabaster Crisp
+          </button>
+          <button onclick="setTheme('sage')" class="p-3.5 squircle-btn bg-[#F2F5F0] border border-[#DCE4D8] text-left font-semibold text-stone-900 shadow-xs">
+            🌿 Pale Sage
+          </button>
         </div>
       </div>
 
       <!-- Backup / Reset -->
-      <div class="pt-2 border-t border-white/10 flex justify-between items-center text-xs">
-        <button onclick="exportDataJSON()" class="text-sky-400 hover:underline">Export Backup</button>
-        <button onclick="resetDefaults()" class="text-red-400 hover:underline">Reset Defaults</button>
+      <div class="pt-2 border-t border-[#ECE7DE] flex justify-between items-center text-xs">
+        <button onclick="exportDataJSON()" class="text-stone-800 font-semibold hover:underline">Export Ledger (JSON)</button>
+        <button onclick="resetDefaults()" class="text-rose-700 font-semibold hover:underline">Reset Defaults</button>
       </div>
 
-      <button onclick="toggleSettingsModal(false)" class="w-full py-3 squircle-btn bg-sky-500 text-xs font-semibold text-white shadow-lg">Done</button>
+      <button onclick="toggleSettingsModal(false)" class="w-full py-2.5 squircle-btn bg-stone-900 text-white text-xs font-bold shadow-xs">Done</button>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY_TASKS = 'vibehub_tasks_v4';
-    const STORAGE_KEY_NOTES = 'vibehub_notes_v4';
-    const STORAGE_KEY_THEME = 'vibehub_theme_v4';
+    const STORAGE_KEY_TASKS = 'vibehub_tasks_v6';
+    const STORAGE_KEY_NOTES = 'vibehub_notes_v6';
+    const STORAGE_KEY_THEME = 'vibehub_theme_v6';
+    const STORAGE_KEY_SCHEDULE = 'vibehub_schedule_v6';
 
     const DEFAULT_TASKS = [
       { id: 1, text: "Prep brisket dry rub (16 mesh pepper + kosher salt)", category: "HOME & GRILL", time: "Friday 6:00 PM", done: false, highPriority: true },
@@ -439,13 +719,226 @@
       }
     ];
 
+    const DEFAULT_SCHEDULE = [
+      { id: 1, time: "07:00 AM", title: "Morning Espresso & Review Sports Radar", tag: "ROUTINE", active: false },
+      { id: 2, time: "08:30 AM", title: "Deep Work Session: Architecture & Code", tag: "FOCUS", active: true },
+      { id: 3, time: "11:00 AM", title: "Engineering Sync & Hardware Review", tag: "MEETING", active: false },
+      { id: 4, time: "12:30 PM", title: "Lunch & Smoker Temperature Check", tag: "PERSONAL", active: false },
+      { id: 5, time: "02:00 PM", title: "Design Systems & iOS App Testing", tag: "PROJECT", active: false },
+      { id: 6, time: "04:30 PM", title: "Golf Driving Range Tempo Drills", tag: "WELLNESS", active: false },
+      { id: 7, time: "07:00 PM", title: "Primetime Game & Dinner", tag: "EVENING", active: false },
+      { id: 8, time: "09:30 PM", title: "Daily Debrief & Notebook Log Capture", tag: "WIND DOWN", active: false }
+    ];
+
+    const FALLBACK_SPORTS = {
+      primetime: {
+        note: "PRIMETIME FOOTBALL",
+        broadcast: "Prime Video",
+        stateTag: "FINAL",
+        isLive: false,
+        isFinal: true,
+        statusDetail: "Final",
+        away: { name: "SEA", score: "24", logo: "https://a.espncdn.com/i/teamlogos/nfl/500/sea.png" },
+        home: { name: "CHI", score: "21", logo: "https://a.espncdn.com/i/teamlogos/nfl/500/chi.png" }
+      },
+      nfl: {
+        stateTag: "SCHEDULED",
+        isLive: false,
+        isFinal: false,
+        statusDetail: "Sun 4:25 PM",
+        away: { name: "SF 49ers", score: "-", logo: "https://a.espncdn.com/i/teamlogos/nfl/500/sf.png" },
+        home: { name: "LAR", score: "-", logo: "https://a.espncdn.com/i/teamlogos/nfl/500/lar.png" }
+      },
+      nba: {
+        stateTag: "FINAL",
+        isLive: false,
+        isFinal: true,
+        statusDetail: "Final",
+        away: { name: "OKC Thunder", score: "118", logo: "https://a.espncdn.com/i/teamlogos/nba/500/okc.png" },
+        home: { name: "DAL", score: "110", logo: "https://a.espncdn.com/i/teamlogos/nba/500/dal.png" }
+      }
+    };
+
     let state = {
       activeTab: 'dashboard',
       taskFilter: 'all',
       noteCategory: 'All',
       tasks: [],
-      notes: []
+      notes: [],
+      schedule: [],
+      activeNoteId: 1
     };
+
+    let currentSlide = 0;
+    const TOTAL_SLIDES = 4;
+    let carouselInterval = null;
+    let isCarouselPaused = false;
+
+    const COMICS = [
+      {
+        emoji: "☕ 💻 🔥",
+        title: '"Production Friday"',
+        dialogue: '"What could possibly go wrong? It worked on my local machine."',
+        punchline: "5 minutes later, 47 PagerDuty alerts fire at once."
+      },
+      {
+        emoji: "🤖 🧠 📈",
+        title: '"AI In 2026"',
+        dialogue: '"We built an autonomous agent to automate our meetings."',
+        punchline: "It just scheduled 12 more recurring syncs to discuss automation."
+      },
+      {
+        emoji: "⛳ 🌲 🏌️",
+        title: '"The Pure Strike"',
+        dialogue: '"I finally figured out my golf swing during range practice!"',
+        punchline: "Proceeds to slice the first tee shot into an alternate dimension."
+      },
+      {
+        emoji: "🥩 ⏱️ 🍖",
+        title: '"The Brisket Stall"',
+        dialogue: '"It has been at 162°F for three hours. The smoker has frozen in time."',
+        punchline: "Dinner will be ready at either 6:00 PM or tomorrow noon."
+      }
+    ];
+    let currentComicIndex = 0;
+
+    function initCarousel() {
+      const track = document.getElementById('carouselTrack');
+      if (!track) return;
+
+      track.addEventListener('mouseenter', () => isCarouselPaused = true);
+      track.addEventListener('mouseleave', () => isCarouselPaused = false);
+      track.addEventListener('touchstart', () => isCarouselPaused = true, { passive: true });
+      track.addEventListener('touchend', () => {
+        setTimeout(() => isCarouselPaused = false, 4000);
+      });
+
+      track.addEventListener('scroll', () => {
+        const slideWidth = track.clientWidth * 0.9;
+        const newIndex = Math.round(track.scrollLeft / slideWidth);
+        if (newIndex >= 0 && newIndex < TOTAL_SLIDES && newIndex !== currentSlide) {
+          currentSlide = newIndex;
+          updateDots();
+        }
+      }, { passive: true });
+
+      if (carouselInterval) clearInterval(carouselInterval);
+      carouselInterval = setInterval(() => {
+        if (!isCarouselPaused) {
+          nextSlide();
+        }
+      }, 8000);
+    }
+
+    function goToSlide(index) {
+      const track = document.getElementById('carouselTrack');
+      if (!track) return;
+      currentSlide = (index + TOTAL_SLIDES) % TOTAL_SLIDES;
+      const card = track.children[currentSlide];
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+      updateDots();
+    }
+
+    function nextSlide() {
+      goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentSlide - 1);
+    }
+
+    function updateDots() {
+      for (let i = 0; i < TOTAL_SLIDES; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (dot) {
+          if (i === currentSlide) {
+            dot.className = "w-5 h-1.5 rounded-full bg-stone-800 transition-all duration-300";
+          } else {
+            dot.className = "w-1.5 h-1.5 rounded-full bg-stone-300 transition-all duration-300";
+          }
+        }
+      }
+    }
+
+    function rotateComic() {
+      currentComicIndex = (currentComicIndex + 1) % COMICS.length;
+      const comic = COMICS[currentComicIndex];
+      const emojiEl = document.getElementById('comicEmoji');
+      const titleEl = document.getElementById('comicTitle');
+      const diaEl = document.getElementById('comicDialogue');
+      const punchEl = document.getElementById('comicPunchline');
+
+      if (emojiEl) emojiEl.innerText = comic.emoji;
+      if (titleEl) titleEl.innerText = comic.title;
+      if (diaEl) diaEl.innerText = comic.dialogue;
+      if (punchEl) punchEl.innerText = `Punchline: *${comic.punchline}*`;
+    }
+
+    function togglePitRangeMode(mode) {
+      const bbqEl = document.getElementById('pitContentBBQ');
+      const golfEl = document.getElementById('pitContentGolf');
+      const btnBBQ = document.getElementById('btn-mode-bbq');
+      const btnGolf = document.getElementById('btn-mode-golf');
+      const footerTag = document.getElementById('pitRangeFooterTag');
+
+      if (mode === 'bbq') {
+        if (bbqEl) bbqEl.classList.remove('hidden');
+        if (golfEl) golfEl.classList.add('hidden');
+        if (btnBBQ) btnBBQ.className = "px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-white text-stone-900 font-bold shadow-xs transition-all";
+        if (btnGolf) btnGolf.className = "px-2.5 py-0.5 rounded-full text-[10px] font-mono text-stone-600 hover:text-stone-900 transition-all";
+        if (footerTag) footerTag.innerText = "Field Notes";
+      } else {
+        if (bbqEl) bbqEl.classList.add('hidden');
+        if (golfEl) golfEl.classList.remove('hidden');
+        if (btnGolf) btnGolf.className = "px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-white text-stone-900 font-bold shadow-xs transition-all";
+        if (btnBBQ) btnBBQ.className = "px-2.5 py-0.5 rounded-full text-[10px] font-mono text-stone-600 hover:text-stone-900 transition-all";
+        if (footerTag) footerTag.innerText = "Yardage Matrix";
+      }
+    }
+
+    function openNewsSnippet(idx) {
+      const headlines = [
+        "Autonomous Reasoning Models: Zero-shot multimodal verification benchmarks demonstrate significant precision gains across specialized engineering proofs.",
+        "Clean Grid Batteries: Record hardware deployment metrics recorded as distributed battery capacity stabilizes peak seasonal demands."
+      ];
+      showToast(headlines[idx] || "News expanded", "📰");
+    }
+
+    function updateClock() {
+      const clockEl = document.getElementById('liveClock');
+      const greetingEl = document.getElementById('greetingHeading');
+      const now = new Date();
+
+      if (clockEl) {
+        clockEl.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+
+      if (greetingEl) {
+        const hour = now.getHours();
+        let greeting = "Good evening, legend";
+        if (hour >= 5 && hour < 12) greeting = "Good morning, legend";
+        else if (hour >= 12 && hour < 17) greeting = "Good afternoon, legend";
+        else if (hour >= 17 && hour < 22) greeting = "Good evening, legend";
+        else greeting = "Late evening, legend";
+
+        greetingEl.innerHTML = `
+          <span>${greeting}</span>
+          <span class="text-[9px] font-mono font-medium px-2 py-0.5 rounded-full bg-[#EFEBE4] text-stone-700 border border-[#E2DCD2]">Edition</span>
+        `;
+      }
+    }
+
+    function safeInitIcons() {
+      try {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+      } catch (e) {
+        console.warn('Lucide icon load bypass:', e);
+      }
+    }
 
     function loadState() {
       try {
@@ -455,17 +948,30 @@
         const storedNotes = localStorage.getItem(STORAGE_KEY_NOTES);
         state.notes = storedNotes ? JSON.parse(storedNotes) : [...DEFAULT_NOTES];
 
-        const theme = localStorage.getItem(STORAGE_KEY_THEME) || 'twilight';
+        const storedSchedule = localStorage.getItem(STORAGE_KEY_SCHEDULE);
+        state.schedule = storedSchedule ? JSON.parse(storedSchedule) : [...DEFAULT_SCHEDULE];
+
+        if (state.notes.length > 0) {
+          state.activeNoteId = state.notes[0].id;
+        }
+
+        const theme = localStorage.getItem(STORAGE_KEY_THEME) || 'parchment';
         setTheme(theme);
       } catch (e) {
         state.tasks = [...DEFAULT_TASKS];
         state.notes = [...DEFAULT_NOTES];
+        state.schedule = [...DEFAULT_SCHEDULE];
       }
     }
 
     function saveState() {
-      localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(state.tasks));
-      localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(state.notes));
+      try {
+        localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(state.tasks));
+        localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(state.notes));
+        localStorage.setItem(STORAGE_KEY_SCHEDULE, JSON.stringify(state.schedule));
+      } catch(e) {
+        console.warn('LocalStorage save failed:', e);
+      }
     }
 
     function switchTab(tab) {
@@ -475,102 +981,216 @@
       const vPlan = document.getElementById('viewPlanner');
       const vNote = document.getElementById('viewNotebook');
 
-      vDash.classList.toggle('hidden', tab !== 'dashboard');
-      vPlan.classList.toggle('hidden', tab !== 'planner');
-      vNote.classList.toggle('hidden', tab !== 'notebook');
+      if (vDash) vDash.classList.toggle('hidden', tab !== 'dashboard');
+      if (vPlan) vPlan.classList.toggle('hidden', tab !== 'planner');
+      if (vNote) vNote.classList.toggle('hidden', tab !== 'notebook');
 
       ['dashboard', 'planner', 'notebook'].forEach(t => {
         const btn = document.getElementById(`nav-${t}`);
         if (btn) {
           if (t === tab) {
-            btn.className = "w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-sky-400 bg-white/15 shadow-inner";
+            btn.className = "w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-stone-900 bg-stone-100 border border-stone-200 shadow-xs";
+            const icon = btn.querySelector('i');
+            if (icon) icon.className = "w-5 h-5 text-stone-900";
           } else {
-            btn.className = "w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-slate-400 hover:text-white";
+            btn.className = "w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-stone-500 hover:text-stone-900";
+            const icon = btn.querySelector('i');
+            if (icon) icon.className = "w-5 h-5 text-stone-500";
           }
         }
       });
 
       if (tab === 'dashboard') renderDashboard();
-      if (tab === 'planner') renderTasks();
-      if (tab === 'notebook') renderNotes();
+      if (tab === 'planner') {
+        renderPlannerSplitView();
+      }
+      if (tab === 'notebook') {
+        renderNotebookRuledView();
+      }
+      safeInitIcons();
     }
 
     function renderDashboard() {
       const dbList = document.getElementById('dashboardTaskList');
-      const activeTasks = state.tasks.filter(t => !t.done).slice(0, 4);
+      if (!dbList) return;
 
+      const activeTasks = state.tasks.filter(t => !t.done).slice(0, 4);
       if (activeTasks.length === 0) {
-        dbList.innerHTML = `<div class="p-4 text-xs text-slate-400 liquid-glass text-center">All caught up for today!</div>`;
+        dbList.innerHTML = `<div class="p-4 text-xs text-stone-400 paper-card text-center font-normal">All caught up for today.</div>`;
       } else {
         dbList.innerHTML = activeTasks.map(t => `
-          <div class="p-3.5 liquid-glass flex items-center justify-between">
+          <div class="p-3.5 paper-card flex items-center justify-between hover:border-stone-400 transition-all">
             <div class="flex items-center space-x-3 min-w-0">
-              <button onclick="toggleTask(${t.id})" class="w-5 h-5 rounded-lg border border-white/30 flex items-center justify-center shrink-0 hover:border-sky-400 touch-spring"></button>
+              <button onclick="toggleTask(${t.id})" class="w-5 h-5 rounded-lg border border-stone-300 bg-white flex items-center justify-center shrink-0 hover:border-stone-500 touch-spring"></button>
               <div class="min-w-0">
-                <p class="text-xs font-medium text-slate-200 truncate">${escapeHtml(t.text)}</p>
-                <span class="text-[9px] uppercase font-mono text-slate-400">${t.category} • ${t.time}</span>
+                <p class="text-xs font-semibold text-stone-900 truncate">${escapeHtml(t.text)}</p>
+                <span class="text-[9px] uppercase font-mono text-stone-500">${escapeHtml(t.category)} • ${escapeHtml(t.time)}</span>
               </div>
             </div>
-            ${t.highPriority ? '<span class="text-[9px] font-bold text-red-400 bg-red-400/15 px-2 py-0.5 rounded-full border border-red-500/20 shrink-0">HIGH</span>' : ''}
+            ${t.highPriority ? '<span class="text-[9px] font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200 shrink-0">HIGH</span>' : ''}
           </div>
         `).join('');
       }
 
       const pinned = state.notes.find(n => n.pinned) || state.notes[0];
       const pinnedContainer = document.getElementById('dashboardPinnedNote');
-      if (pinned) {
+      if (pinnedContainer && pinned) {
         pinnedContainer.innerHTML = `
           <div class="flex items-center justify-between mb-2">
-            <span class="text-[10px] font-mono uppercase text-sky-400 font-bold">${pinned.tag}</span>
-            <span class="text-xs text-rose-400">📌 Pinned</span>
+            <span class="text-[10px] font-mono uppercase text-stone-600 font-bold">${escapeHtml(pinned.tag)}</span>
+            <span class="text-xs text-amber-800 font-medium flex items-center gap-1">📌 Pinned</span>
           </div>
-          <h4 class="text-xs font-semibold text-white mb-1.5">${escapeHtml(pinned.title)}</h4>
-          <p class="text-[11px] text-slate-300 font-mono leading-relaxed line-clamp-4">${escapeHtml(pinned.content)}</p>
+          <h4 class="text-xs font-bold text-stone-900 mb-1.5 font-serif">${escapeHtml(pinned.title)}</h4>
+          <p class="text-[11px] text-stone-600 font-mono leading-relaxed line-clamp-4 bg-[#F8F6F1] p-3 rounded-2xl border border-[#E8E2D8]">${escapeHtml(pinned.content)}</p>
         `;
       }
     }
 
+    /* ========================================================
+       PLANNER: SPLIT-SCREEN DAY CALENDAR + PRIORITIES
+       ======================================================== */
+    function renderPlannerSplitView() {
+      renderScheduleTimeline();
+      renderTasks();
+    }
+
+    function renderScheduleTimeline() {
+      const container = document.getElementById('dayScheduleTimeline');
+      if (!container) return;
+
+      container.innerHTML = state.schedule.map((item, idx) => `
+        <div class="p-3 rounded-2xl border ${item.active ? 'bg-amber-50/70 border-amber-300/80 shadow-xs' : 'bg-white border-[#ECE7DE] hover:border-stone-300'} transition-all flex items-start gap-3">
+          <div class="shrink-0 flex flex-col items-center pt-0.5 w-16">
+            <span class="text-[11px] font-mono font-bold ${item.active ? 'text-amber-950 font-black' : 'text-stone-700'}">${escapeHtml(item.time)}</span>
+            <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded-md mt-1 ${item.active ? 'bg-amber-200/70 text-amber-900 font-bold' : 'bg-stone-100 text-stone-500'}">${escapeHtml(item.tag)}</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <input type="text" value="${escapeHtml(item.title)}" onchange="updateScheduleTitle(${item.id}, this.value)" class="w-full text-xs font-semibold ${item.active ? 'text-stone-900' : 'text-stone-800'} bg-transparent outline-none truncate hover:underline focus:underline cursor-text">
+            <div class="flex items-center space-x-2 mt-1">
+              <button onclick="toggleScheduleActive(${item.id})" class="text-[10px] font-mono ${item.active ? 'text-amber-800 font-bold' : 'text-stone-400 hover:text-stone-700'}">
+                ${item.active ? '● Current Focus' : '○ Set Focus'}
+              </button>
+            </div>
+          </div>
+          <button onclick="deleteScheduleSlot(${item.id})" class="text-stone-300 hover:text-rose-600 text-xs p-1">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function updateScheduleTitle(id, newTitle) {
+      const item = state.schedule.find(x => x.id === id);
+      if (item) {
+        item.title = newTitle;
+        saveState();
+        showToast('Schedule slot updated', '⏱️');
+      }
+    }
+
+    function toggleScheduleActive(id) {
+      state.schedule.forEach(x => {
+        x.active = (x.id === id) ? !x.active : false;
+      });
+      saveState();
+      renderScheduleTimeline();
+    }
+
+    function addScheduleSlot() {
+      const time = prompt("Enter Time (e.g. 03:00 PM):", "03:00 PM");
+      if (!time) return;
+      const title = prompt("Event / Block Title:", "Afternoon Review");
+      if (!title) return;
+
+      state.schedule.push({
+        id: Date.now(),
+        time,
+        title,
+        tag: "AGENDA",
+        active: false
+      });
+      saveState();
+      renderScheduleTimeline();
+      showToast('Time slot added', '✓');
+    }
+
+    function deleteScheduleSlot(id) {
+      state.schedule = state.schedule.filter(x => x.id !== id);
+      saveState();
+      renderScheduleTimeline();
+      showToast('Time slot removed', '🗑️');
+    }
+
     function renderTasks() {
       const plList = document.getElementById('plannerTaskList');
+      const countEl = document.getElementById('prioritySummaryCount');
+      if (!plList) return;
+
       let filtered = state.tasks;
       if (state.taskFilter === 'pending') filtered = state.tasks.filter(t => !t.done);
       if (state.taskFilter === 'priority') filtered = state.tasks.filter(t => t.highPriority && !t.done);
       if (state.taskFilter === 'done') filtered = state.tasks.filter(t => t.done);
 
+      const pendingCount = state.tasks.filter(t => !t.done).length;
+      if (countEl) countEl.innerText = `${pendingCount} Pending`;
+
       if (filtered.length === 0) {
-        plList.innerHTML = `<div class="p-8 text-center text-xs text-slate-400 liquid-glass">No tasks found.</div>`;
+        plList.innerHTML = `<div class="p-8 text-center text-xs text-stone-400 paper-card-subtle">No tasks found.</div>`;
         return;
       }
 
       plList.innerHTML = filtered.map(t => `
-        <div class="p-3.5 liquid-glass flex items-center justify-between gap-3 ${t.done ? 'opacity-40' : ''}">
-          <div class="flex items-center space-x-3 flex-1 min-w-0">
-            <button onclick="toggleTask(${t.id})" class="w-5 h-5 rounded-lg border ${t.done ? 'bg-sky-500 border-sky-500 text-white' : 'border-white/30'} flex items-center justify-center shrink-0 font-bold text-xs touch-spring">
+        <div class="p-3 rounded-2xl border ${t.done ? 'bg-stone-50/50 border-stone-200 opacity-50' : 'bg-[#FAF8F5] border-[#ECE7DE] hover:border-stone-400'} flex items-start justify-between gap-2.5 transition-all">
+          <div class="flex items-start space-x-2.5 flex-1 min-w-0 pt-0.5">
+            <button onclick="toggleTask(${t.id})" class="w-4 h-4 mt-0.5 rounded-md border ${t.done ? 'bg-stone-900 text-white border-stone-900' : 'border-stone-400 bg-white'} flex items-center justify-center shrink-0 font-bold text-[10px] touch-spring">
               ${t.done ? '✓' : ''}
             </button>
-            <div class="min-w-0">
-              <p class="text-xs font-medium ${t.done ? 'line-through text-slate-400' : 'text-slate-200'} truncate">${escapeHtml(t.text)}</p>
-              <div class="flex items-center space-x-2 mt-0.5">
-                <span class="text-[9px] uppercase font-mono text-slate-400">${t.category}</span>
-                <span class="text-[9px] text-slate-500">• ${t.time}</span>
+            <div class="min-w-0 flex-1">
+              <input type="text" value="${escapeHtml(t.text)}" onchange="updateTaskText(${t.id}, this.value)" class="text-xs font-medium ${t.done ? 'line-through text-stone-400' : 'text-stone-900'} w-full bg-transparent outline-none truncate hover:underline focus:underline cursor-text">
+              <div class="flex items-center space-x-2 mt-1">
+                <span class="text-[9px] uppercase font-mono text-stone-500">${escapeHtml(t.category)}</span>
+                <span class="text-[9px] text-stone-400 font-mono">• ${escapeHtml(t.time)}</span>
               </div>
             </div>
           </div>
-          <div class="flex items-center space-x-2 shrink-0">
-            ${t.highPriority ? '<span class="text-[9px] font-bold text-red-400 bg-red-400/15 px-2 py-0.5 rounded-full border border-red-500/20">HIGH</span>' : ''}
-            <button onclick="deleteTask(${t.id})" class="text-slate-500 hover:text-red-400 text-xs p-1">✕</button>
+          <div class="flex items-center space-x-1.5 shrink-0 pt-0.5">
+            <button onclick="toggleTaskPriority(${t.id})" class="text-[9px] font-bold font-mono px-2 py-0.5 rounded-full border ${t.highPriority ? 'text-amber-900 bg-amber-100 border-amber-300' : 'text-stone-500 bg-white border-stone-200'}">
+              ${t.highPriority ? 'HIGH' : 'NORMAL'}
+            </button>
+            <button onclick="deleteTask(${t.id})" class="text-stone-300 hover:text-rose-600 text-xs p-1">✕</button>
           </div>
         </div>
       `).join('');
     }
 
-    function renderNotes() {
+    function updateTaskText(id, newText) {
+      const t = state.tasks.find(x => x.id === id);
+      if (t) {
+        t.text = newText;
+        saveState();
+        renderDashboard();
+      }
+    }
+
+    function toggleTaskPriority(id) {
+      const t = state.tasks.find(x => x.id === id);
+      if (t) {
+        t.highPriority = !t.highPriority;
+        saveState();
+        renderTasks();
+        renderDashboard();
+      }
+    }
+
+    /* ========================================================
+       NOTEBOOK: COLLEGE-RULED BINDER PAPER
+       ======================================================== */
+    function renderNotebookRuledView() {
       const catContainer = document.getElementById('noteCategoryChips');
-      const notesContainer = document.getElementById('notesList');
+      const indexContainer = document.getElementById('binderNotesIndexStrip');
+      if (!catContainer || !indexContainer) return;
 
       const categories = ['All', 'Smoker & Cooking', 'Golf Log', 'Workbench'];
       catContainer.innerHTML = categories.map(cat => `
-        <button onclick="setNoteCategory('${cat}')" class="px-3.5 py-1.5 squircle-btn whitespace-nowrap font-medium text-xs touch-spring ${state.noteCategory === cat ? 'bg-sky-500 text-white' : 'bg-white/5 text-slate-300 border border-white/10'}">
+        <button onclick="setNoteCategory('${cat}')" class="px-3.5 py-1.5 squircle-btn whitespace-nowrap font-medium text-xs touch-spring ${state.noteCategory === cat ? 'bg-stone-900 text-white font-bold' : 'bg-white text-stone-700 border border-[#E5DFD5]'}">
           ${cat}
         </button>
       `).join('');
@@ -579,31 +1199,106 @@
       if (state.noteCategory !== 'All') {
         filtered = state.notes.filter(n => n.tag === state.noteCategory);
       }
-      filtered.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
 
-      if (filtered.length === 0) {
-        notesContainer.innerHTML = `<div class="p-8 text-center text-xs text-slate-400 liquid-glass col-span-full">No notes found.</div>`;
-        return;
+      if (filtered.length > 0 && !filtered.some(n => n.id === state.activeNoteId)) {
+        state.activeNoteId = filtered[0].id;
       }
 
-      notesContainer.innerHTML = filtered.map(n => `
-        <div class="p-5 liquid-glass space-y-2.5">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-mono uppercase text-sky-400 font-bold">${n.tag}</span>
-            <div class="flex items-center space-x-2">
-              <button onclick="togglePinNote(${n.id})" class="text-xs ${n.pinned ? 'text-rose-400' : 'text-slate-500 hover:text-rose-400'} p-0.5">📌</button>
-              <button onclick="deleteNote(${n.id})" class="text-slate-500 hover:text-red-400 text-xs p-0.5">✕</button>
-            </div>
+      // Load active note onto the college-ruled page
+      const activeNote = state.notes.find(n => n.id === state.activeNoteId) || state.notes[0];
+      if (activeNote) {
+        state.activeNoteId = activeNote.id;
+        const titleInput = document.getElementById('activeNoteTitleInput');
+        const contentTextarea = document.getElementById('activeNoteContentTextarea');
+        const tagBadge = document.getElementById('activeNoteTagBadge');
+        const pinBtn = document.getElementById('activeNotePinBtn');
+        const countTag = document.getElementById('activeNoteWordCount');
+        const indexTag = document.getElementById('activeNoteIndexTag');
+
+        if (titleInput) titleInput.value = activeNote.title || '';
+        if (contentTextarea) contentTextarea.value = activeNote.content || '';
+        if (tagBadge) tagBadge.innerText = activeNote.tag || 'General';
+        if (pinBtn) pinBtn.innerText = activeNote.pinned ? '📌 Pinned' : '📌 Pin';
+
+        const words = (activeNote.content || '').trim().split(/\s+/).filter(Boolean).length;
+        if (countTag) countTag.innerText = `${words} words • Auto-saved to ledger`;
+        
+        const noteIdx = state.notes.findIndex(n => n.id === activeNote.id) + 1;
+        if (indexTag) indexTag.innerText = `Sheet ${noteIdx} of ${state.notes.length}`;
+      }
+
+      // Render bottom binder sheets strip
+      indexContainer.innerHTML = filtered.map(n => `
+        <div onclick="selectActiveNote(${n.id})" class="p-3 rounded-2xl border ${n.id === state.activeNoteId ? 'bg-white border-stone-800 shadow-md ring-1 ring-stone-800' : 'bg-[#FAF8F5] border-[#ECE7DE] hover:border-stone-400'} cursor-pointer transition-all space-y-1">
+          <div class="flex items-center justify-between text-[10px] font-mono text-stone-500">
+            <span class="font-bold uppercase text-stone-700">${escapeHtml(n.tag)}</span>
+            ${n.pinned ? '<span class="text-amber-800 font-bold">📌</span>' : ''}
           </div>
-          <h3 class="text-sm font-semibold text-white">${escapeHtml(n.title)}</h3>
-          <p class="text-xs text-slate-300 whitespace-pre-line font-mono leading-relaxed bg-black/40 p-3.5 rounded-2xl border border-white/5">${escapeHtml(n.content)}</p>
+          <h4 class="text-xs font-bold text-stone-900 truncate font-serif">${escapeHtml(n.title)}</h4>
+          <p class="text-[10px] text-stone-500 font-mono truncate">${escapeHtml(n.content.replace(/\n/g, ' '))}</p>
         </div>
       `).join('');
     }
 
+    function selectActiveNote(id) {
+      state.activeNoteId = id;
+      renderNotebookRuledView();
+    }
+
+    function updateActiveNoteTitle(val) {
+      const active = state.notes.find(n => n.id === state.activeNoteId);
+      if (active) {
+        active.title = val;
+        saveState();
+        renderDashboard();
+      }
+    }
+
+    function updateActiveNoteContent(val) {
+      const active = state.notes.find(n => n.id === state.activeNoteId);
+      if (active) {
+        active.content = val;
+        saveState();
+        const countTag = document.getElementById('activeNoteWordCount');
+        const words = val.trim().split(/\s+/).filter(Boolean).length;
+        if (countTag) countTag.innerText = `${words} words • Auto-saved to ledger`;
+        renderDashboard();
+      }
+    }
+
+    function toggleActiveNotePin() {
+      const active = state.notes.find(n => n.id === state.activeNoteId);
+      if (active) {
+        active.pinned = !active.pinned;
+        saveState();
+        renderNotebookRuledView();
+        renderDashboard();
+        showToast(active.pinned ? 'Note pinned to top' : 'Pin removed', '📌');
+      }
+    }
+
+    function deleteActiveNote() {
+      if (state.notes.length <= 1) {
+        showToast('At least one sheet required', '⚠️');
+        return;
+      }
+      if (confirm('Delete this notebook sheet?')) {
+        state.notes = state.notes.filter(n => n.id !== state.activeNoteId);
+        state.activeNoteId = state.notes[0].id;
+        saveState();
+        renderNotebookRuledView();
+        renderDashboard();
+        showToast('Sheet removed from binder', '🗑️');
+      }
+    }
+
+    function renderNotes() {
+      renderNotebookRuledView();
+    }
+
     function quickCapture(type) {
       const input = document.getElementById('quickCaptureInput');
-      const val = input.value.trim();
+      const val = input ? input.value.trim() : '';
       if (!val) {
         showToast('Type something first', '⚠️');
         return;
@@ -620,21 +1315,23 @@
         });
         showToast('Task added to Planner', '✓');
       } else {
-        state.notes.unshift({
+        const newNote = {
           id: Date.now(),
           title: val.length > 25 ? val.substring(0, 25) + '...' : val,
           tag: "General",
           pinned: false,
           content: val
-        });
-        showToast('Saved to Notebook', '📝');
+        };
+        state.notes.unshift(newNote);
+        state.activeNoteId = newNote.id;
+        showToast('Saved to College-Ruled Notebook', '📝');
       }
 
-      input.value = '';
+      if (input) input.value = '';
       saveState();
       renderDashboard();
       renderTasks();
-      renderNotes();
+      renderNotebookRuledView();
     }
 
     function toggleTask(id) {
@@ -672,10 +1369,10 @@
     function setTaskFilter(filter) {
       state.taskFilter = filter;
       document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.className = "filter-btn px-3.5 py-1.5 squircle-btn bg-white/5 text-slate-300 border border-white/10 font-medium";
+        btn.className = "filter-btn px-3 py-1 squircle-btn bg-[#F6F3EC] text-stone-700 border border-[#EBE5DB] font-medium text-[11px]";
       });
       const activeBtn = document.getElementById(`filter-${filter}`);
-      if (activeBtn) activeBtn.className = "filter-btn px-3.5 py-1.5 squircle-btn bg-sky-500 text-white font-semibold";
+      if (activeBtn) activeBtn.className = "filter-btn px-3 py-1 squircle-btn bg-stone-900 text-white font-bold text-[11px]";
       renderTasks();
     }
 
@@ -702,92 +1399,310 @@
     }
 
     function openNewNoteDialog() {
-      const title = prompt("Note title:");
+      const title = prompt("Loose Leaf Note title:", "New Field Sheet");
       if (!title) return;
-      const content = prompt("Content:") || "";
-      state.notes.unshift({
+      const content = prompt("Content (optional):", "") || "";
+      const newNote = {
         id: Date.now(),
         title,
-        tag: "General",
+        tag: state.noteCategory === 'All' ? 'General' : state.noteCategory,
         pinned: false,
         content
-      });
+      };
+      state.notes.unshift(newNote);
+      state.activeNoteId = newNote.id;
       saveState();
-      renderNotes();
+      renderNotebookRuledView();
       renderDashboard();
-      showToast('Note created', '📝');
+      showToast('New sheet inserted in binder', '📝');
     }
 
     function toggleSettingsModal(open) {
-      document.getElementById('settingsModal').classList.toggle('hidden', !open);
+      const modal = document.getElementById('settingsModal');
+      if (modal) modal.classList.toggle('hidden', !open);
+      safeInitIcons();
     }
 
     function setTheme(theme) {
       const body = document.getElementById('bodyRoot');
-      if (theme === 'oled') {
-        body.style.background = '#000000';
+      if (!body) return;
+
+      if (theme === 'kraft') {
+        body.style.background = '#F3EFE6';
+      } else if (theme === 'alabaster') {
+        body.style.background = '#FFFFFF';
+      } else if (theme === 'sage') {
+        body.style.background = '#F2F5F0';
       } else {
-        body.style.background = 'radial-gradient(circle at 15% 15%, #0b1429 0%, #060a16 50%, #03050a 100%)';
+        // Default: Parchment / Warm Linen
+        body.style.background = '#FAF8F5';
       }
-      localStorage.setItem(STORAGE_KEY_THEME, theme);
+      try {
+        localStorage.setItem(STORAGE_KEY_THEME, theme);
+      } catch(e) {}
     }
 
     function exportDataJSON() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+      const data = {
         tasks: state.tasks,
-        notes: state.notes
-      }, null, 2));
+        notes: state.notes,
+        exportedAt: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.setAttribute("href", dataStr);
-      a.setAttribute("download", `hub_backup.json`);
-      document.body.appendChild(a);
+      a.href = url;
+      a.download = `ledger_backup_${new Date().toISOString().slice(0,10)}.json`;
       a.click();
-      a.remove();
-      showToast('Backup saved', '💾');
+      URL.revokeObjectURL(url);
+      showToast('Backup downloaded', '💾');
     }
 
     function resetDefaults() {
-      state.tasks = [...DEFAULT_TASKS];
-      state.notes = [...DEFAULT_NOTES];
-      saveState();
-      renderDashboard();
-      renderTasks();
-      renderNotes();
-      toggleSettingsModal(false);
-      showToast('Defaults restored', '🔄');
+      if (confirm('Reset tasks and notes back to defaults?')) {
+        state.tasks = [...DEFAULT_TASKS];
+        state.notes = [...DEFAULT_NOTES];
+        saveState();
+        renderDashboard();
+        renderTasks();
+        renderNotes();
+        showToast('Reset to defaults', '✓');
+      }
     }
 
-    let toastTimer;
     function showToast(msg, icon = '✓') {
       const toast = document.getElementById('toast');
-      document.getElementById('toastMsg').innerText = msg;
-      document.getElementById('toastIcon').innerText = icon;
+      const toastMsg = document.getElementById('toastMsg');
+      const toastIcon = document.getElementById('toastIcon');
+      if (!toast) return;
+
+      if (toastMsg) toastMsg.innerText = msg;
+      if (toastIcon) toastIcon.innerText = icon;
+
       toast.classList.remove('opacity-0', '-translate-y-4');
       toast.classList.add('opacity-100', 'translate-y-0');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
+
+      setTimeout(() => {
         toast.classList.remove('opacity-100', 'translate-y-0');
         toast.classList.add('opacity-0', '-translate-y-4');
-      }, 1800);
-    }
-
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('liveClock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }, 2600);
     }
 
     function escapeHtml(str) {
       if (!str) return '';
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
-    window.onload = function() {
-      loadState();
-      lucide.createIcons();
-      updateClock();
-      setInterval(updateClock, 1000);
-      switchTab('dashboard');
-    };
+    // ESPN Sports Score Fetcher & Renderer
+    function renderSportsCard(results) {
+      try {
+        const container = document.getElementById('sportsFeedContent');
+        const marqueeContainer = document.getElementById('primetimeMarqueeBanner');
+        const badge = document.getElementById('sportsGlobalBadge');
+        if (!container || !marqueeContainer) return;
+
+        const prime = results.primetime;
+        const nfl = results.nfl;
+        const nba = results.nba;
+
+        const hasLive = (prime && prime.isLive) || (nfl && nfl.isLive) || (nba && nba.isLive);
+        if (badge) {
+          badge.innerText = hasLive ? '● LIVE' : 'Radar Active';
+          badge.className = hasLive
+            ? "px-2 py-0.5 rounded-full text-[10px] bg-red-100 text-red-800 border border-red-200 font-mono animate-pulse font-bold"
+            : "px-2 py-0.5 rounded-full text-[10px] bg-stone-100 text-stone-700 border border-stone-200 font-mono";
+        }
+
+        if (prime) {
+          marqueeContainer.innerHTML = `
+            <div class="p-3 rounded-2xl bg-[#F8F6F1] border border-[#E8E2D8]">
+              <div class="flex items-center justify-between text-[10px] font-mono mb-2 border-b border-[#E8E2D8] pb-1.5">
+                <span class="font-bold tracking-wide text-stone-900 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-stone-800"></span>
+                  ${escapeHtml(prime.note || "PRIMETIME SHOWCASE")}
+                </span>
+                <span class="px-2 py-0.5 rounded-full bg-white text-stone-700 border border-[#E5DFD5] shadow-xs">${escapeHtml(prime.broadcast)}</span>
+              </div>
+              <div class="flex items-center justify-between px-1">
+                <div class="flex items-center space-x-2">
+                  ${prime.away.logo ? `<img src="${prime.away.logo}" class="w-6 h-6 object-contain">` : ''}
+                  <span class="text-xs font-bold text-stone-900">${escapeHtml(prime.away.name)}</span>
+                  <span class="text-sm font-bold text-stone-800">${prime.away.score}</span>
+                </div>
+                <div class="text-[10px] font-mono text-stone-400 font-bold px-2">VS</div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-sm font-bold text-stone-800">${prime.home.score}</span>
+                  <span class="text-xs font-bold text-stone-900">${escapeHtml(prime.home.name)}</span>
+                  ${prime.home.logo ? `<img src="${prime.home.logo}" class="w-6 h-6 object-contain">` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        const renderRow = (game) => {
+          if (!game) return '';
+          return `
+            <div class="p-2.5 rounded-2xl bg-[#F8F6F1] border border-[#E8E2D8] flex items-center justify-between gap-3">
+              <div class="flex items-center space-x-2.5 min-w-0">
+                <div class="flex flex-col text-xs font-semibold text-stone-900 min-w-0">
+                  <div class="flex items-center space-x-1.5">
+                    ${game.away.logo ? `<img src="${game.away.logo}" class="w-4 h-4 object-contain inline-block">` : ''}
+                    <span class="truncate">${escapeHtml(game.away.name)}</span>
+                    <span class="font-mono text-stone-700 ml-1 font-bold">${game.away.score}</span>
+                  </div>
+                  <div class="flex items-center space-x-1.5 mt-0.5">
+                    ${game.home.logo ? `<img src="${game.home.logo}" class="w-4 h-4 object-contain inline-block">` : ''}
+                    <span class="truncate">${escapeHtml(game.home.name)}</span>
+                    <span class="font-mono text-stone-700 ml-1 font-bold">${game.home.score}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-right shrink-0 flex flex-col items-end">
+                <span class="text-[9px] font-mono uppercase px-2 py-0.5 rounded-full border ${game.isLive ? 'bg-red-100 text-red-800 border-red-200 font-bold' : 'bg-white text-stone-600 border-[#E5DFD5]'}">
+                  ${game.stateTag}
+                </span>
+                <span class="text-[10px] text-stone-500 font-mono mt-1">${escapeHtml(game.statusDetail)}</span>
+              </div>
+            </div>
+          `;
+        };
+
+        container.innerHTML = `
+          ${renderRow(nfl)}
+          ${renderRow(nba)}
+        `;
+      } catch(e) {
+        console.warn('Error rendering sports card:', e);
+      }
+    }
+
+    async function fetchLiveSportsScores(isManual = false) {
+      const refreshBtn = document.getElementById('sportsRefreshBtn');
+      if (refreshBtn) refreshBtn.classList.add('animate-spin');
+
+      try {
+        const [nflRes, nbaRes] = await Promise.allSettled([
+          fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard', { cache: 'no-store' }).then(r => r.json()),
+          fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard', { cache: 'no-store' }).then(r => r.json())
+        ]);
+
+        const parsed = {
+          primetime: FALLBACK_SPORTS.primetime,
+          nfl: FALLBACK_SPORTS.nfl,
+          nba: FALLBACK_SPORTS.nba
+        };
+
+        // Parse NFL
+        if (nflRes.status === 'fulfilled' && nflRes.value && Array.isArray(nflRes.value.events)) {
+          const events = nflRes.value.events;
+          const primeEvt = events.find(e => {
+            const name = (e.name || '').toLowerCase();
+            const note = (e.competitions?.[0]?.notes?.[0]?.headline || '').toLowerCase();
+            return note.includes('night') || note.includes('primetime') || name.includes('seahawks') || name.includes('49ers');
+          }) || events[events.length - 1];
+
+          if (primeEvt && primeEvt.competitions?.[0]) {
+            const comp = primeEvt.competitions[0];
+            const competitors = comp.competitors || [];
+            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+            const stateType = primeEvt.status?.type?.state || 'pre';
+
+            parsed.primetime = {
+              note: comp.notes?.[0]?.headline || primeEvt.name || "PRIMETIME MATCHUP",
+              broadcast: comp.broadcasts?.[0]?.names?.[0] || "Live Broadcast",
+              stateTag: stateType === 'in' ? 'LIVE' : (stateType === 'post' ? 'FINAL' : 'SCHEDULED'),
+              isLive: stateType === 'in',
+              isFinal: stateType === 'post',
+              statusDetail: primeEvt.status?.type?.shortDetail || 'Tonight',
+              away: {
+                name: away.team?.abbreviation || away.team?.shortDisplayName || "AWAY",
+                score: away.score !== undefined ? String(away.score) : "-",
+                logo: away.team?.logo || ""
+              },
+              home: {
+                name: home.team?.abbreviation || home.team?.shortDisplayName || "HOME",
+                score: home.score !== undefined ? String(home.score) : "-",
+                logo: home.team?.logo || ""
+              }
+            };
+          }
+
+          const nflTeam = events.find(e => (e.name || '').toLowerCase().includes('49ers'));
+          if (nflTeam && nflTeam.competitions?.[0]) {
+            const comp = nflTeam.competitions[0];
+            const competitors = comp.competitors || [];
+            const away = competitors.find(c => c.homeAway === 'away') || {};
+            const home = competitors.find(c => c.homeAway === 'home') || {};
+            const stateType = nflTeam.status?.type?.state || 'pre';
+
+            parsed.nfl = {
+              stateTag: stateType === 'in' ? 'LIVE' : (stateType === 'post' ? 'FINAL' : 'SCHEDULED'),
+              isLive: stateType === 'in',
+              isFinal: stateType === 'post',
+              statusDetail: nflTeam.status?.type?.shortDetail || 'Sun 4:25 PM',
+              away: { name: away.team?.shortDisplayName || "49ers", score: away.score !== undefined ? String(away.score) : "-", logo: away.team?.logo || "" },
+              home: { name: home.team?.shortDisplayName || "Opponent", score: home.score !== undefined ? String(home.score) : "-", logo: home.team?.logo || "" }
+            };
+          }
+        }
+
+        // Parse NBA
+        if (nbaRes.status === 'fulfilled' && nbaRes.value && Array.isArray(nbaRes.value.events)) {
+          const events = nbaRes.value.events;
+          const nbaTeam = events.find(e => (e.name || '').toLowerCase().includes('thunder'));
+          if (nbaTeam && nbaTeam.competitions?.[0]) {
+            const comp = nbaTeam.competitions[0];
+            const competitors = comp.competitors || [];
+            const away = competitors.find(c => c.homeAway === 'away') || {};
+            const home = competitors.find(c => c.homeAway === 'home') || {};
+            const stateType = nbaTeam.status?.type?.state || 'pre';
+
+            parsed.nba = {
+              stateTag: stateType === 'in' ? 'LIVE' : (stateType === 'post' ? 'FINAL' : 'SCHEDULED'),
+              isLive: stateType === 'in',
+              isFinal: stateType === 'post',
+              statusDetail: nbaTeam.status?.type?.shortDetail || 'Tonight',
+              away: { name: away.team?.shortDisplayName || "Thunder", score: away.score !== undefined ? String(away.score) : "-", logo: away.team?.logo || "" },
+              home: { name: home.team?.shortDisplayName || "Opponent", score: home.score !== undefined ? String(home.score) : "-", logo: home.team?.logo || "" }
+            };
+          }
+        }
+
+        renderSportsCard(parsed);
+        const syncEl = document.getElementById('sportsLastSync');
+        if (syncEl) syncEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Live Synced`;
+        if (isManual) showToast('Live scores updated', '🏈');
+      } catch(err) {
+        console.warn('Live sports fetch failed, preserving data:', err);
+        renderSportsCard(FALLBACK_SPORTS);
+      } finally {
+        if (refreshBtn) refreshBtn.classList.remove('animate-spin');
+      }
+    }
+
+    // Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        loadState();
+        updateClock();
+        setInterval(updateClock, 1000);
+        switchTab('dashboard');
+        initCarousel();
+        renderSportsCard(FALLBACK_SPORTS);
+        fetchLiveSportsScores(false);
+        setInterval(() => fetchLiveSportsScores(false), 60000);
+        safeInitIcons();
+      } catch (err) {
+        console.error('Initialization error bypassed:', err);
+      }
+    });
   </script>
 </body>
 </html>
