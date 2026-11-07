@@ -169,6 +169,21 @@
       transform: scale(0.96);
     }
 
+    /* Voice Waveform Animation */
+    @keyframes wavePulse {
+      0%, 100% { height: 6px; }
+      50% { height: 18px; }
+    }
+    .wave-bar {
+      width: 2.5px;
+      background-color: currentColor;
+      border-radius: 9999px;
+      animation: wavePulse 1s ease-in-out infinite;
+    }
+    .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.45s; }
+
     /* Fluid full-bleed viewport with hardware clearance */
     .viewport-content {
       padding-top: max(14px, env(safe-area-inset-top));
@@ -413,6 +428,13 @@
             <input id="quickCaptureInput" type="text" placeholder="Quick idea, task, or note..." class="w-full min-w-0 bg-transparent text-xs outline-none placeholder:text-stone-400 text-stone-900 font-normal truncate">
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
+            <!-- Rabbit R1 Mic Button -->
+            <button id="voiceCaptureBtn" onclick="toggleVoiceCapture()" class="p-2 sm:px-3 sm:py-2 squircle-btn bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/80 text-[11px] sm:text-xs font-semibold flex items-center gap-1.5 touch-spring whitespace-nowrap shadow-xs" title="Voice Assistant (Tap or Hold to Talk)">
+              <div id="voiceWaveIcon" class="flex items-center gap-0.5 h-3.5 text-amber-800">
+                <i data-lucide="mic" class="w-3.5 h-3.5"></i>
+              </div>
+              <span id="voiceBtnLabel" class="hidden sm:inline">Talk</span>
+            </button>
             <button onclick="quickCapture('task')" class="px-3 sm:px-3.5 py-1.5 sm:py-2 squircle-btn bg-stone-900 text-white text-[11px] sm:text-xs font-medium hover:bg-stone-800 flex items-center gap-1 touch-spring whitespace-nowrap shadow-xs">
               <span>+</span><span>Task</span>
             </button>
@@ -420,6 +442,28 @@
               <span>+</span><span>Note</span>
             </button>
           </div>
+        </div>
+
+        <!-- Voice Live HUD Banner (Active during speech & AI thinking) -->
+        <div id="voiceStatusHud" class="hidden p-3.5 rounded-2xl bg-gradient-to-r from-amber-50/90 via-white to-amber-50/90 border border-amber-200/80 shadow-md flex items-center justify-between gap-3 transition-all duration-300">
+          <div class="flex items-center space-x-3 min-w-0">
+            <div id="voiceHudWave" class="flex items-center gap-1 h-5 text-amber-700 shrink-0">
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <span id="voiceHudState" class="text-xs font-bold text-amber-950 font-mono tracking-wide uppercase">Listening...</span>
+                <span id="voiceAiBadge" class="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-md bg-amber-200/70 text-amber-900">Rabbit Engine</span>
+              </div>
+              <p id="voiceTranscriptPreview" class="text-xs text-stone-600 font-mono italic truncate mt-0.5">Speak your thoughts, reminders, or observations...</p>
+            </div>
+          </div>
+          <button onclick="stopVoiceCapture(true)" class="px-2.5 py-1 rounded-xl bg-stone-900 text-white text-[10px] font-semibold shrink-0 hover:bg-stone-800 touch-spring">
+            Done
+          </button>
         </div>
 
         <!-- Adaptive Panoramic Grid -->
@@ -625,6 +669,11 @@
         <span class="text-[9px] font-medium mt-0.5 tracking-tight">Notes</span>
       </button>
 
+      <button onclick="toggleVoiceCapture()" id="nav-voice" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-amber-800 bg-amber-50/80 border border-amber-200/70 hover:bg-amber-100" title="Voice Assistant">
+        <i data-lucide="mic" class="w-5 h-5 text-amber-800"></i>
+        <span class="text-[9px] font-semibold mt-0.5 tracking-tight">Talk</span>
+      </button>
+
       <div class="w-6 h-[1px] bg-stone-200 my-0.5"></div>
 
       <button onclick="toggleSettingsModal(true)" id="nav-settings" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-stone-500 hover:text-stone-900" title="Settings">
@@ -652,6 +701,43 @@
           <span class="w-2 h-2 rounded-full bg-stone-800"></span> Warm Linen Edition
         </div>
         <p class="text-stone-500 text-[11px] leading-relaxed">Natural tactile cream parchment with dark ink typography, designed for comfortable daylight reading and zero eye strain.</p>
+      </div>
+
+      <!-- Rabbit R1 & Gemini AI Assistant Settings Card -->
+      <div class="space-y-2 p-3.5 rounded-2xl bg-white border border-amber-200/70 shadow-xs">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-1.5">
+            <span class="text-amber-800">✨</span>
+            <label class="text-[11px] font-bold text-stone-900 uppercase tracking-wider font-mono">Gemini AI Assistant</label>
+          </div>
+          <span id="apiKeyStatusBadge" class="text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200">No Key Set</span>
+        </div>
+        <p class="text-[10px] text-stone-500 leading-relaxed font-mono">
+          Turns rambling voice notes into structured agenda blocks and bulleted loose-leaf notes.
+        </p>
+
+        <div class="space-y-1.5 pt-1">
+          <div class="relative">
+            <input id="geminiApiKeyInput" type="password" placeholder="AIzaSy..." class="w-full text-xs font-mono px-3 py-2 pr-10 rounded-xl bg-[#FAF8F5] border border-[#E0D8C8] outline-none text-stone-900 focus:border-stone-800">
+            <button onclick="toggleApiKeyVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 text-xs">
+              <i id="apiKeyEyeIcon" data-lucide="eye" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+          <div class="flex items-center gap-1.5 pt-1">
+            <button onclick="saveApiKey()" class="flex-1 py-1.5 squircle-btn bg-stone-900 text-white text-[11px] font-bold shadow-xs touch-spring">
+              Save Key
+            </button>
+            <button onclick="testApiKey()" class="px-3 py-1.5 squircle-btn bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 text-[11px] font-semibold touch-spring">
+              Test
+            </button>
+            <button onclick="clearApiKey()" class="px-2.5 py-1.5 squircle-btn text-rose-600 hover:bg-rose-50 text-[11px] font-medium touch-spring">
+              Clear
+            </button>
+          </div>
+          <p class="text-[9px] text-stone-400 pt-0.5">
+            Get your key from <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" class="text-stone-700 font-semibold underline">Google AI Studio</a>. Saved locally in browser storage.
+          </p>
+        </div>
       </div>
 
       <!-- Paper Tones -->
@@ -688,6 +774,7 @@
     const STORAGE_KEY_NOTES = 'vibehub_notes_v6';
     const STORAGE_KEY_THEME = 'vibehub_theme_v6';
     const STORAGE_KEY_SCHEDULE = 'vibehub_schedule_v6';
+    const STORAGE_KEY_GEMINI = 'vibehub_gemini_api_key_v1';
 
     const DEFAULT_TASKS = [
       { id: 1, text: "Prep brisket dry rub (16 mesh pepper + kosher salt)", category: "HOME & GRILL", time: "Friday 6:00 PM", done: false, highPriority: true },
@@ -801,6 +888,398 @@
       }
     ];
     let currentComicIndex = 0;
+
+    /* ========================================================
+       RABBIT R1 VOICE CAPTURE & GEMINI PIPELINE
+       ======================================================== */
+    let recognition = null;
+    let isListening = false;
+    let voiceTranscriptAccumulator = "";
+
+    function initSpeechEngine() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        console.warn('SpeechRecognition API not available in this browser.');
+        return null;
+      }
+      const recognizer = new SpeechRecognition();
+      recognizer.continuous = false;
+      recognizer.interimResults = true;
+      recognizer.lang = 'en-US';
+
+      recognizer.onstart = () => {
+        isListening = true;
+        setVoiceUIState('listening');
+      };
+
+      recognizer.onresult = (event) => {
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            voiceTranscriptAccumulator += event.results[i][0].transcript + ' ';
+          } else {
+            interim += event.results[i][0].transcript;
+          }
+        }
+        const preview = document.getElementById('voiceTranscriptPreview');
+        if (preview) {
+          preview.innerText = `"${(voiceTranscriptAccumulator + interim).trim() || 'Listening...'}"`;
+        }
+      };
+
+      recognizer.onerror = (e) => {
+        console.warn('Speech recognition error:', e.error);
+        if (e.error !== 'no-speech') {
+          showToast(`Voice error: ${e.error}`, '⚠️');
+        }
+        stopVoiceCapture(false);
+      };
+
+      recognizer.onend = () => {
+        if (isListening) {
+          stopVoiceCapture(true);
+        }
+      };
+
+      return recognizer;
+    }
+
+    function toggleVoiceCapture() {
+      if (isListening) {
+        stopVoiceCapture(true);
+      } else {
+        startVoiceCapture();
+      }
+    }
+
+    function startVoiceCapture() {
+      if (!recognition) {
+        recognition = initSpeechEngine();
+      }
+      if (!recognition) {
+        showToast('Speech recognition not supported on this browser', '⚠️');
+        return;
+      }
+
+      voiceTranscriptAccumulator = "";
+      try {
+        recognition.start();
+        setVoiceUIState('listening');
+      } catch (e) {
+        console.warn('Failed to start recognition:', e);
+      }
+    }
+
+    function stopVoiceCapture(processResults = true) {
+      if (recognition && isListening) {
+        try { recognition.stop(); } catch(e) {}
+      }
+      isListening = false;
+
+      const transcript = voiceTranscriptAccumulator.trim();
+      if (!processResults || !transcript) {
+        setVoiceUIState('idle');
+        return;
+      }
+
+      // Process voice note
+      processVoiceTranscript(transcript);
+    }
+
+    function setVoiceUIState(mode) {
+      const hud = document.getElementById('voiceStatusHud');
+      const hudState = document.getElementById('voiceHudState');
+      const waveIcon = document.getElementById('voiceWaveIcon');
+      const btnLabel = document.getElementById('voiceBtnLabel');
+      const navBtn = document.getElementById('nav-voice');
+
+      if (mode === 'listening') {
+        if (hud) hud.classList.remove('hidden');
+        if (hudState) hudState.innerText = "Listening...";
+        if (btnLabel) btnLabel.innerText = "Listening...";
+        if (waveIcon) {
+          waveIcon.innerHTML = `
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+          `;
+        }
+        if (navBtn) navBtn.classList.add('ring-2', 'ring-amber-500', 'animate-pulse');
+      } else if (mode === 'processing') {
+        if (hud) hud.classList.remove('hidden');
+        if (hudState) hudState.innerText = "Structuring with AI...";
+        if (btnLabel) btnLabel.innerText = "Processing...";
+        if (waveIcon) waveIcon.innerHTML = `<i data-lucide="sparkles" class="w-3.5 h-3.5 animate-spin"></i>`;
+      } else {
+        if (hud) hud.classList.add('hidden');
+        if (btnLabel) btnLabel.innerText = "Talk";
+        if (waveIcon) waveIcon.innerHTML = `<i data-lucide="mic" class="w-3.5 h-3.5"></i>`;
+        if (navBtn) navBtn.classList.remove('ring-2', 'ring-amber-500', 'animate-pulse');
+      }
+      safeInitIcons();
+    }
+
+    async function processVoiceTranscript(rawText) {
+      const apiKey = localStorage.getItem(STORAGE_KEY_GEMINI) || '';
+
+      if (!apiKey) {
+        // Fallback: Offline local classifier
+        localClassifyVoiceNote(rawText);
+        setVoiceUIState('idle');
+        return;
+      }
+
+      setVoiceUIState('processing');
+
+      try {
+        const structured = await callGeminiAssistant(rawText, apiKey);
+        applyStructuredVoiceOutput(structured, rawText);
+      } catch (err) {
+        console.warn('Gemini Assistant call failed, falling back to local capture:', err);
+        showToast('AI offline, falling back to standard capture', '⚠️');
+        localClassifyVoiceNote(rawText);
+      } finally {
+        setVoiceUIState('idle');
+      }
+    }
+
+    async function callGeminiAssistant(rawTranscript, apiKey) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+      const systemPrompt = `You are the executive chief of staff and voice parser for a personal Life OS app inspired by the Rabbit R1.
+Analyze this raw spoken transcript and extract any tasks, scheduled events, and notes.
+Return ONLY valid JSON matching this exact structure:
+{
+  "hasTask": boolean,
+  "task": {
+    "title": "Clear concise task statement",
+    "category": "HOME & GRILL" | "GOLF" | "WORKBENCH" | "GENERAL",
+    "time": "e.g. Friday 6:00 PM or Today",
+    "highPriority": boolean
+  },
+  "hasScheduleSlot": boolean,
+  "scheduleSlot": {
+    "time": "e.g. 05:00 PM or 08:30 AM",
+    "title": "Agenda block title",
+    "tag": "FOCUS" | "ROUTINE" | "MEETING" | "PERSONAL" | "WELLNESS"
+  },
+  "hasNote": boolean,
+  "note": {
+    "title": "Subject heading for note",
+    "tag": "Smoker & Cooking" | "Golf Log" | "Workbench" | "General",
+    "bulletPoints": ["bullet 1", "bullet 2"]
+  },
+  "summary": "Brief 1-sentence description of what was filed"
+}
+Raw spoken text: "${rawTranscript.replace(/"/g, '\\"')}"`;
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: systemPrompt }] }],
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.2
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errDetail = await response.text();
+        throw new Error(`Gemini API Error ${response.status}: ${errDetail}`);
+      }
+
+      const resJson = await response.json();
+      const rawOutputText = resJson.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!rawOutputText) throw new Error("No response content from Gemini.");
+
+      return JSON.parse(rawOutputText);
+    }
+
+    function applyStructuredVoiceOutput(parsed, rawBackup) {
+      let filedCount = 0;
+      let summaryItems = [];
+
+      // 1. Task Ledger
+      if (parsed.hasTask && parsed.task?.title) {
+        state.tasks.unshift({
+          id: Date.now() + Math.random(),
+          text: parsed.task.title,
+          category: parsed.task.category || "GENERAL",
+          time: parsed.task.time || "Today",
+          done: false,
+          highPriority: !!parsed.task.highPriority
+        });
+        summaryItems.push("Task");
+        filedCount++;
+      }
+
+      // 2. Day Schedule Timeline
+      if (parsed.hasScheduleSlot && parsed.scheduleSlot?.title && parsed.scheduleSlot?.time) {
+        state.schedule.push({
+          id: Date.now() + Math.random(),
+          time: parsed.scheduleSlot.time,
+          title: parsed.scheduleSlot.title,
+          tag: parsed.scheduleSlot.tag || "AGENDA",
+          active: false
+        });
+        summaryItems.push(`Slot (${parsed.scheduleSlot.time})`);
+        filedCount++;
+      }
+
+      // 3. College-Ruled Notebook
+      if (parsed.hasNote && parsed.note?.title) {
+        const bullets = (parsed.note.bulletPoints || []).map(b => `• ${b}`).join('\n');
+        const content = bullets || rawBackup;
+        const targetTag = parsed.note.tag || "General";
+
+        // Look for existing note sheet with same tag or create new
+        const existingNote = state.notes.find(n => n.tag === targetTag);
+        if (existingNote && existingNote.content.length < 1500) {
+          existingNote.content += `\n\n[Voice Entry: ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}]\n${content}`;
+          state.activeNoteId = existingNote.id;
+        } else {
+          const newSheet = {
+            id: Date.now(),
+            title: parsed.note.title,
+            tag: targetTag,
+            pinned: false,
+            content: content
+          };
+          state.notes.unshift(newSheet);
+          state.activeNoteId = newSheet.id;
+        }
+        summaryItems.push(`Note (${targetTag})`);
+        filedCount++;
+      }
+
+      if (filedCount === 0) {
+        // Fallback default
+        localClassifyVoiceNote(rawBackup);
+        return;
+      }
+
+      saveState();
+      renderDashboard();
+      renderTasks();
+      renderScheduleTimeline();
+      renderNotebookRuledView();
+
+      showToast(parsed.summary || `✨ AI Filed: Added ${summaryItems.join(' & ')}`, '✨');
+    }
+
+    function localClassifyVoiceNote(raw) {
+      const lower = raw.toLowerCase();
+      const isTask = lower.includes('remind') || lower.includes('buy') || lower.includes('todo') || lower.includes('task');
+      
+      if (isTask) {
+        state.tasks.unshift({
+          id: Date.now(),
+          text: raw,
+          category: "VOICE CAPTURE",
+          time: "Today",
+          done: false,
+          highPriority: lower.includes('urgent') || lower.includes('important')
+        });
+        showToast('Logged to Planner Tasks', '✓');
+      } else {
+        let tag = "General";
+        if (lower.includes('brisket') || lower.includes('smoker') || lower.includes('grill') || lower.includes('meat') || lower.includes('cook')) {
+          tag = "Smoker & Cooking";
+        } else if (lower.includes('golf') || lower.includes('wedge') || lower.includes('swing') || lower.includes('yardage')) {
+          tag = "Golf Log";
+        } else if (lower.includes('print') || lower.includes('bed') || lower.includes('tool') || lower.includes('workbench')) {
+          tag = "Workbench";
+        }
+
+        const newSheet = {
+          id: Date.now(),
+          title: raw.length > 25 ? raw.substring(0, 25) + '...' : raw,
+          tag: tag,
+          pinned: false,
+          content: `• ${raw}`
+        };
+        state.notes.unshift(newSheet);
+        state.activeNoteId = newSheet.id;
+        showToast(`Filed to Notebook (${tag})`, '📝');
+      }
+
+      saveState();
+      renderDashboard();
+      renderTasks();
+      renderNotebookRuledView();
+    }
+
+    /* Settings API Key Handlers */
+    function initApiKeyUI() {
+      const stored = localStorage.getItem(STORAGE_KEY_GEMINI) || '';
+      const input = document.getElementById('geminiApiKeyInput');
+      const badge = document.getElementById('apiKeyStatusBadge');
+      if (input && stored) input.value = stored;
+      if (badge) {
+        if (stored) {
+          badge.innerText = "Key Configured";
+          badge.className = "text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200";
+        } else {
+          badge.innerText = "No Key Set";
+          badge.className = "text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200";
+        }
+      }
+    }
+
+    function saveApiKey() {
+      const input = document.getElementById('geminiApiKeyInput');
+      const val = input ? input.value.trim() : '';
+      if (!val) {
+        showToast('Please enter a valid key', '⚠️');
+        return;
+      }
+      localStorage.setItem(STORAGE_KEY_GEMINI, val);
+      initApiKeyUI();
+      showToast('Gemini Assistant key saved', '✓');
+    }
+
+    function clearApiKey() {
+      localStorage.removeItem(STORAGE_KEY_GEMINI);
+      const input = document.getElementById('geminiApiKeyInput');
+      if (input) input.value = '';
+      initApiKeyUI();
+      showToast('API key cleared', '🗑️');
+    }
+
+    function toggleApiKeyVisibility() {
+      const input = document.getElementById('geminiApiKeyInput');
+      const icon = document.getElementById('apiKeyEyeIcon');
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) icon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        input.type = 'password';
+        if (icon) icon.setAttribute('data-lucide', 'eye');
+      }
+      safeInitIcons();
+    }
+
+    async function testApiKey() {
+      const key = localStorage.getItem(STORAGE_KEY_GEMINI);
+      if (!key) {
+        showToast('Save a key first to test', '⚠️');
+        return;
+      }
+      showToast('Testing Gemini Assistant connection...', '⏳');
+      try {
+        const testRes = await callGeminiAssistant("Remind me at 4 PM to check golf clubs", key);
+        if (testRes && (testRes.hasTask || testRes.hasScheduleSlot)) {
+          showToast('Connection Successful! Gemini ready.', '✨');
+        } else {
+          showToast('Response received successfully', '✓');
+        }
+      } catch (e) {
+        showToast(`Test failed: ${e.message}`, '❌');
+      }
+    }
 
     function initCarousel() {
       const track = document.getElementById('carouselTrack');
@@ -1691,6 +2170,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       try {
         loadState();
+        initApiKeyUI();
         updateClock();
         setInterval(updateClock, 1000);
         switchTab('dashboard');
