@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Life OS • Personal Hub</title>
-  <meta name="theme-color" content="#FAF8F5">
+  <meta name="theme-color" content="#FAF6F0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
@@ -26,18 +26,26 @@
           },
           colors: {
             paper: {
-              50: '#FCFBF9',
-              100: '#FAF8F5',
-              200: '#F4EFEA',
-              300: '#EAE3DA',
-              400: '#D5CCC0',
-              border: '#E8E2D8',
+              50: '#FDFBF7',
+              100: '#FAF6F0',
+              200: '#F3EDE2',
+              300: '#E7DDD0',
+              400: '#D5C7B5',
+              border: '#E8DED1',
+            },
+            yacht: {
+              sunset: '#E07A5F',
+              sand: '#F4F1DE',
+              sea: '#3D405B',
+              sage: '#81B29A',
+              gold: '#F2CC8F',
+              dustyrose: '#C2847A',
             },
             ink: {
-              primary: '#1C1917',
-              secondary: '#44403C',
-              muted: '#78716C',
-              faint: '#A8A29E',
+              primary: '#242124',
+              secondary: '#484349',
+              muted: '#7A7276',
+              faint: '#ACA5AA',
             }
           }
         }
@@ -57,22 +65,29 @@
     }
 
     body {
-      background-color: #FAF8F5;
-      color: #1C1917;
+      background-color: #FAF6F0;
+      /* Subtle cosmic yacht-rock vintage gradient backdrop */
+      background-image: 
+        radial-gradient(ellipse 90% 60% at 88% -5%, rgba(224, 122, 95, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 50% at 5% 100%, rgba(61, 64, 91, 0.06) 0%, transparent 65%),
+        radial-gradient(circle 350px at 50% 25%, rgba(242, 204, 143, 0.07) 0%, transparent 70%);
+      background-attachment: fixed;
+      color: #242124;
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       overscroll-behavior-y: none;
       -webkit-font-smoothing: antialiased;
     }
 
+    /* College-Ruled Notebook Simulation */
     .college-ruled {
-      background-color: #FAF8F5;
-      background-image: linear-gradient(#D5DFEB 1px, transparent 1px);
+      background-color: #FCF9F3;
+      background-image: linear-gradient(#D5E0EA 1px, transparent 1px);
       background-size: 100% 28px;
       line-height: 28px;
     }
 
     .red-margin-line {
-      border-left: 2px solid rgba(239, 68, 68, 0.45);
+      border-left: 2px solid rgba(224, 122, 95, 0.45);
     }
 
     ::-webkit-scrollbar {
@@ -80,49 +95,64 @@
       height: 4px;
     }
     ::-webkit-scrollbar-thumb {
-      background: #D5CCC0;
+      background: #D5C7B5;
       border-radius: 9999px;
     }
 
     .paper-card {
       background: #FFFFFF;
-      border: 1px solid #E8E2D8;
-      box-shadow: 0 4px 18px -4px rgba(28, 25, 23, 0.05), 0 1px 3px 0 rgba(28, 25, 23, 0.03);
+      border: 1px solid #E8DED1;
+      box-shadow: 0 4px 18px -4px rgba(36, 33, 36, 0.04), 0 1px 3px 0 rgba(36, 33, 36, 0.02);
+    }
+
+    /* Solution 2: Auto-collapsing Edge-Tucked Rail */
+    .edge-tucked-rail {
+      transform: translateX(calc(100% - 16px));
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s ease;
+      touch-action: pan-y;
+    }
+
+    .edge-tucked-rail:hover,
+    .edge-tucked-rail:focus-within,
+    .edge-tucked-rail.expanded {
+      transform: translateX(0);
+      box-shadow: -8px 0 30px -5px rgba(61, 64, 91, 0.16);
     }
 
     .rail-glass {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(232, 226, 216, 0.95);
-      box-shadow: 0 10px 30px -5px rgba(28, 25, 23, 0.08), 0 2px 6px -1px rgba(28, 25, 23, 0.04);
+      background: rgba(253, 251, 247, 0.94);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid rgba(232, 222, 209, 0.95);
+      border-right: none;
     }
 
+    /* Cosmic Yacht-Rock Floating Orb */
     @keyframes orbFloat {
       0%, 100% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-12px) scale(1.02); }
+      50% { transform: translateY(-10px) scale(1.02); }
     }
 
-    @keyframes orbGlowPulse {
+    @keyframes orbCosmicGlow {
       0%, 100% {
-        box-shadow: 0 0 35px 8px rgba(245, 158, 11, 0.28), 0 20px 45px -10px rgba(217, 119, 6, 0.35);
+        box-shadow: 0 0 40px 10px rgba(224, 122, 95, 0.24), 0 20px 50px -10px rgba(242, 204, 143, 0.32);
       }
       50% {
-        box-shadow: 0 0 60px 18px rgba(245, 158, 11, 0.45), 0 25px 60px -5px rgba(217, 119, 6, 0.5);
+        box-shadow: 0 0 65px 20px rgba(224, 122, 95, 0.38), 0 25px 65px -5px rgba(242, 204, 143, 0.45);
       }
     }
 
     @keyframes recordingRipple {
-      0% { transform: scale(0.95); opacity: 0.9; }
+      0% { transform: scale(0.95); opacity: 0.85; }
       100% { transform: scale(1.6); opacity: 0; }
     }
 
     .ai-orb-core {
-      animation: orbFloat 4.2s ease-in-out infinite, orbGlowPulse 3.6s ease-in-out infinite;
+      animation: orbFloat 4.6s ease-in-out infinite, orbCosmicGlow 4s ease-in-out infinite;
     }
 
     .pulse-ring {
-      animation: recordingRipple 1.7s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+      animation: recordingRipple 1.8s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
     }
   </style>
 </head>
@@ -132,10 +162,11 @@
   <header class="shrink-0 border-b border-paper-border bg-paper-100/90 backdrop-blur-md z-30 px-4 sm:px-6 pt-[calc(var(--sat)+10px)] pb-3">
     <div class="max-w-6xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></div>
+        <!-- Subtle 70s Yacht Sun Pip -->
+        <div class="w-3 h-3 rounded-full bg-gradient-to-tr from-yacht-sunset to-yacht-gold shadow-sm"></div>
         <div>
           <h1 id="headerGreeting" class="font-serif text-lg sm:text-xl font-medium tracking-tight text-ink-primary">Good evening, legend</h1>
-          <p class="text-[11px] font-mono tracking-wider uppercase text-ink-muted">Personal Hub • Life OS</p>
+          <p class="text-[11px] font-mono tracking-wider uppercase text-ink-muted">Personal Hub • Pacific Horizon</p>
         </div>
       </div>
       <div class="flex items-center gap-3 pr-[max(0px,calc(var(--sar)-4px))]">
@@ -148,7 +179,8 @@
   </header>
 
   <!-- ================= MAIN SCROLLABLE VIEWPORT ================= -->
-  <main class="flex-1 overflow-y-auto relative z-10 px-4 sm:px-6 py-4 pr-[max(72px,calc(var(--sar)+68px))] pl-[max(16px,var(--sal))] pb-[max(32px,calc(var(--sab)+24px))]">
+  <!-- Clean padding right (pr-4 sm:pr-8) because edge-tucked rail hides offscreen -->
+  <main class="flex-1 overflow-y-auto relative z-10 px-4 sm:px-8 py-4 pl-[max(16px,var(--sal))] pb-[max(32px,calc(var(--sab)+24px))]">
     <div class="max-w-5xl mx-auto">
 
       <!-- ================= 1. DASHBOARD VIEW ================= -->
@@ -158,7 +190,7 @@
         <div class="space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-xs font-mono font-semibold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-              <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-600"></i> Quick Hits Radar
+              <i data-lucide="compass" class="w-3.5 h-3.5 text-yacht-sunset"></i> Quick Hits Radar
             </span>
             <div class="flex items-center gap-2">
               <div class="flex items-center gap-1" id="carouselDots">
@@ -182,7 +214,7 @@
             <!-- Slide 0: Sports Radar -->
             <div id="slide-0" class="carousel-slide p-4 sm:p-5 transition-opacity duration-300">
               <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
-                <span class="text-xs font-mono font-semibold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200/60 flex items-center gap-1">
+                <span class="text-xs font-mono font-semibold text-yacht-sunset bg-orange-50/80 px-2.5 py-0.5 rounded-full border border-orange-200/60 flex items-center gap-1">
                   <i data-lucide="trophy" class="w-3 h-3"></i> ESPN Live Matchups
                 </span>
                 <button onclick="fetchLiveSports(true)" class="text-ink-muted hover:text-ink-primary p-1 rounded-lg hover:bg-paper-100" title="Refresh Live Scores">
@@ -191,10 +223,10 @@
               </div>
               <div id="primetimeContainer" class="mb-3 p-2.5 rounded-xl bg-paper-50 border border-paper-border flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-amber-600 text-white rounded">PRIMETIME</span>
+                  <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-yacht-sunset text-white rounded">PRIMETIME</span>
                   <span id="primetimeMatchup" class="text-xs font-semibold text-ink-primary">Seahawks vs Bears</span>
                 </div>
-                <span id="primetimeStatus" class="font-mono text-xs font-bold text-amber-700">8:15 PM ET</span>
+                <span id="primetimeStatus" class="font-mono text-xs font-bold text-yacht-sunset">8:15 PM ET</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="teamMatchupsContainer">
                 <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between">
@@ -211,10 +243,10 @@
             <!-- Slide 1: News Pulse -->
             <div id="slide-1" class="carousel-slide p-4 sm:p-5 hidden transition-opacity duration-300">
               <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
-                <span class="text-xs font-mono font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60 flex items-center gap-1">
+                <span class="text-xs font-mono font-semibold text-yacht-sage bg-emerald-50/80 px-2.5 py-0.5 rounded-full border border-emerald-200/60 flex items-center gap-1">
                   <i data-lucide="newspaper" class="w-3 h-3"></i> Daily Dispatch
                 </span>
-                <span class="text-[11px] font-mono text-ink-muted">Morning Edition</span>
+                <span class="text-[11px] font-mono text-ink-muted">Pacific Edition</span>
               </div>
               <div class="space-y-2">
                 <div class="p-2.5 rounded-xl bg-paper-50 border border-paper-border">
@@ -231,22 +263,22 @@
             <!-- Slide 2: Daily Comic -->
             <div id="slide-2" class="carousel-slide p-4 sm:p-5 hidden transition-opacity duration-300">
               <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
-                <span class="text-xs font-mono font-semibold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full border border-purple-200/60 flex items-center gap-1">
+                <span class="text-xs font-mono font-semibold text-yacht-dustyrose bg-rose-50/80 px-2.5 py-0.5 rounded-full border border-rose-200/60 flex items-center gap-1">
                   <i data-lucide="smile" class="w-3 h-3"></i> Field Notes & Comic
                 </span>
                 <button onclick="rotateComicStrip()" class="text-[11px] font-mono text-ink-muted hover:text-ink-primary underline">Next Strip</button>
               </div>
               <div class="p-3 rounded-xl bg-paper-50 border border-paper-border text-center">
                 <p id="comicSetup" class="font-serif text-sm italic text-ink-primary">"There are only 10 types of people in the world..."</p>
-                <p id="comicPunchline" class="font-mono text-xs font-semibold text-purple-800 mt-2">"...Those who understand binary, and those who don't."</p>
+                <p id="comicPunchline" class="font-mono text-xs font-semibold text-yacht-sea mt-2">"...Those who understand binary, and those who don't."</p>
               </div>
             </div>
 
             <!-- Slide 3: Pit & Range Guide -->
             <div id="slide-3" class="carousel-slide p-4 sm:p-5 hidden transition-opacity duration-300">
               <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
-                <span class="text-xs font-mono font-semibold text-stone-700 bg-stone-100 px-2.5 py-0.5 rounded-full border border-paper-border flex items-center gap-1">
-                  <i data-lucide="flame" class="w-3 h-3 text-orange-600"></i> Pit & Range Quick Specs
+                <span class="text-xs font-mono font-semibold text-ink-secondary bg-paper-200 px-2.5 py-0.5 rounded-full border border-paper-border flex items-center gap-1">
+                  <i data-lucide="flame" class="w-3 h-3 text-yacht-sunset"></i> Pit & Range Specs
                 </span>
                 <span class="text-[11px] font-mono text-ink-muted">Reference Sheet</span>
               </div>
@@ -279,8 +311,8 @@
             <button onclick="handleQuickCapture('note')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-paper-200 text-ink-primary border border-paper-border text-xs font-medium hover:bg-paper-300 transition-colors whitespace-nowrap flex items-center gap-1">
               <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Note
             </button>
-            <button onclick="switchView('talk')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-50 text-amber-900 border border-amber-300/60 text-xs font-medium hover:bg-amber-100 transition-colors whitespace-nowrap flex items-center gap-1">
-              <i data-lucide="mic" class="w-3.5 h-3.5 text-amber-700"></i> Talk
+            <button onclick="switchView('talk')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-orange-50/80 text-yacht-sunset border border-orange-200/60 text-xs font-medium hover:bg-orange-100 transition-colors whitespace-nowrap flex items-center gap-1">
+              <i data-lucide="mic" class="w-3.5 h-3.5 text-yacht-sunset"></i> Talk
             </button>
           </div>
         </div>
@@ -312,7 +344,7 @@
           <div class="paper-card rounded-2xl p-4 sm:p-5 flex flex-col">
             <div class="flex items-center justify-between pb-3 border-b border-paper-border mb-3">
               <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-                <i data-lucide="clock" class="w-4 h-4 text-amber-700"></i> Plan Your Day (24 Hours)
+                <i data-lucide="sun" class="w-4 h-4 text-yacht-sunset"></i> Plan Your Day (24 Hours)
               </span>
               <span class="text-[11px] font-mono text-ink-muted">Editable times & tasks</span>
             </div>
@@ -322,12 +354,12 @@
             </div>
           </div>
 
-          <!-- 2. PRIORITY LEDGER (Editable tabs + Add Priority tab bottom) -->
+          <!-- 2. PRIORITY LEDGER -->
           <div class="paper-card rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between pb-3 border-b border-paper-border mb-3">
                 <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-                  <i data-lucide="check-square" class="w-4 h-4 text-emerald-700"></i> Priority Ledger
+                  <i data-lucide="check-square" class="w-4 h-4 text-yacht-sage"></i> Priority Ledger
                 </span>
                 <span class="text-[11px] font-mono text-ink-muted">Click any item or tag to edit</span>
               </div>
@@ -340,7 +372,7 @@
             <!-- Add a Priority Tab Button (Always positioned underneath) -->
             <div class="pt-3 mt-2 border-t border-paper-border">
               <button onclick="addNewPriorityItem()" class="w-full py-2.5 px-3 rounded-xl bg-paper-100 hover:bg-paper-200 border border-dashed border-paper-border text-xs font-mono font-medium text-ink-primary transition-all flex items-center justify-center gap-2">
-                <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-700"></i> + Add a Priority
+                <i data-lucide="plus-circle" class="w-4 h-4 text-yacht-sage"></i> + Add a Priority
               </button>
             </div>
           </div>
@@ -354,9 +386,9 @@
           <div class="paper-card rounded-2xl p-4 sm:p-5 space-y-3">
             <div class="flex items-center justify-between pb-3 border-b border-paper-border">
               <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-                <i data-lucide="calendar-range" class="w-4 h-4 text-indigo-700"></i> Plans for the Month
+                <i data-lucide="calendar-range" class="w-4 h-4 text-yacht-sea"></i> Plans for the Month
               </span>
-              <button onclick="addNewMonthPlan()" class="text-xs font-mono text-indigo-800 hover:text-indigo-950 font-medium flex items-center gap-1">
+              <button onclick="addNewMonthPlan()" class="text-xs font-mono text-yacht-sea hover:text-ink-primary font-medium flex items-center gap-1">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Plan
               </button>
             </div>
@@ -370,9 +402,9 @@
           <div class="paper-card rounded-2xl p-4 sm:p-5 space-y-3">
             <div class="flex items-center justify-between pb-3 border-b border-paper-border">
               <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-                <i data-lucide="target" class="w-4 h-4 text-rose-700"></i> Month Goals
+                <i data-lucide="target" class="w-4 h-4 text-yacht-dustyrose"></i> Month Goals
               </span>
-              <button onclick="addNewMonthGoal()" class="text-xs font-mono text-rose-800 hover:text-rose-950 font-medium flex items-center gap-1">
+              <button onclick="addNewMonthGoal()" class="text-xs font-mono text-yacht-dustyrose hover:text-ink-primary font-medium flex items-center gap-1">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Goal
               </button>
             </div>
@@ -415,22 +447,23 @@
         </div>
       </section>
 
-      <!-- ================= 4. TALK VIEW ================= -->
+      <!-- ================= 4. TALK VIEW (Cosmic 70s Floating Orb) ================= -->
       <section id="viewTalk" class="hidden flex flex-col items-center justify-center min-h-[65vh] py-8 space-y-6">
         <div class="text-center space-y-1.5 max-w-sm">
-          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300/60">Voice Intelligence</span>
+          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-orange-100/70 text-yacht-sunset border border-orange-200">Cosmic Frequency</span>
           <h2 class="font-serif text-2xl font-medium text-ink-primary">Voice Companion</h2>
           <p class="text-xs text-ink-muted">Tap the orb to dictate stream-of-consciousness thoughts, field notes, or reminders.</p>
         </div>
 
         <div class="relative flex items-center justify-center w-64 h-64 my-4">
-          <div id="orbRipple1" class="absolute inset-0 rounded-full bg-amber-400/20 pulse-ring hidden pointer-events-none"></div>
-          <div id="orbRipple2" class="absolute inset-4 rounded-full bg-orange-400/25 pulse-ring hidden pointer-events-none" style="animation-delay: 0.6s;"></div>
+          <div id="orbRipple1" class="absolute inset-0 rounded-full bg-yacht-sunset/20 pulse-ring hidden pointer-events-none"></div>
+          <div id="orbRipple2" class="absolute inset-4 rounded-full bg-yacht-gold/25 pulse-ring hidden pointer-events-none" style="animation-delay: 0.6s;"></div>
 
-          <button id="aiOrbButton" onclick="toggleVoiceSession()" class="ai-orb-core w-44 h-44 rounded-full relative z-10 focus:outline-none transition-transform active:scale-95 flex flex-col items-center justify-center p-4 text-center cursor-pointer" style="background: radial-gradient(circle at 35% 30%, #FEF3C7 0%, #F59E0B 65%, #B45309 100%);">
-            <div class="absolute top-3 left-6 w-16 h-8 rounded-full bg-white/40 blur-[2px] transform -rotate-12 pointer-events-none"></div>
-            <i data-lucide="mic" id="orbMicIcon" class="w-8 h-8 text-amber-950 mb-1 drop-shadow-sm transition-transform"></i>
-            <span id="orbStatusLabel" class="font-mono text-[11px] font-bold tracking-wider uppercase text-amber-950 drop-shadow-sm">TAP TO TALK</span>
+          <!-- Subtle 70s Yacht Sunset Orb Gradient -->
+          <button id="aiOrbButton" onclick="toggleVoiceSession()" class="ai-orb-core w-44 h-44 rounded-full relative z-10 focus:outline-none transition-transform active:scale-95 flex flex-col items-center justify-center p-4 text-center cursor-pointer" style="background: radial-gradient(circle at 35% 30%, #F4F1DE 0%, #F2CC8F 45%, #E07A5F 80%, #C2847A 100%);">
+            <div class="absolute top-3 left-6 w-16 h-8 rounded-full bg-white/45 blur-[2px] transform -rotate-12 pointer-events-none"></div>
+            <i data-lucide="mic" id="orbMicIcon" class="w-8 h-8 text-ink-primary mb-1 drop-shadow-sm transition-transform"></i>
+            <span id="orbStatusLabel" class="font-mono text-[11px] font-bold tracking-wider uppercase text-ink-primary drop-shadow-sm">TAP TO TALK</span>
           </button>
         </div>
 
@@ -441,10 +474,10 @@
           </p>
         </div>
 
-        <div id="orbReceiptCard" class="w-full max-w-md paper-card rounded-2xl p-4 border border-amber-200/80 bg-amber-50/40 hidden space-y-2">
+        <div id="orbReceiptCard" class="w-full max-w-md paper-card rounded-2xl p-4 border border-paper-border bg-paper-50 hidden space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-mono font-bold text-amber-900 flex items-center gap-1">
-              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-amber-700"></i> AI Structured & Saved
+            <span class="text-xs font-mono font-bold text-yacht-sunset flex items-center gap-1">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-yacht-sage"></i> AI Structured & Saved
             </span>
             <button onclick="dismissReceiptCard()" class="text-xs text-ink-muted hover:text-ink-primary">✕</button>
           </div>
@@ -455,32 +488,40 @@
     </div>
   </main>
 
-  <!-- ================= RIGHT-SIDE CONTROL RAIL ================= -->
-  <aside class="fixed right-3 sm:right-5 top-1/2 -translate-y-1/2 z-40">
-    <nav class="rail-glass rounded-3xl p-1.5 flex flex-col gap-2">
-      <button onclick="switchView('dash')" id="navBtn-dash" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-primary bg-paper-300/60 transition-all hover:bg-paper-200" title="Dashboard">
+  <!-- ================= SOLUTION 2: AUTO-COLLAPSING EDGE-TUCKED CONTROL RAIL ================= -->
+  <!-- Tucks into the right bezel; expands on hover, touch, or click of the mini pull-tab -->
+  <aside id="edgeRail" class="edge-tucked-rail fixed right-0 top-1/2 -translate-y-1/2 z-40 flex items-center">
+    
+    <!-- Mini Grab Tab Indicator -->
+    <div onclick="toggleEdgeRail()" class="w-4 h-16 rounded-l-xl bg-paper-200/90 border border-r-0 border-paper-border flex items-center justify-center cursor-pointer shadow-sm text-ink-muted hover:text-ink-primary">
+      <div class="w-1 h-8 rounded-full bg-paper-400"></div>
+    </div>
+
+    <!-- The Navigation Capsule -->
+    <nav class="rail-glass rounded-l-3xl p-1.5 sm:p-2 flex flex-col gap-2 shadow-xl border-l border-paper-border">
+      <button onclick="switchView('dash')" id="navBtn-dash" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex flex-col items-center justify-center text-ink-primary bg-paper-300/60 transition-all hover:bg-paper-200" title="Dashboard">
         <i data-lucide="layout-grid" class="w-4 h-4"></i>
         <span class="text-[9px] font-mono mt-0.5">Dash</span>
       </button>
 
-      <button onclick="switchView('plan')" id="navBtn-plan" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Planner">
+      <button onclick="switchView('plan')" id="navBtn-plan" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Planner">
         <i data-lucide="calendar" class="w-4 h-4"></i>
         <span class="text-[9px] font-mono mt-0.5">Plan</span>
       </button>
 
-      <button onclick="switchView('notes')" id="navBtn-notes" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Notebook">
+      <button onclick="switchView('notes')" id="navBtn-notes" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Notebook">
         <i data-lucide="book-open" class="w-4 h-4"></i>
         <span class="text-[9px] font-mono mt-0.5">Notes</span>
       </button>
 
-      <button onclick="switchView('talk')" id="navBtn-talk" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-amber-800 hover:text-amber-950 transition-all hover:bg-amber-100" title="Voice AI">
+      <button onclick="switchView('talk')" id="navBtn-talk" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex flex-col items-center justify-center text-yacht-sunset hover:text-ink-primary transition-all hover:bg-orange-50" title="Voice AI">
         <i data-lucide="sparkles" class="w-4 h-4"></i>
         <span class="text-[9px] font-mono mt-0.5">Talk</span>
       </button>
 
-      <div class="w-8 h-[1px] bg-paper-border self-center my-0.5"></div>
+      <div class="w-7 h-[1px] bg-paper-border self-center my-0.5"></div>
 
-      <button onclick="toggleSettingsModal(true)" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Settings">
+      <button onclick="toggleSettingsModal(true)" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Settings">
         <i data-lucide="settings" class="w-4 h-4"></i>
         <span class="text-[9px] font-mono mt-0.5">Set</span>
       </button>
@@ -488,7 +529,7 @@
   </aside>
 
   <!-- ================= SETTINGS MODAL ================= -->
-  <div id="settingsModal" class="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div id="settingsModal" class="fixed inset-0 bg-ink-primary/30 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="paper-card rounded-2xl max-w-md w-full p-6 space-y-4 border border-paper-border shadow-2xl">
       <div class="flex items-center justify-between border-b border-paper-border pb-3">
         <h3 class="font-serif text-lg font-bold text-ink-primary">Settings & AI Keys</h3>
@@ -518,7 +559,23 @@
 
   <!-- ================= APPLICATION SCRIPT ================= -->
   <script>
-    // --- Generate Default 24 Hours (12:00 AM to 11:00 PM) ---
+    // --- Edge Rail Toggle Helper ---
+    function toggleEdgeRail() {
+      const rail = document.getElementById('edgeRail');
+      if (rail) {
+        rail.classList.toggle('expanded');
+      }
+    }
+
+    // Auto-tuck rail after tapping a nav option
+    function collapseEdgeRail() {
+      const rail = document.getElementById('edgeRail');
+      if (rail) {
+        rail.classList.remove('expanded');
+      }
+    }
+
+    // --- Generate Default 24 Hours ---
     function generateDefault24Hours() {
       const hours = [];
       const presets = {
@@ -550,24 +607,20 @@
       speechRecognizer: null,
       activeAudioStream: null,
       
-      // 24-hour daily timeline
       hourlySchedule: JSON.parse(localStorage.getItem('vibehub_24h_schedule')) || generateDefault24Hours(),
       
-      // Priorities with editable tabs
       priorities: JSON.parse(localStorage.getItem('vibehub_priorities_v2')) || [
         { id: 1, text: "Prep brisket dry rub (16 mesh pepper + kosher salt)", category: "HOME & GRILL", done: false },
         { id: 2, text: "Range session: 50yd wedge touch & tempo drills", category: "GOLF", done: false },
         { id: 3, text: "Check Grandstream ATA VoIP configuration", category: "WORKBENCH", done: true }
       ],
 
-      // Plans for the Month
       monthPlans: JSON.parse(localStorage.getItem('vibehub_month_plans')) || [
         { id: 1, date: "Nov 14", title: "Weekend brisket cook & patio smoke test" },
         { id: 2, date: "Nov 21", title: "Golf outing & short game practice session" },
         { id: 3, date: "Nov 28", title: "Family holiday dinner & DIY project review" }
       ],
 
-      // Month Goals
       monthGoals: JSON.parse(localStorage.getItem('vibehub_month_goals')) || [
         { id: 1, goal: "Dial in 54° wedge carry consistency (target 95 yds)", target: "GOLF", done: false },
         { id: 2, goal: "Complete Asterisk VoIP bridge setup on Doritos phone", target: "TECH", done: false },
@@ -607,6 +660,7 @@
           btn.classList.toggle('text-ink-muted', v !== viewName);
         }
       });
+      collapseEdgeRail();
       if (window.lucide) lucide.createIcons();
     }
 
@@ -664,14 +718,14 @@
       }
     }
 
-    // --- 24-Hour Day Planner (Plan Your Day) ---
+    // --- 24-Hour Day Planner ---
     function renderHourlyTimeline() {
       const container = document.getElementById('hourlyTimeline');
       if (!container) return;
 
       container.innerHTML = APP_STATE.hourlySchedule.map((slot, index) => `
         <div class="p-2 sm:p-2.5 rounded-xl bg-paper-100 hover:bg-paper-200/70 border border-paper-border flex items-center gap-2 text-xs transition-colors">
-          <input type="text" value="${slot.time}" onchange="updateScheduleTime(${index}, this.value)" class="w-20 font-mono font-bold text-ink-muted bg-transparent border-b border-transparent focus:border-amber-600 focus:outline-none shrink-0" title="Click to edit hour">
+          <input type="text" value="${slot.time}" onchange="updateScheduleTime(${index}, this.value)" class="w-20 font-mono font-bold text-ink-muted bg-transparent border-b border-transparent focus:border-yacht-sunset focus:outline-none shrink-0" title="Click to edit hour">
           <input type="text" value="${slot.event}" placeholder="Empty slot - tap to plan" onchange="updateScheduleEvent(${index}, this.value)" class="flex-1 bg-transparent border-0 text-ink-primary font-serif placeholder:text-ink-faint focus:outline-none">
           ${slot.event ? `<button onclick="clearScheduleSlot(${index})" class="text-ink-faint hover:text-ink-muted p-0.5" title="Clear slot">✕</button>` : ''}
         </div>
@@ -694,7 +748,7 @@
       renderHourlyTimeline();
     }
 
-    // --- Priorities Ledger (Fully Editable Tabs & + Add Priority) ---
+    // --- Priorities Ledger ---
     function renderPriorities() {
       const dashList = document.getElementById('dashPrioritiesList');
       const planList = document.getElementById('plannerTaskList');
@@ -703,7 +757,7 @@
         dashList.innerHTML = APP_STATE.priorities.map(item => `
           <div class="p-2.5 rounded-xl paper-card flex items-center justify-between text-xs">
             <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
-              <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})" class="rounded border-paper-border text-ink-primary">
+              <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})" class="rounded border-paper-border text-yacht-sunset">
               <span class="${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} font-medium truncate">${item.text}</span>
             </div>
             <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-paper-200 text-ink-muted shrink-0">${item.category}</span>
@@ -715,7 +769,7 @@
         planList.innerHTML = APP_STATE.priorities.map(item => `
           <div class="p-2.5 rounded-xl paper-card flex items-center justify-between gap-2 text-xs group">
             <div class="flex items-center gap-2 flex-1 min-w-0">
-              <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})" class="rounded border-paper-border text-ink-primary shrink-0">
+              <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})" class="rounded border-paper-border text-yacht-sunset shrink-0">
               <input type="text" value="${item.text}" onchange="updatePriorityText(${item.id}, this.value)" class="flex-1 bg-transparent border-0 font-medium ${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} focus:outline-none">
             </div>
             <input type="text" value="${item.category}" onchange="updatePriorityCategory(${item.id}, this.value)" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-paper-200 text-ink-muted border border-paper-border focus:border-ink-primary focus:outline-none w-24 text-center shrink-0" title="Click to edit category">
@@ -774,7 +828,7 @@
 
       container.innerHTML = APP_STATE.monthPlans.map(item => `
         <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2 text-xs group">
-          <input type="text" value="${item.date}" onchange="updateMonthPlanDate(${item.id}, this.value)" class="w-16 font-mono font-bold text-indigo-800 bg-indigo-50/70 border border-indigo-200/60 rounded px-1.5 py-0.5 text-center focus:outline-none shrink-0" title="Click date to edit">
+          <input type="text" value="${item.date}" onchange="updateMonthPlanDate(${item.id}, this.value)" class="w-16 font-mono font-bold text-yacht-sea bg-paper-200/80 border border-paper-border rounded px-1.5 py-0.5 text-center focus:outline-none shrink-0" title="Click date to edit">
           <input type="text" value="${item.title}" onchange="updateMonthPlanTitle(${item.id}, this.value)" class="flex-1 bg-transparent border-0 font-serif text-ink-primary focus:outline-none">
           <button onclick="deleteMonthPlan(${item.id})" class="text-ink-faint hover:text-red-600 px-1 opacity-60 group-hover:opacity-100 transition-opacity" title="Delete">✕</button>
         </div>
@@ -819,9 +873,9 @@
 
       container.innerHTML = APP_STATE.monthGoals.map(item => `
         <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2 text-xs group">
-          <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleMonthGoal(${item.id})" class="rounded border-paper-border text-rose-700 shrink-0">
+          <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleMonthGoal(${item.id})" class="rounded border-paper-border text-yacht-sunset shrink-0">
           <input type="text" value="${item.goal}" onchange="updateMonthGoalText(${item.id}, this.value)" class="flex-1 bg-transparent border-0 font-medium ${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} focus:outline-none">
-          <input type="text" value="${item.target}" onchange="updateMonthGoalTarget(${item.id}, this.value)" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-rose-50 text-rose-800 border border-rose-200/60 focus:outline-none w-20 text-center shrink-0" title="Click to edit category">
+          <input type="text" value="${item.target}" onchange="updateMonthGoalTarget(${item.id}, this.value)" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-rose-50/70 text-yacht-dustyrose border border-rose-200/50 focus:outline-none w-20 text-center shrink-0" title="Click to edit category">
           <button onclick="deleteMonthGoal(${item.id})" class="text-ink-faint hover:text-red-600 px-1 opacity-60 group-hover:opacity-100 transition-opacity" title="Delete">✕</button>
         </div>
       `).join('');
@@ -944,7 +998,7 @@
           APP_STATE.isRecording = true;
           document.getElementById('orbRipple1').classList.remove('hidden');
           document.getElementById('orbRipple2').classList.remove('hidden');
-          orbButton.style.background = 'radial-gradient(circle at 35% 30%, #FEE2E2 0%, #EF4444 65%, #991B1B 100%)';
+          orbButton.style.background = 'radial-gradient(circle at 35% 30%, #F4F1DE 0%, #E07A5F 55%, #991B1B 100%)';
           micIcon.className = "w-8 h-8 text-white mb-1 animate-pulse";
           statusLabel.innerText = "LISTENING...";
           statusLabel.className = "font-mono text-[11px] font-bold tracking-wider uppercase text-white drop-shadow-sm";
@@ -991,10 +1045,10 @@
       const micIcon = document.getElementById('orbMicIcon');
       const statusLabel = document.getElementById('orbStatusLabel');
 
-      orbButton.style.background = 'radial-gradient(circle at 35% 30%, #FEF3C7 0%, #F59E0B 65%, #B45309 100%)';
-      micIcon.className = "w-8 h-8 text-amber-950 mb-1 drop-shadow-sm";
+      orbButton.style.background = 'radial-gradient(circle at 35% 30%, #F4F1DE 0%, #F2CC8F 45%, #E07A5F 80%, #C2847A 100%)';
+      micIcon.className = "w-8 h-8 text-ink-primary mb-1 drop-shadow-sm";
       statusLabel.innerText = "TAP TO TALK";
-      statusLabel.className = "font-mono text-[11px] font-bold tracking-wider uppercase text-amber-950 drop-shadow-sm";
+      statusLabel.className = "font-mono text-[11px] font-bold tracking-wider uppercase text-ink-primary drop-shadow-sm";
 
       if (APP_STATE.speechRecognizer) {
         try { APP_STATE.speechRecognizer.stop(); } catch (_) {}
@@ -1105,7 +1159,7 @@ Return strictly a JSON object with this schema:
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         statusEl.innerText = "✅ Microphone accessible and active!";
-        statusEl.className = "text-[11px] text-emerald-700 mt-1 text-center font-mono";
+        statusEl.className = "text-[11px] text-yacht-sage mt-1 text-center font-mono";
         stream.getTracks().forEach(t => t.stop());
       } catch (err) {
         statusEl.innerText = `❌ Error: ${err.message}`;
