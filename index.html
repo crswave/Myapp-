@@ -128,4 +128,1015 @@
 </head>
 <body class="h-full w-full select-none overflow-hidden text-ink-primary flex flex-col justify-between">
 
-  <!-- ================= TOP HEADER BAR
+  <!-- ================= TOP HEADER BAR ================= -->
+  <header class="shrink-0 border-b border-paper-border bg-paper-100/90 backdrop-blur-md z-30 px-4 sm:px-6 pt-[calc(var(--sat)+10px)] pb-3">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></div>
+        <div>
+          <h1 id="headerGreeting" class="font-serif text-lg sm:text-xl font-medium tracking-tight text-ink-primary">Good evening, legend</h1>
+          <p class="text-[11px] font-mono tracking-wider uppercase text-ink-muted">Personal Hub • Life OS</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 pr-[max(0px,calc(var(--sar)-4px))]">
+        <span id="liveClock" class="font-mono text-xs font-semibold px-2.5 py-1 rounded-full bg-paper-200 text-ink-secondary border border-paper-border">12:00 PM</span>
+        <button onclick="toggleSettingsModal(true)" class="p-2 rounded-xl text-ink-secondary hover:text-ink-primary hover:bg-paper-200 transition-colors" title="Settings">
+          <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN SCROLLABLE VIEWPORT ================= -->
+  <main class="flex-1 overflow-y-auto relative z-10 px-4 sm:px-6 py-4 pr-[max(72px,calc(var(--sar)+68px))] pl-[max(16px,var(--sal))] pb-[max(32px,calc(var(--sab)+24px))]">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- ================= 1. DASHBOARD VIEW ================= -->
+      <section id="viewDash" class="space-y-6">
+
+        <!-- QUICK HITS 4-CARD REVOLVING CAROUSEL -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono font-semibold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-600"></i> Quick Hits Radar
+            </span>
+            <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1" id="carouselDots">
+                <button onclick="setCarouselSlide(0)" class="w-2 h-2 rounded-full bg-ink-primary transition-all"></button>
+                <button onclick="setCarouselSlide(1)" class="w-2 h-2 rounded-full bg-paper-300 transition-all"></button>
+                <button onclick="setCarouselSlide(2)" class="w-2 h-2 rounded-full bg-paper-300 transition-all"></button>
+                <button onclick="setCarouselSlide(3)" class="w-2 h-2 rounded-full bg-paper-300 transition-all"></button>
+              </div>
+              <button onclick="prevCarouselSlide()" class="p-1 rounded-lg text-ink-muted hover:text-ink-primary hover:bg-paper-200">
+                <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="nextCarouselSlide()" class="p-1 rounded-lg text-ink-muted hover:text-ink-primary hover:bg-paper-200">
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Carousel Container -->
+          <div id="carouselWrapper" class="relative overflow-hidden rounded-2xl paper-card min-h-[175px]">
+            
+            <!-- Slide 0: Sports Radar -->
+            <div id="slide-0" class="carousel-slide p-4 sm:p-5 transition-opacity duration-300">
+              <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
+                <span class="text-xs font-mono font-semibold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200/60 flex items-center gap-1">
+                  <i data-lucide="trophy" class="w-3 h-3"></i> ESPN Live Matchups
+                </span>
+                <button onclick="fetchLiveSports(true)" class="text-ink-muted hover:text-ink-primary p-1 rounded-lg hover:bg-paper-100" title="Refresh Live Scores">
+                  <i data-lucide="refresh-cw" id="sportsRefreshIcon" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+              <div id="primetimeContainer" class="mb-3 p-2.5 rounded-xl bg-paper-50 border border-paper-border flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-amber-600 text-white rounded">PRIMETIME</span>
+                  <span id="primetimeMatchup" class="text-xs font-semibold text-ink-primary">Seahawks vs Bears</span>
+                </div>
+                <span id="primetimeStatus" class="font-mono text-xs font-bold text-amber-700">8:15 PM ET</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="teamMatchupsContainer">
+                <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between">
+                  <span class="font-medium text-ink-primary">SF 49ers vs Rams</span>
+                  <span class="font-mono text-[11px] text-ink-muted">Sun 4:25 PM</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between">
+                  <span class="font-medium text-ink-primary">OKC Thunder @ DAL</span>
+                  <span class="font-mono text-[11px] text-ink-muted">Final 118-110</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 1: News Pulse -->
+            <div id="slide-1" class="carousel-slide p-4 sm:p-5 hidden transition-opacity duration-300">
+              <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
+                <span class="text-xs font-mono font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60 flex items-center gap-1">
+                  <i data-lucide="newspaper" class="w-3 h-3"></i> Daily Dispatch
+                </span>
+                <span class="text-[11px] font-mono text-ink-muted">Morning Edition</span>
+              </div>
+              <div class="space-y-2">
+                <div class="p-2.5 rounded-xl bg-paper-50 border border-paper-border">
+                  <p class="font-serif text-sm font-medium text-ink-primary line-clamp-1">Space Exploration: Artemis Moon Landings Target Next Flight Window</p>
+                  <p class="text-[11px] text-ink-muted mt-0.5">Reuters • Aerospace & Science</p>
+                </div>
+                <div class="p-2.5 rounded-xl bg-paper-50 border border-paper-border">
+                  <p class="font-serif text-sm font-medium text-ink-primary line-clamp-1">Hardware & Silicon: New Edge AI Chipsets Target Sub-Watt Efficiency</p>
+                  <p class="text-[11px] text-ink-muted mt-0.5">Ars Technica • Hardware</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 2: Daily Comic -->
+            <div id="slide-2" class="carousel-slide p-4 sm:p-5 hidden transition-opacity duration-300">
+              <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
+                <span class="text-xs font-mono font-semibold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full border border-purple-200/60 flex items-center gap-1">
+                  <i data-lucide="smile" class="w-3 h-3"></i> Field Notes & Comic
+                </span>
+                <button onclick="rotateComicStrip()" class="text-[11px] font-mono text-ink-muted hover:text-ink-primary underline">Next Strip</button>
+              </div>
+              <div class="p-3 rounded-xl bg-paper-50 border border-paper-border text-center">
+                <p id="comicSetup" class="font-serif text-sm italic text-ink-primary">"There are only 10 types of people in the world..."</p>
+                <p id="comicPunchline" class="font-mono text-xs font-semibold text-purple-800 mt-2">"...Those who understand binary, and those who don't."</p>
+              </div>
+            </div>
+
+            <!-- Slide 3: Pit & Range Guide -->
+            <div id="slide-3" class="carousel-slide p-4 sm:p-5 hidden transition-opacity duration-300">
+              <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
+                <span class="text-xs font-mono font-semibold text-stone-700 bg-stone-100 px-2.5 py-0.5 rounded-full border border-paper-border flex items-center gap-1">
+                  <i data-lucide="flame" class="w-3 h-3 text-orange-600"></i> Pit & Range Quick Specs
+                </span>
+                <span class="text-[11px] font-mono text-ink-muted">Reference Sheet</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="p-2.5 rounded-xl bg-paper-50 border border-paper-border">
+                  <span class="text-[10px] font-mono text-ink-muted uppercase">Smoked Brisket</span>
+                  <p class="font-semibold text-ink-primary mt-0.5">Wrap @ 165°F</p>
+                  <p class="text-[11px] text-ink-muted">Probe Tender @ 203°F</p>
+                </div>
+                <div class="p-2.5 rounded-xl bg-paper-50 border border-paper-border">
+                  <span class="text-[10px] font-mono text-ink-muted uppercase">54° Wedge Carry</span>
+                  <p class="font-semibold text-ink-primary mt-0.5">95 yds (Full)</p>
+                  <p class="text-[11px] text-ink-muted">75 yds (3/4 Pitch)</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- QUICK CAPTURE CAPSULE -->
+        <div class="paper-card rounded-2xl p-2.5 sm:p-3 flex items-center gap-2">
+          <div class="flex-1 min-w-0">
+            <input type="text" id="quickCaptureInput" placeholder="Quick idea, task, or note..." class="w-full bg-transparent border-0 px-2 py-1 text-sm text-ink-primary placeholder:text-ink-faint focus:outline-none focus:ring-0">
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="handleQuickCapture('task')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-ink-primary text-white text-xs font-medium hover:bg-ink-secondary transition-colors whitespace-nowrap flex items-center gap-1">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Task
+            </button>
+            <button onclick="handleQuickCapture('note')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-paper-200 text-ink-primary border border-paper-border text-xs font-medium hover:bg-paper-300 transition-colors whitespace-nowrap flex items-center gap-1">
+              <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Note
+            </button>
+            <button onclick="switchView('talk')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-50 text-amber-900 border border-amber-300/60 text-xs font-medium hover:bg-amber-100 transition-colors whitespace-nowrap flex items-center gap-1">
+              <i data-lucide="mic" class="w-3.5 h-3.5 text-amber-700"></i> Talk
+            </button>
+          </div>
+        </div>
+
+        <!-- TOP PRIORITIES SUMMARY -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono font-semibold uppercase tracking-wider text-ink-muted">Today's Priorities</span>
+            <button onclick="switchView('plan')" class="text-xs font-serif italic text-ink-muted hover:text-ink-primary">View Full Planner →</button>
+          </div>
+          <div id="dashPrioritiesList" class="space-y-2"></div>
+        </div>
+
+      </section>
+
+      <!-- ================= 2. REVAMPED PLAN VIEW ================= -->
+      <section id="viewPlan" class="hidden space-y-6">
+        <div class="flex items-center justify-between pb-2 border-b border-paper-border">
+          <div>
+            <h2 class="font-serif text-xl sm:text-2xl font-medium text-ink-primary">Executive Day & Monthly Agenda</h2>
+            <p class="text-xs font-mono text-ink-muted">24-hour daily timeline, priority ledger, and monthly vision</p>
+          </div>
+        </div>
+
+        <!-- TOP ROW: Plan Your Day (24-Hour) & Priority Ledger -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+          <!-- 1. PLAN YOUR DAY (24-Hour Scrollable Slots) -->
+          <div class="paper-card rounded-2xl p-4 sm:p-5 flex flex-col">
+            <div class="flex items-center justify-between pb-3 border-b border-paper-border mb-3">
+              <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
+                <i data-lucide="clock" class="w-4 h-4 text-amber-700"></i> Plan Your Day (24 Hours)
+              </span>
+              <span class="text-[11px] font-mono text-ink-muted">Editable times & tasks</span>
+            </div>
+            
+            <div id="hourlyTimeline" class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+              <!-- Dynamically populated 24 hours -->
+            </div>
+          </div>
+
+          <!-- 2. PRIORITY LEDGER (Editable tabs + Add Priority tab bottom) -->
+          <div class="paper-card rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between pb-3 border-b border-paper-border mb-3">
+                <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
+                  <i data-lucide="check-square" class="w-4 h-4 text-emerald-700"></i> Priority Ledger
+                </span>
+                <span class="text-[11px] font-mono text-ink-muted">Click any item or tag to edit</span>
+              </div>
+              
+              <div id="plannerTaskList" class="space-y-2 max-h-[440px] overflow-y-auto pr-1">
+                <!-- Dynamically populated priorities -->
+              </div>
+            </div>
+
+            <!-- Add a Priority Tab Button (Always positioned underneath) -->
+            <div class="pt-3 mt-2 border-t border-paper-border">
+              <button onclick="addNewPriorityItem()" class="w-full py-2.5 px-3 rounded-xl bg-paper-100 hover:bg-paper-200 border border-dashed border-paper-border text-xs font-mono font-medium text-ink-primary transition-all flex items-center justify-center gap-2">
+                <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-700"></i> + Add a Priority
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- BOTTOM ROW: Plans for the Month & Month Goals -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+          <!-- 3. PLANS FOR THE MONTH -->
+          <div class="paper-card rounded-2xl p-4 sm:p-5 space-y-3">
+            <div class="flex items-center justify-between pb-3 border-b border-paper-border">
+              <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
+                <i data-lucide="calendar-range" class="w-4 h-4 text-indigo-700"></i> Plans for the Month
+              </span>
+              <button onclick="addNewMonthPlan()" class="text-xs font-mono text-indigo-800 hover:text-indigo-950 font-medium flex items-center gap-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Plan
+              </button>
+            </div>
+            
+            <div id="monthPlansList" class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+              <!-- Dynamically populated month plans -->
+            </div>
+          </div>
+
+          <!-- 4. MONTH GOALS -->
+          <div class="paper-card rounded-2xl p-4 sm:p-5 space-y-3">
+            <div class="flex items-center justify-between pb-3 border-b border-paper-border">
+              <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
+                <i data-lucide="target" class="w-4 h-4 text-rose-700"></i> Month Goals
+              </span>
+              <button onclick="addNewMonthGoal()" class="text-xs font-mono text-rose-800 hover:text-rose-950 font-medium flex items-center gap-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Goal
+              </button>
+            </div>
+            
+            <div id="monthGoalsList" class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+              <!-- Dynamically populated month goals -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= 3. NOTES VIEW ================= -->
+      <section id="viewNotes" class="hidden space-y-4">
+        <div class="flex items-center justify-between pb-2 border-b border-paper-border">
+          <div>
+            <h2 class="font-serif text-xl font-medium text-ink-primary">Notebook & Logs</h2>
+            <p class="text-xs font-mono text-ink-muted">College-ruled loose-leaf binder</p>
+          </div>
+          <div class="flex items-center gap-1" id="notebookTabs">
+            <button onclick="setNotebookTab('Smoker & Cooking')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-ink-primary text-white">Smoker</button>
+            <button onclick="setNotebookTab('Golf Log')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">Golf</button>
+            <button onclick="setNotebookTab('Workbench')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">Workbench</button>
+            <button onclick="setNotebookTab('General')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">General</button>
+          </div>
+        </div>
+
+        <div class="paper-card rounded-2xl overflow-hidden relative border border-paper-border shadow-md">
+          <div class="absolute left-3 top-0 bottom-0 flex flex-col justify-around py-12 pointer-events-none z-20">
+            <div class="w-3.5 h-3.5 rounded-full bg-paper-300 border border-paper-border shadow-inner"></div>
+            <div class="w-3.5 h-3.5 rounded-full bg-paper-300 border border-paper-border shadow-inner"></div>
+            <div class="w-3.5 h-3.5 rounded-full bg-paper-300 border border-paper-border shadow-inner"></div>
+          </div>
+
+          <div class="college-ruled min-h-[520px] pl-12 pr-6 py-4 relative">
+            <div class="absolute left-10 top-0 bottom-0 red-margin-line pointer-events-none"></div>
+            <input id="noteSheetTitle" type="text" class="w-full font-serif text-lg font-bold text-ink-primary bg-transparent border-0 focus:outline-none mb-2" value="Texas Style Smoked Brisket Master Checklist">
+            <textarea id="noteSheetContent" oninput="saveCurrentNoteContent()" class="w-full bg-transparent border-0 font-mono text-xs sm:text-sm text-ink-primary leading-[28px] resize-none focus:outline-none min-h-[440px]" spellcheck="false"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. TALK VIEW ================= -->
+      <section id="viewTalk" class="hidden flex flex-col items-center justify-center min-h-[65vh] py-8 space-y-6">
+        <div class="text-center space-y-1.5 max-w-sm">
+          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300/60">Voice Intelligence</span>
+          <h2 class="font-serif text-2xl font-medium text-ink-primary">Voice Companion</h2>
+          <p class="text-xs text-ink-muted">Tap the orb to dictate stream-of-consciousness thoughts, field notes, or reminders.</p>
+        </div>
+
+        <div class="relative flex items-center justify-center w-64 h-64 my-4">
+          <div id="orbRipple1" class="absolute inset-0 rounded-full bg-amber-400/20 pulse-ring hidden pointer-events-none"></div>
+          <div id="orbRipple2" class="absolute inset-4 rounded-full bg-orange-400/25 pulse-ring hidden pointer-events-none" style="animation-delay: 0.6s;"></div>
+
+          <button id="aiOrbButton" onclick="toggleVoiceSession()" class="ai-orb-core w-44 h-44 rounded-full relative z-10 focus:outline-none transition-transform active:scale-95 flex flex-col items-center justify-center p-4 text-center cursor-pointer" style="background: radial-gradient(circle at 35% 30%, #FEF3C7 0%, #F59E0B 65%, #B45309 100%);">
+            <div class="absolute top-3 left-6 w-16 h-8 rounded-full bg-white/40 blur-[2px] transform -rotate-12 pointer-events-none"></div>
+            <i data-lucide="mic" id="orbMicIcon" class="w-8 h-8 text-amber-950 mb-1 drop-shadow-sm transition-transform"></i>
+            <span id="orbStatusLabel" class="font-mono text-[11px] font-bold tracking-wider uppercase text-amber-950 drop-shadow-sm">TAP TO TALK</span>
+          </button>
+        </div>
+
+        <div class="w-full max-w-md paper-card rounded-2xl p-4 text-center space-y-2">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-ink-muted">Live Transcription Stream</span>
+          <p id="orbTranscriptText" class="font-serif italic text-sm text-ink-secondary min-h-[38px] flex items-center justify-center">
+            "Listening... speak freely."
+          </p>
+        </div>
+
+        <div id="orbReceiptCard" class="w-full max-w-md paper-card rounded-2xl p-4 border border-amber-200/80 bg-amber-50/40 hidden space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono font-bold text-amber-900 flex items-center gap-1">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-amber-700"></i> AI Structured & Saved
+            </span>
+            <button onclick="dismissReceiptCard()" class="text-xs text-ink-muted hover:text-ink-primary">✕</button>
+          </div>
+          <div id="orbReceiptContent" class="text-xs text-ink-secondary space-y-1"></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= RIGHT-SIDE CONTROL RAIL ================= -->
+  <aside class="fixed right-3 sm:right-5 top-1/2 -translate-y-1/2 z-40">
+    <nav class="rail-glass rounded-3xl p-1.5 flex flex-col gap-2">
+      <button onclick="switchView('dash')" id="navBtn-dash" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-primary bg-paper-300/60 transition-all hover:bg-paper-200" title="Dashboard">
+        <i data-lucide="layout-grid" class="w-4 h-4"></i>
+        <span class="text-[9px] font-mono mt-0.5">Dash</span>
+      </button>
+
+      <button onclick="switchView('plan')" id="navBtn-plan" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Planner">
+        <i data-lucide="calendar" class="w-4 h-4"></i>
+        <span class="text-[9px] font-mono mt-0.5">Plan</span>
+      </button>
+
+      <button onclick="switchView('notes')" id="navBtn-notes" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Notebook">
+        <i data-lucide="book-open" class="w-4 h-4"></i>
+        <span class="text-[9px] font-mono mt-0.5">Notes</span>
+      </button>
+
+      <button onclick="switchView('talk')" id="navBtn-talk" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-amber-800 hover:text-amber-950 transition-all hover:bg-amber-100" title="Voice AI">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+        <span class="text-[9px] font-mono mt-0.5">Talk</span>
+      </button>
+
+      <div class="w-8 h-[1px] bg-paper-border self-center my-0.5"></div>
+
+      <button onclick="toggleSettingsModal(true)" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Settings">
+        <i data-lucide="settings" class="w-4 h-4"></i>
+        <span class="text-[9px] font-mono mt-0.5">Set</span>
+      </button>
+    </nav>
+  </aside>
+
+  <!-- ================= SETTINGS MODAL ================= -->
+  <div id="settingsModal" class="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="paper-card rounded-2xl max-w-md w-full p-6 space-y-4 border border-paper-border shadow-2xl">
+      <div class="flex items-center justify-between border-b border-paper-border pb-3">
+        <h3 class="font-serif text-lg font-bold text-ink-primary">Settings & AI Keys</h3>
+        <button onclick="toggleSettingsModal(false)" class="text-ink-muted hover:text-ink-primary p-1 rounded-lg">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-mono uppercase text-ink-muted mb-1">Google AI Studio API Key</label>
+          <div class="flex gap-2">
+            <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="flex-1 px-3 py-2 rounded-xl bg-paper-100 border border-paper-border text-xs text-ink-primary focus:outline-none">
+            <button onclick="saveApiKey()" class="px-3 py-2 rounded-xl bg-ink-primary text-white font-medium hover:bg-ink-secondary">Save</button>
+          </div>
+          <p class="text-[11px] text-ink-muted mt-1">Stored locally in your device's browser memory.</p>
+        </div>
+
+        <div class="border-t border-paper-border pt-3">
+          <label class="block font-mono uppercase text-ink-muted mb-1.5">Microphone Diagnostics</label>
+          <button onclick="testMicrophoneAccess()" class="w-full px-3 py-2 rounded-xl bg-paper-200 text-ink-primary border border-paper-border hover:bg-paper-300 font-mono text-[11px] flex items-center justify-center gap-1.5">
+            <i data-lucide="mic" class="w-3.5 h-3.5"></i> Test Safari Microphone Access
+          </button>
+          <p id="micDiagnosticStatus" class="text-[11px] text-ink-muted mt-1 text-center font-mono"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= APPLICATION SCRIPT ================= -->
+  <script>
+    // --- Generate Default 24 Hours (12:00 AM to 11:00 PM) ---
+    function generateDefault24Hours() {
+      const hours = [];
+      const presets = {
+        7: "Espresso & daily dispatch overview",
+        9: "Work sprint & team syncs",
+        12: "Lunch & quick walk",
+        16: "Range practice / golf drills",
+        18: "Dinner & pellet smoker check"
+      };
+      for (let h = 0; h < 24; h++) {
+        const period = h >= 12 ? 'PM' : 'AM';
+        const displayH = h % 12 === 0 ? 12 : h % 12;
+        const formattedTime = `${String(displayH).padStart(2, '0')}:00 ${period}`;
+        hours.push({
+          time: formattedTime,
+          event: presets[h] || ""
+        });
+      }
+      return hours;
+    }
+
+    // --- State Storage ---
+    const APP_STATE = {
+      activeView: 'dash',
+      carouselIndex: 0,
+      carouselTimer: null,
+      activeNotebookTab: 'Smoker & Cooking',
+      isRecording: false,
+      speechRecognizer: null,
+      activeAudioStream: null,
+      
+      // 24-hour daily timeline
+      hourlySchedule: JSON.parse(localStorage.getItem('vibehub_24h_schedule')) || generateDefault24Hours(),
+      
+      // Priorities with editable tabs
+      priorities: JSON.parse(localStorage.getItem('vibehub_priorities_v2')) || [
+        { id: 1, text: "Prep brisket dry rub (16 mesh pepper + kosher salt)", category: "HOME & GRILL", done: false },
+        { id: 2, text: "Range session: 50yd wedge touch & tempo drills", category: "GOLF", done: false },
+        { id: 3, text: "Check Grandstream ATA VoIP configuration", category: "WORKBENCH", done: true }
+      ],
+
+      // Plans for the Month
+      monthPlans: JSON.parse(localStorage.getItem('vibehub_month_plans')) || [
+        { id: 1, date: "Nov 14", title: "Weekend brisket cook & patio smoke test" },
+        { id: 2, date: "Nov 21", title: "Golf outing & short game practice session" },
+        { id: 3, date: "Nov 28", title: "Family holiday dinner & DIY project review" }
+      ],
+
+      // Month Goals
+      monthGoals: JSON.parse(localStorage.getItem('vibehub_month_goals')) || [
+        { id: 1, goal: "Dial in 54° wedge carry consistency (target 95 yds)", target: "GOLF", done: false },
+        { id: 2, goal: "Complete Asterisk VoIP bridge setup on Doritos phone", target: "TECH", done: false },
+        { id: 3, goal: "Host backyard smoker cookout for family", target: "HOME", done: true }
+      ],
+
+      notesData: JSON.parse(localStorage.getItem('vibehub_notebook_v1')) || {
+        'Smoker & Cooking': {
+          title: "Texas Style Smoked Brisket Master Checklist",
+          content: "• Trim hard fat to uniform 1/4 inch flat layer.\n• Rub: 50% coarse 16-mesh black pepper, 45% kosher salt, 5% granulated garlic.\n• Temperature: 225°F Traeger Silverton with Post Oak pellets.\n• Peach butcher paper boat wrap at 165°F bark stall.\n• Pull probe-tender at 203°F internal. Rest minimum 3 hours in cooler."
+        },
+        'Golf Log': {
+          title: "Wedge Yardages & Swing Focus",
+          content: "• 60° Lob Wedge: 75 yards carry.\n• 54° Sand Wedge: 95 yards full / 70 yards punch.\n• 50° Gap Wedge: 110 yards.\n• Swing thought: Keep lead wrist flat at top of backswing; quiet hips on takeaway."
+        },
+        'Workbench': {
+          title: "Pi & Hardware Lab Setup",
+          content: "• Grandstream HT801 ATA IP: 192.168.1.140\n• Asterisk SIP port: 5060\n• Traeger pellet sensor calibration: Check hopper clear path."
+        },
+        'General': {
+          title: "Quick Ideas & Reference",
+          content: "• Call local butcher for prime grade brisket flats.\n• Book Saturday tee time 7 days ahead."
+        }
+      }
+    };
+
+    // --- View Navigation ---
+    function switchView(viewName) {
+      APP_STATE.activeView = viewName;
+      ['dash', 'plan', 'notes', 'talk'].forEach(v => {
+        const sec = document.getElementById(`view${v.charAt(0).toUpperCase() + v.slice(1)}`);
+        const btn = document.getElementById(`navBtn-${v}`);
+        if (sec) sec.classList.toggle('hidden', v !== viewName);
+        if (btn) {
+          btn.classList.toggle('bg-paper-300/60', v === viewName);
+          btn.classList.toggle('text-ink-primary', v === viewName);
+          btn.classList.toggle('text-ink-muted', v !== viewName);
+        }
+      });
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // --- Carousel Controls ---
+    function setCarouselSlide(index) {
+      APP_STATE.carouselIndex = index;
+      for (let i = 0; i < 4; i++) {
+        const slide = document.getElementById(`slide-${i}`);
+        if (slide) slide.classList.toggle('hidden', i !== index);
+      }
+      const dots = document.getElementById('carouselDots')?.children;
+      if (dots) {
+        for (let i = 0; i < dots.length; i++) {
+          dots[i].className = i === index ? 'w-2 h-2 rounded-full bg-ink-primary transition-all' : 'w-2 h-2 rounded-full bg-paper-300 transition-all';
+        }
+      }
+    }
+
+    function nextCarouselSlide() {
+      setCarouselSlide((APP_STATE.carouselIndex + 1) % 4);
+    }
+
+    function prevCarouselSlide() {
+      setCarouselSlide((APP_STATE.carouselIndex + 3) % 4);
+    }
+
+    function startCarousel() {
+      if (APP_STATE.carouselTimer) clearInterval(APP_STATE.carouselTimer);
+      APP_STATE.carouselTimer = setInterval(nextCarouselSlide, 8000);
+    }
+
+    // --- ESPN Scoreboard Live Polling ---
+    async function fetchLiveSports(isManual = false) {
+      const icon = document.getElementById('sportsRefreshIcon');
+      if (icon) icon.classList.add('animate-spin');
+
+      try {
+        const [nflRes, nbaRes] = await Promise.allSettled([
+          fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'),
+          fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard')
+        ]);
+
+        if (nflRes.status === 'fulfilled') {
+          const nflData = await nflRes.value.json();
+          const primeGame = nflData.events?.find(e => e.competitions?.[0]?.broadcast?.toLowerCase().includes('espn') || e.name?.includes('49ers')) || nflData.events?.[0];
+          if (primeGame) {
+            document.getElementById('primetimeMatchup').innerText = primeGame.shortName || primeGame.name;
+            document.getElementById('primetimeStatus').innerText = primeGame.status?.type?.detail || "Scheduled";
+          }
+        }
+      } catch (err) {
+        console.warn('Sports live scoreboard fallback active', err);
+      } finally {
+        if (icon) icon.classList.remove('animate-spin');
+      }
+    }
+
+    // --- 24-Hour Day Planner (Plan Your Day) ---
+    function renderHourlyTimeline() {
+      const container = document.getElementById('hourlyTimeline');
+      if (!container) return;
+
+      container.innerHTML = APP_STATE.hourlySchedule.map((slot, index) => `
+        <div class="p-2 sm:p-2.5 rounded-xl bg-paper-100 hover:bg-paper-200/70 border border-paper-border flex items-center gap-2 text-xs transition-colors">
+          <input type="text" value="${slot.time}" onchange="updateScheduleTime(${index}, this.value)" class="w-20 font-mono font-bold text-ink-muted bg-transparent border-b border-transparent focus:border-amber-600 focus:outline-none shrink-0" title="Click to edit hour">
+          <input type="text" value="${slot.event}" placeholder="Empty slot - tap to plan" onchange="updateScheduleEvent(${index}, this.value)" class="flex-1 bg-transparent border-0 text-ink-primary font-serif placeholder:text-ink-faint focus:outline-none">
+          ${slot.event ? `<button onclick="clearScheduleSlot(${index})" class="text-ink-faint hover:text-ink-muted p-0.5" title="Clear slot">✕</button>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function updateScheduleTime(index, val) {
+      APP_STATE.hourlySchedule[index].time = val;
+      localStorage.setItem('vibehub_24h_schedule', JSON.stringify(APP_STATE.hourlySchedule));
+    }
+
+    function updateScheduleEvent(index, val) {
+      APP_STATE.hourlySchedule[index].event = val;
+      localStorage.setItem('vibehub_24h_schedule', JSON.stringify(APP_STATE.hourlySchedule));
+    }
+
+    function clearScheduleSlot(index) {
+      APP_STATE.hourlySchedule[index].event = "";
+      localStorage.setItem('vibehub_24h_schedule', JSON.stringify(APP_STATE.hourlySchedule));
+      renderHourlyTimeline();
+    }
+
+    // --- Priorities Ledger (Fully Editable Tabs & + Add Priority) ---
+    function renderPriorities() {
+      const dashList = document.getElementById('dashPrioritiesList');
+      const planList = document.getElementById('plannerTaskList');
+
+      if (dashList) {
+        dashList.innerHTML = APP_STATE.priorities.map(item => `
+          <div class="p-2.5 rounded-xl paper-card flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
+              <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})" class="rounded border-paper-border text-ink-primary">
+              <span class="${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} font-medium truncate">${item.text}</span>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-paper-200 text-ink-muted shrink-0">${item.category}</span>
+          </div>
+        `).join('');
+      }
+
+      if (planList) {
+        planList.innerHTML = APP_STATE.priorities.map(item => `
+          <div class="p-2.5 rounded-xl paper-card flex items-center justify-between gap-2 text-xs group">
+            <div class="flex items-center gap-2 flex-1 min-w-0">
+              <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})" class="rounded border-paper-border text-ink-primary shrink-0">
+              <input type="text" value="${item.text}" onchange="updatePriorityText(${item.id}, this.value)" class="flex-1 bg-transparent border-0 font-medium ${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} focus:outline-none">
+            </div>
+            <input type="text" value="${item.category}" onchange="updatePriorityCategory(${item.id}, this.value)" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-paper-200 text-ink-muted border border-paper-border focus:border-ink-primary focus:outline-none w-24 text-center shrink-0" title="Click to edit category">
+            <button onclick="deletePriority(${item.id})" class="text-ink-faint hover:text-red-600 px-1 opacity-60 group-hover:opacity-100 transition-opacity" title="Delete">✕</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function togglePriority(id) {
+      const p = APP_STATE.priorities.find(x => x.id === id);
+      if (p) p.done = !p.done;
+      savePriorities();
+    }
+
+    function updatePriorityText(id, newText) {
+      const p = APP_STATE.priorities.find(x => x.id === id);
+      if (p) p.text = newText;
+      savePriorities();
+    }
+
+    function updatePriorityCategory(id, newCat) {
+      const p = APP_STATE.priorities.find(x => x.id === id);
+      if (p) p.category = newCat.toUpperCase();
+      savePriorities();
+    }
+
+    function deletePriority(id) {
+      APP_STATE.priorities = APP_STATE.priorities.filter(x => x.id !== id);
+      savePriorities();
+    }
+
+    function addNewPriorityItem() {
+      APP_STATE.priorities.push({
+        id: Date.now(),
+        text: "New actionable priority",
+        category: "FOCUS",
+        done: false
+      });
+      savePriorities();
+      setTimeout(() => {
+        const list = document.getElementById('plannerTaskList');
+        if (list) list.scrollTop = list.scrollHeight;
+      }, 50);
+    }
+
+    function savePriorities() {
+      localStorage.setItem('vibehub_priorities_v2', JSON.stringify(APP_STATE.priorities));
+      renderPriorities();
+    }
+
+    // --- Plans for the Month ---
+    function renderMonthPlans() {
+      const container = document.getElementById('monthPlansList');
+      if (!container) return;
+
+      container.innerHTML = APP_STATE.monthPlans.map(item => `
+        <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2 text-xs group">
+          <input type="text" value="${item.date}" onchange="updateMonthPlanDate(${item.id}, this.value)" class="w-16 font-mono font-bold text-indigo-800 bg-indigo-50/70 border border-indigo-200/60 rounded px-1.5 py-0.5 text-center focus:outline-none shrink-0" title="Click date to edit">
+          <input type="text" value="${item.title}" onchange="updateMonthPlanTitle(${item.id}, this.value)" class="flex-1 bg-transparent border-0 font-serif text-ink-primary focus:outline-none">
+          <button onclick="deleteMonthPlan(${item.id})" class="text-ink-faint hover:text-red-600 px-1 opacity-60 group-hover:opacity-100 transition-opacity" title="Delete">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function updateMonthPlanDate(id, val) {
+      const item = APP_STATE.monthPlans.find(x => x.id === id);
+      if (item) item.date = val;
+      saveMonthPlans();
+    }
+
+    function updateMonthPlanTitle(id, val) {
+      const item = APP_STATE.monthPlans.find(x => x.id === id);
+      if (item) item.title = val;
+      saveMonthPlans();
+    }
+
+    function deleteMonthPlan(id) {
+      APP_STATE.monthPlans = APP_STATE.monthPlans.filter(x => x.id !== id);
+      saveMonthPlans();
+    }
+
+    function addNewMonthPlan() {
+      APP_STATE.monthPlans.push({
+        id: Date.now(),
+        date: "Nov 30",
+        title: "New monthly milestone or plan"
+      });
+      saveMonthPlans();
+    }
+
+    function saveMonthPlans() {
+      localStorage.setItem('vibehub_month_plans', JSON.stringify(APP_STATE.monthPlans));
+      renderMonthPlans();
+    }
+
+    // --- Month Goals ---
+    function renderMonthGoals() {
+      const container = document.getElementById('monthGoalsList');
+      if (!container) return;
+
+      container.innerHTML = APP_STATE.monthGoals.map(item => `
+        <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2 text-xs group">
+          <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleMonthGoal(${item.id})" class="rounded border-paper-border text-rose-700 shrink-0">
+          <input type="text" value="${item.goal}" onchange="updateMonthGoalText(${item.id}, this.value)" class="flex-1 bg-transparent border-0 font-medium ${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} focus:outline-none">
+          <input type="text" value="${item.target}" onchange="updateMonthGoalTarget(${item.id}, this.value)" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-rose-50 text-rose-800 border border-rose-200/60 focus:outline-none w-20 text-center shrink-0" title="Click to edit category">
+          <button onclick="deleteMonthGoal(${item.id})" class="text-ink-faint hover:text-red-600 px-1 opacity-60 group-hover:opacity-100 transition-opacity" title="Delete">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function toggleMonthGoal(id) {
+      const g = APP_STATE.monthGoals.find(x => x.id === id);
+      if (g) g.done = !g.done;
+      saveMonthGoals();
+    }
+
+    function updateMonthGoalText(id, val) {
+      const g = APP_STATE.monthGoals.find(x => x.id === id);
+      if (g) g.goal = val;
+      saveMonthGoals();
+    }
+
+    function updateMonthGoalTarget(id, val) {
+      const g = APP_STATE.monthGoals.find(x => x.id === id);
+      if (g) g.target = val.toUpperCase();
+      saveMonthGoals();
+    }
+
+    function deleteMonthGoal(id) {
+      APP_STATE.monthGoals = APP_STATE.monthGoals.filter(x => x.id !== id);
+      saveMonthGoals();
+    }
+
+    function addNewMonthGoal() {
+      APP_STATE.monthGoals.push({
+        id: Date.now(),
+        goal: "New target or monthly aspiration",
+        target: "GOAL",
+        done: false
+      });
+      saveMonthGoals();
+    }
+
+    function saveMonthGoals() {
+      localStorage.setItem('vibehub_month_goals', JSON.stringify(APP_STATE.monthGoals));
+      renderMonthGoals();
+    }
+
+    // --- Notebook Tabs & Content ---
+    function setNotebookTab(tabName) {
+      APP_STATE.activeNotebookTab = tabName;
+      const tabData = APP_STATE.notesData[tabName] || { title: tabName, content: "" };
+      document.getElementById('noteSheetTitle').value = tabData.title;
+      document.getElementById('noteSheetContent').value = tabData.content;
+
+      const tabs = document.getElementById('notebookTabs').children;
+      for (let btn of tabs) {
+        const isActive = btn.innerText.includes(tabName.split(' ')[0]);
+        btn.className = isActive ? 'px-2.5 py-1 text-xs font-mono rounded-lg bg-ink-primary text-white' : 'px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary';
+      }
+    }
+
+    function saveCurrentNoteContent() {
+      const tab = APP_STATE.activeNotebookTab;
+      APP_STATE.notesData[tab] = {
+        title: document.getElementById('noteSheetTitle').value,
+        content: document.getElementById('noteSheetContent').value
+      };
+      localStorage.setItem('vibehub_notebook_v1', JSON.stringify(APP_STATE.notesData));
+    }
+
+    // --- Quick Capture ---
+    function handleQuickCapture(type) {
+      const input = document.getElementById('quickCaptureInput');
+      const val = input.value.trim();
+      if (!val) return;
+
+      if (type === 'task') {
+        APP_STATE.priorities.unshift({ id: Date.now(), text: val, category: 'GENERAL', done: false });
+        savePriorities();
+      } else {
+        const curTab = APP_STATE.activeNotebookTab;
+        APP_STATE.notesData[curTab].content += `\n• ${val}`;
+        setNotebookTab(curTab);
+      }
+      input.value = '';
+    }
+
+    // --- Safari Voice Engine (Rabbit R1 Orb) ---
+    async function toggleVoiceSession() {
+      if (APP_STATE.isRecording) {
+        stopVoiceSession();
+      } else {
+        await startVoiceSession();
+      }
+    }
+
+    async function startVoiceSession() {
+      const transcriptEl = document.getElementById('orbTranscriptText');
+      const orbButton = document.getElementById('aiOrbButton');
+      const micIcon = document.getElementById('orbMicIcon');
+      const statusLabel = document.getElementById('orbStatusLabel');
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        APP_STATE.activeAudioStream = stream;
+      } catch (err) {
+        transcriptEl.innerText = "⚠️ Microphone permission denied in Safari. Tap Settings to verify.";
+        return;
+      }
+
+      const SpeechClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechClass) {
+        transcriptEl.innerText = "Speech recognition is unavailable on this browser.";
+        return;
+      }
+
+      try {
+        const recognizer = new SpeechClass();
+        recognizer.continuous = false;
+        recognizer.interimResults = true;
+        recognizer.lang = 'en-US';
+
+        recognizer.onstart = () => {
+          APP_STATE.isRecording = true;
+          document.getElementById('orbRipple1').classList.remove('hidden');
+          document.getElementById('orbRipple2').classList.remove('hidden');
+          orbButton.style.background = 'radial-gradient(circle at 35% 30%, #FEE2E2 0%, #EF4444 65%, #991B1B 100%)';
+          micIcon.className = "w-8 h-8 text-white mb-1 animate-pulse";
+          statusLabel.innerText = "LISTENING...";
+          statusLabel.className = "font-mono text-[11px] font-bold tracking-wider uppercase text-white drop-shadow-sm";
+          transcriptEl.innerText = "Listening to your voice...";
+        };
+
+        recognizer.onresult = (event) => {
+          let text = '';
+          for (let i = event.resultIndex; i < event.results.length; ++i) {
+            text += event.results[i][0].transcript;
+          }
+          transcriptEl.innerText = `"${text}"`;
+        };
+
+        recognizer.onerror = (e) => {
+          if (e.error !== 'aborted') {
+            transcriptEl.innerText = `⚠️ Voice capture event: ${e.error}`;
+          }
+          stopVoiceSession();
+        };
+
+        recognizer.onend = () => {
+          const rawSpoken = transcriptEl.innerText.replace(/"/g, '').trim();
+          stopVoiceSession();
+          if (rawSpoken && rawSpoken !== "Listening to your voice..." && rawSpoken !== "Listening... speak freely.") {
+            processVoiceWithGemini(rawSpoken);
+          }
+        };
+
+        APP_STATE.speechRecognizer = recognizer;
+        recognizer.start();
+      } catch (e) {
+        transcriptEl.innerText = `Initialization error: ${e.message}`;
+        stopVoiceSession();
+      }
+    }
+
+    function stopVoiceSession() {
+      APP_STATE.isRecording = false;
+      document.getElementById('orbRipple1').classList.add('hidden');
+      document.getElementById('orbRipple2').classList.add('hidden');
+      
+      const orbButton = document.getElementById('aiOrbButton');
+      const micIcon = document.getElementById('orbMicIcon');
+      const statusLabel = document.getElementById('orbStatusLabel');
+
+      orbButton.style.background = 'radial-gradient(circle at 35% 30%, #FEF3C7 0%, #F59E0B 65%, #B45309 100%)';
+      micIcon.className = "w-8 h-8 text-amber-950 mb-1 drop-shadow-sm";
+      statusLabel.innerText = "TAP TO TALK";
+      statusLabel.className = "font-mono text-[11px] font-bold tracking-wider uppercase text-amber-950 drop-shadow-sm";
+
+      if (APP_STATE.speechRecognizer) {
+        try { APP_STATE.speechRecognizer.stop(); } catch (_) {}
+        APP_STATE.speechRecognizer = null;
+      }
+      if (APP_STATE.activeAudioStream) {
+        APP_STATE.activeAudioStream.getTracks().forEach(t => t.stop());
+        APP_STATE.activeAudioStream = null;
+      }
+    }
+
+    // --- Gemini Structuring Pipeline ---
+    async function processVoiceWithGemini(rawSpeech) {
+      const transcriptEl = document.getElementById('orbTranscriptText');
+      transcriptEl.innerText = "Thinking & structuring notes...";
+
+      const apiKey = localStorage.getItem('vibehub_gemini_api_key_v1') || '';
+      if (!apiKey) {
+        handleOfflineVoiceParse(rawSpeech);
+        return;
+      }
+
+      const prompt = `You are a personal OS assistant. Parse this spoken note: "${rawSpeech}".
+Return strictly a JSON object with this schema:
+{
+  "destination": "planner" | "notes" | "both",
+  "task": { "text": "string or null", "category": "HOME & GRILL" | "GOLF" | "WORKBENCH" | "GENERAL" },
+  "note": { "tab": "Smoker & Cooking" | "Golf Log" | "Workbench" | "General", "bullet": "string or null" }
+}`;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { responseMimeType: "application/json" }
+          })
+        });
+
+        const json = await response.json();
+        const parsed = JSON.parse(json.candidates[0].content.parts[0].text);
+        executeStructuredVoiceOutput(parsed, rawSpeech);
+      } catch (err) {
+        handleOfflineVoiceParse(rawSpeech);
+      }
+    }
+
+    function handleOfflineVoiceParse(rawSpeech) {
+      const lower = rawSpeech.toLowerCase();
+      if (lower.includes('remind') || lower.includes('todo') || lower.includes('task')) {
+        APP_STATE.priorities.unshift({ id: Date.now(), text: rawSpeech, category: 'GENERAL', done: false });
+        savePriorities();
+        showReceipt("Task added to Priority Ledger", rawSpeech);
+      } else {
+        const tab = lower.includes('smoker') || lower.includes('brisket') ? 'Smoker & Cooking' : (lower.includes('golf') ? 'Golf Log' : 'General');
+        APP_STATE.notesData[tab].content += `\n• ${rawSpeech}`;
+        setNotebookTab(tab);
+        showReceipt(`Note added to ${tab}`, rawSpeech);
+      }
+    }
+
+    function executeStructuredVoiceOutput(data, rawSpeech) {
+      let receiptText = "";
+      if (data.task && data.task.text) {
+        APP_STATE.priorities.unshift({ id: Date.now(), text: data.task.text, category: data.task.category || 'GENERAL', done: false });
+        savePriorities();
+        receiptText += `✓ Task added: "${data.task.text}"\n`;
+      }
+      if (data.note && data.note.bullet) {
+        const tab = data.note.tab || 'General';
+        APP_STATE.notesData[tab].content += `\n• ${data.note.bullet}`;
+        setNotebookTab(tab);
+        receiptText += `✓ Note logged under [${tab}]`;
+      }
+      showReceipt("Successfully Parsed & Filed", receiptText || rawSpeech);
+    }
+
+    function showReceipt(title, details) {
+      const card = document.getElementById('orbReceiptCard');
+      const content = document.getElementById('orbReceiptContent');
+      content.innerText = `${title}\n${details}`;
+      card.classList.remove('hidden');
+    }
+
+    function dismissReceiptCard() {
+      document.getElementById('orbReceiptCard').classList.add('hidden');
+    }
+
+    // --- Settings & Diagnostics ---
+    function toggleSettingsModal(open) {
+      document.getElementById('settingsModal').classList.toggle('hidden', !open);
+      if (open) {
+        document.getElementById('apiKeyInput').value = localStorage.getItem('vibehub_gemini_api_key_v1') || '';
+      }
+    }
+
+    function saveApiKey() {
+      const key = document.getElementById('apiKeyInput').value.trim();
+      localStorage.setItem('vibehub_gemini_api_key_v1', key);
+      alert('API key saved locally.');
+      toggleSettingsModal(false);
+    }
+
+    async function testMicrophoneAccess() {
+      const statusEl = document.getElementById('micDiagnosticStatus');
+      statusEl.innerText = "Requesting Safari mic permissions...";
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        statusEl.innerText = "✅ Microphone accessible and active!";
+        statusEl.className = "text-[11px] text-emerald-700 mt-1 text-center font-mono";
+        stream.getTracks().forEach(t => t.stop());
+      } catch (err) {
+        statusEl.innerText = `❌ Error: ${err.message}`;
+        statusEl.className = "text-[11px] text-red-600 mt-1 text-center font-mono";
+      }
+    }
+
+    // --- Clock & Header Greetings ---
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('liveClock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const hrs = now.getHours();
+      let g = "Good evening, legend";
+      if (hrs >= 4 && hrs < 12) g = "Good morning, legend";
+      else if (hrs >= 12 && hrs < 17) g = "Good afternoon, legend";
+      document.getElementById('headerGreeting').innerText = g;
+    }
+
+    // --- App Init ---
+    window.addEventListener('DOMContentLoaded', () => {
+      updateClock();
+      setInterval(updateClock, 1000);
+      renderPriorities();
+      renderHourlyTimeline();
+      renderMonthPlans();
+      renderMonthGoals();
+      setNotebookTab('Smoker & Cooking');
+      startCarousel();
+      fetchLiveSports();
+      if (window.lucide) lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
