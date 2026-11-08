@@ -184,6 +184,103 @@
     .wave-bar:nth-child(3) { animation-delay: 0.3s; }
     .wave-bar:nth-child(4) { animation-delay: 0.45s; }
 
+    /* ========================================================
+       FLOATING GLASS AI ORB ANIMATIONS & SHYLING
+       ======================================================== */
+    @keyframes orbFloat {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg) scale(1);
+      }
+      50% {
+        transform: translateY(-14px) rotate(3deg) scale(1.02);
+      }
+    }
+
+    @keyframes orbGlowPulse {
+      0%, 100% {
+        box-shadow: 
+          0 0 40px -8px rgba(245, 158, 11, 0.35),
+          0 20px 50px -10px rgba(180, 83, 9, 0.25),
+          inset 0 2px 10px rgba(255, 255, 255, 0.9),
+          inset 0 -10px 25px rgba(217, 119, 6, 0.3);
+      }
+      50% {
+        box-shadow: 
+          0 0 70px -4px rgba(245, 158, 11, 0.55),
+          0 30px 70px -8px rgba(180, 83, 9, 0.35),
+          inset 0 3px 14px rgba(255, 255, 255, 1),
+          inset 0 -14px 35px rgba(217, 119, 6, 0.45);
+      }
+    }
+
+    @keyframes orbRipple {
+      0% {
+        transform: scale(0.9);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(2.1);
+        opacity: 0;
+      }
+    }
+
+    .ai-orb-container {
+      animation: orbFloat 5s ease-in-out infinite;
+    }
+
+    .ai-orb {
+      background: radial-gradient(circle at 35% 30%, #FFFDF9 0%, #FDE68A 32%, #F59E0B 68%, #B45309 100%);
+      animation: orbGlowPulse 4s ease-in-out infinite;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .ai-orb:hover {
+      transform: scale(1.04);
+    }
+    .ai-orb:active {
+      transform: scale(0.94);
+    }
+
+    .ai-orb-recording {
+      animation: orbGlowPulse 1.2s ease-in-out infinite !important;
+      background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #FECACA 30%, #EF4444 65%, #991B1B 100%) !important;
+      box-shadow: 
+        0 0 70px 4px rgba(239, 68, 68, 0.55),
+        0 25px 60px -8px rgba(185, 28, 28, 0.4),
+        inset 0 3px 12px rgba(255, 255, 255, 1),
+        inset 0 -12px 30px rgba(185, 28, 28, 0.4) !important;
+    }
+
+    .ai-orb-thinking {
+      animation: orbGlowPulse 1.8s ease-in-out infinite !important;
+      background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #DDD6FE 32%, #8B5CF6 68%, #5B21B6 100%) !important;
+      box-shadow: 
+        0 0 70px 4px rgba(139, 92, 246, 0.55),
+        0 25px 60px -8px rgba(91, 33, 182, 0.4),
+        inset 0 3px 12px rgba(255, 255, 255, 1),
+        inset 0 -12px 30px rgba(91, 33, 182, 0.4) !important;
+    }
+
+    .pulse-ring {
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(245, 158, 11, 0.4);
+      pointer-events: none;
+      opacity: 0;
+    }
+    .is-listening .pulse-ring-1 {
+      border-color: rgba(239, 68, 68, 0.5);
+      animation: orbRipple 2.2s cubic-bezier(0.1, 0.2, 0.4, 1) infinite;
+    }
+    .is-listening .pulse-ring-2 {
+      border-color: rgba(239, 68, 68, 0.4);
+      animation: orbRipple 2.2s cubic-bezier(0.1, 0.2, 0.4, 1) 0.75s infinite;
+    }
+
     /* Fluid full-bleed viewport with hardware clearance */
     .viewport-content {
       padding-top: max(14px, env(safe-area-inset-top));
@@ -499,6 +596,86 @@
 
       </div>
 
+      <!-- ================= TALK & ORB AI ASSISTANT VIEW ================= -->
+      <div id="viewTalk" class="space-y-6 max-w-2xl mx-auto py-2 sm:py-6 hidden">
+        <!-- Orb Section Header -->
+        <div class="text-center space-y-1">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white border border-[#E5DFD5] shadow-xs">
+            <span id="orbStatusDot" class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+            <span id="orbStatusBadge" class="text-[11px] font-mono font-bold tracking-wider uppercase text-stone-700">Rabbit Intelligence</span>
+          </div>
+          <h2 id="orbStateHeading" class="text-2xl sm:text-3xl font-bold font-serif-title text-stone-900 tracking-tight pt-1">
+            Voice Companion
+          </h2>
+          <p id="orbStateSubtext" class="text-xs text-stone-500 font-mono-ledger max-w-sm mx-auto">
+            Tap the floating orb to talk. Speak stream-of-consciousness thoughts, reminders, or field notes.
+          </p>
+        </div>
+
+        <!-- The Floating Glass Orb Stage -->
+        <div class="relative py-8 flex flex-col items-center justify-center">
+          
+          <!-- Ripple Rings Container -->
+          <div id="orbRippleContainer" class="relative flex items-center justify-center">
+            <div class="pulse-ring pulse-ring-1"></div>
+            <div class="pulse-ring pulse-ring-2"></div>
+            
+            <!-- Floating Orb Wrapper -->
+            <div class="ai-orb-container">
+              <button id="mainVoiceOrb" onclick="handleOrbTap()" class="ai-orb w-40 h-40 sm:w-48 sm:h-48 rounded-full flex flex-col items-center justify-center p-4 relative z-20 outline-none select-none touch-spring" aria-label="Tap to talk to AI assistant">
+                <!-- Specular Refraction Highlight -->
+                <div class="absolute top-4 left-7 w-12 h-6 rounded-full bg-white/70 blur-[3px] pointer-events-none -rotate-25"></div>
+                
+                <!-- Inner Core Icon & Glow -->
+                <div id="orbCoreIcon" class="flex flex-col items-center justify-center text-stone-900 z-10 transition-all duration-300">
+                  <div class="p-3.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-xs mb-1.5">
+                    <i data-lucide="mic" class="w-6 h-6 text-stone-900"></i>
+                  </div>
+                  <span id="orbCoreLabel" class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-stone-900/90 drop-shadow-sm">Tap to Talk</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Live Transcript Box -->
+          <div class="w-full mt-6 space-y-3">
+            <div id="orbLiveTranscriptCard" class="paper-card p-4 sm:p-5 text-center transition-all duration-300 min-h-[90px] flex flex-col items-center justify-center">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-stone-400 font-bold mb-1">Live Dictation Stream</span>
+              <p id="orbLiveTranscriptText" class="text-xs sm:text-sm font-mono text-stone-700 italic leading-relaxed">
+                "Listening for your voice..."
+              </p>
+            </div>
+
+            <!-- Auto-Filing Result Receipt Card (Shows after AI processing) -->
+            <div id="orbReceiptCard" class="hidden paper-card p-4 sm:p-5 border-amber-300/80 bg-gradient-to-b from-white to-[#FDFBF7] space-y-3 shadow-md">
+              <div class="flex items-center justify-between border-b border-[#ECE7DE] pb-2">
+                <span class="text-xs font-serif font-bold text-stone-900 flex items-center gap-1.5">
+                  <span>✨</span> Filed by AI Assistant
+                </span>
+                <span id="receiptTimestamp" class="text-[10px] font-mono text-stone-400">Just now</span>
+              </div>
+              <div id="receiptContent" class="space-y-2 text-xs font-mono text-stone-800">
+                <!-- Populated dynamically with parsed task/note items -->
+              </div>
+              <div class="pt-2 border-t border-[#ECE7DE] flex items-center justify-between text-[11px]">
+                <button onclick="switchTab('planner')" class="font-bold text-amber-900 hover:underline">View in Planner →</button>
+                <button onclick="switchTab('notebook')" class="font-bold text-stone-800 hover:underline">View in Notebook →</button>
+              </div>
+            </div>
+
+            <!-- Example voice prompts to inspire the user -->
+            <div class="p-3.5 paper-card-subtle text-left space-y-1.5">
+              <span class="text-[10px] font-mono uppercase font-bold text-stone-500 tracking-wider">Example Voice Commands:</span>
+              <ul class="text-[11px] font-mono text-stone-600 space-y-1">
+                <li class="cursor-pointer hover:text-stone-900" onclick="simulateVoicePrompt(this.innerText)">• "Remind me at 4:30 PM to inspect the brisket peach paper wrap."</li>
+                <li class="cursor-pointer hover:text-stone-900" onclick="simulateVoicePrompt(this.innerText)">• "Make a golf note that full 56-degree wedge carry is 90 yards."</li>
+                <li class="cursor-pointer hover:text-stone-900" onclick="simulateVoicePrompt(this.innerText)">• "High priority task: Level the 3D printer heat bed before tomorrow."</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ================= PLANNER VIEW (SPLIT-SCREEN EXECUTIVE AGENDA) ================= -->
       <div id="viewPlanner" class="space-y-5 max-w-6xl mx-auto hidden">
         <!-- Planner Top Bar with Date Indicator and Add Actions -->
@@ -669,8 +846,8 @@
         <span class="text-[9px] font-medium mt-0.5 tracking-tight">Notes</span>
       </button>
 
-      <button onclick="toggleVoiceCapture()" id="nav-voice" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-amber-800 bg-amber-50/80 border border-amber-200/70 hover:bg-amber-100" title="Voice Assistant">
-        <i data-lucide="mic" class="w-5 h-5 text-amber-800"></i>
+      <button onclick="switchTab('talk')" id="nav-talk" class="w-11 h-11 sm:w-12 sm:h-12 squircle-btn flex flex-col items-center justify-center text-amber-800 bg-amber-50/80 border border-amber-200/70 hover:bg-amber-100 shadow-xs" title="AI Voice Orb">
+        <i data-lucide="sparkles" class="w-5 h-5 text-amber-800"></i>
         <span class="text-[9px] font-semibold mt-0.5 tracking-tight">Talk</span>
       </button>
 
@@ -921,9 +1098,14 @@
             interim += event.results[i][0].transcript;
           }
         }
+        const text = (voiceTranscriptAccumulator + interim).trim();
         const preview = document.getElementById('voiceTranscriptPreview');
         if (preview) {
-          preview.innerText = `"${(voiceTranscriptAccumulator + interim).trim() || 'Listening...'}"`;
+          preview.innerText = `"${text || 'Listening...'}"`;
+        }
+        const orbTranscript = document.getElementById('orbLiveTranscriptText');
+        if (orbTranscript) {
+          orbTranscript.innerText = `"${text || 'Listening to your voice...'}"`;
         }
       };
 
@@ -952,6 +1134,22 @@
       }
     }
 
+    function handleOrbTap() {
+      if (isListening) {
+        stopVoiceCapture(true);
+      } else {
+        startVoiceCapture();
+      }
+    }
+
+    function simulateVoicePrompt(sample) {
+      const cleaned = sample.replace(/^•\s*"/, '').replace(/"$/, '');
+      const orbTranscript = document.getElementById('orbLiveTranscriptText');
+      if (orbTranscript) orbTranscript.innerText = `"${cleaned}"`;
+      voiceTranscriptAccumulator = cleaned;
+      processVoiceTranscript(cleaned);
+    }
+
     function startVoiceCapture() {
       if (!recognition) {
         recognition = initSpeechEngine();
@@ -962,6 +1160,9 @@
       }
 
       voiceTranscriptAccumulator = "";
+      const orbTranscript = document.getElementById('orbLiveTranscriptText');
+      if (orbTranscript) orbTranscript.innerText = '"Listening... speak freely."';
+
       try {
         recognition.start();
         setVoiceUIState('listening');
@@ -991,7 +1192,16 @@
       const hudState = document.getElementById('voiceHudState');
       const waveIcon = document.getElementById('voiceWaveIcon');
       const btnLabel = document.getElementById('voiceBtnLabel');
-      const navBtn = document.getElementById('nav-voice');
+      const navBtn = document.getElementById('nav-talk');
+
+      // Dedicated Orb UI Elements
+      const orb = document.getElementById('mainVoiceOrb');
+      const orbCoreIcon = document.getElementById('orbCoreIcon');
+      const orbCoreLabel = document.getElementById('orbCoreLabel');
+      const orbRippleWrap = document.getElementById('orbRippleContainer');
+      const orbStatusBadge = document.getElementById('orbStatusBadge');
+      const orbStateHeading = document.getElementById('orbStateHeading');
+      const orbStateSub = document.getElementById('orbStateSubtext');
 
       if (mode === 'listening') {
         if (hud) hud.classList.remove('hidden');
@@ -1004,17 +1214,80 @@
             <span class="wave-bar"></span>
           `;
         }
-        if (navBtn) navBtn.classList.add('ring-2', 'ring-amber-500', 'animate-pulse');
+        if (navBtn) navBtn.classList.add('ring-2', 'ring-rose-500', 'animate-pulse');
+
+        // Orb into active recording mode
+        if (orb) {
+          orb.classList.remove('ai-orb-thinking');
+          orb.classList.add('ai-orb-recording');
+        }
+        if (orbRippleWrap) orbRippleWrap.classList.add('is-listening');
+        if (orbCoreLabel) orbCoreLabel.innerText = "Tap to Stop";
+        if (orbCoreIcon) {
+          orbCoreIcon.innerHTML = `
+            <div class="p-3.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-xs mb-1.5 animate-pulse">
+              <i data-lucide="square" class="w-6 h-6 text-stone-900 fill-stone-900"></i>
+            </div>
+            <span class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-stone-900">Recording</span>
+          `;
+        }
+        if (orbStatusBadge) {
+          orbStatusBadge.innerText = "Listening Now";
+          orbStatusBadge.className = "text-[11px] font-mono font-bold tracking-wider uppercase text-rose-700";
+        }
+        if (orbStateHeading) orbStateHeading.innerText = "I'm Listening...";
+        if (orbStateSub) orbStateSub.innerText = "Speak naturally. When you finish, tap the red orb or pause.";
       } else if (mode === 'processing') {
         if (hud) hud.classList.remove('hidden');
         if (hudState) hudState.innerText = "Structuring with AI...";
         if (btnLabel) btnLabel.innerText = "Processing...";
         if (waveIcon) waveIcon.innerHTML = `<i data-lucide="sparkles" class="w-3.5 h-3.5 animate-spin"></i>`;
+
+        // Orb into thinking state
+        if (orb) {
+          orb.classList.remove('ai-orb-recording');
+          orb.classList.add('ai-orb-thinking');
+        }
+        if (orbRippleWrap) orbRippleWrap.classList.remove('is-listening');
+        if (orbCoreIcon) {
+          orbCoreIcon.innerHTML = `
+            <div class="p-3.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-xs mb-1.5 animate-spin">
+              <i data-lucide="sparkles" class="w-6 h-6 text-stone-900"></i>
+            </div>
+            <span class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-stone-900">Analyzing</span>
+          `;
+        }
+        if (orbStatusBadge) {
+          orbStatusBadge.innerText = "Structuring with Gemini";
+          orbStatusBadge.className = "text-[11px] font-mono font-bold tracking-wider uppercase text-purple-700";
+        }
+        if (orbStateHeading) orbStateHeading.innerText = "Jotting Down Notes...";
+        if (orbStateSub) orbStateSub.innerText = "Extracting priorities, calendar slots, and bullet points...";
       } else {
         if (hud) hud.classList.add('hidden');
         if (btnLabel) btnLabel.innerText = "Talk";
         if (waveIcon) waveIcon.innerHTML = `<i data-lucide="mic" class="w-3.5 h-3.5"></i>`;
-        if (navBtn) navBtn.classList.remove('ring-2', 'ring-amber-500', 'animate-pulse');
+        if (navBtn) navBtn.classList.remove('ring-2', 'ring-rose-500', 'ring-amber-500', 'animate-pulse');
+
+        // Orb back to steady floating idle state
+        if (orb) {
+          orb.classList.remove('ai-orb-recording', 'ai-orb-thinking');
+        }
+        if (orbRippleWrap) orbRippleWrap.classList.remove('is-listening');
+        if (orbCoreIcon) {
+          orbCoreIcon.innerHTML = `
+            <div class="p-3.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 shadow-xs mb-1.5">
+              <i data-lucide="mic" class="w-6 h-6 text-stone-900"></i>
+            </div>
+            <span class="text-[11px] font-mono font-extrabold uppercase tracking-widest text-stone-900/90 drop-shadow-sm">Tap to Talk</span>
+          `;
+        }
+        if (orbStatusBadge) {
+          orbStatusBadge.innerText = "Rabbit Intelligence";
+          orbStatusBadge.className = "text-[11px] font-mono font-bold tracking-wider uppercase text-stone-700";
+        }
+        if (orbStateHeading) orbStateHeading.innerText = "Voice Companion";
+        if (orbStateSub) orbStateSub.innerText = "Tap the floating orb to talk. Speak stream-of-consciousness thoughts, reminders, or field notes.";
       }
       safeInitIcons();
     }
@@ -1160,6 +1433,8 @@ Raw spoken text: "${rawTranscript.replace(/"/g, '\\"')}"`;
         return;
       }
 
+      displayOrbReceipt(parsed, summaryItems);
+
       saveState();
       renderDashboard();
       renderTasks();
@@ -1169,10 +1444,62 @@ Raw spoken text: "${rawTranscript.replace(/"/g, '\\"')}"`;
       showToast(parsed.summary || `✨ AI Filed: Added ${summaryItems.join(' & ')}`, '✨');
     }
 
+    function displayOrbReceipt(parsed, items) {
+      const receiptCard = document.getElementById('orbReceiptCard');
+      const receiptContent = document.getElementById('receiptContent');
+      const receiptTime = document.getElementById('receiptTimestamp');
+      if (!receiptCard || !receiptContent) return;
+
+      if (receiptTime) receiptTime.innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      let html = '';
+      if (parsed.hasTask && parsed.task) {
+        html += `
+          <div class="p-2 rounded-xl bg-white border border-[#E8E2D8] flex items-center justify-between">
+            <div>
+              <span class="text-[9px] uppercase font-bold text-amber-800">Task Filed</span>
+              <p class="font-bold text-stone-900">${escapeHtml(parsed.task.title)}</p>
+            </div>
+            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${parsed.task.highPriority ? 'bg-amber-100 text-amber-900' : 'bg-stone-100 text-stone-700'}">${parsed.task.highPriority ? 'HIGH' : 'NORMAL'}</span>
+          </div>
+        `;
+      }
+      if (parsed.hasScheduleSlot && parsed.scheduleSlot) {
+        html += `
+          <div class="p-2 rounded-xl bg-white border border-[#E8E2D8] flex items-center justify-between">
+            <div>
+              <span class="text-[9px] uppercase font-bold text-stone-600">Calendar Block</span>
+              <p class="font-bold text-stone-900">${escapeHtml(parsed.scheduleSlot.title)}</p>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-stone-100 text-stone-800">${escapeHtml(parsed.scheduleSlot.time)}</span>
+          </div>
+        `;
+      }
+      if (parsed.hasNote && parsed.note) {
+        const bullets = (parsed.note.bulletPoints || []).map(b => `<div class="text-[10px] text-stone-600">• ${escapeHtml(b)}</div>`).join('');
+        html += `
+          <div class="p-2 rounded-xl bg-white border border-[#E8E2D8] space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] uppercase font-bold text-stone-600">Notebook Sheet (${escapeHtml(parsed.note.tag || 'General')})</span>
+              <span class="text-[9px] text-amber-800 font-bold">Ruled Paper</span>
+            </div>
+            <p class="font-bold text-stone-900">${escapeHtml(parsed.note.title)}</p>
+            ${bullets}
+          </div>
+        `;
+      }
+
+      receiptContent.innerHTML = html;
+      receiptCard.classList.remove('hidden');
+    }
+
     function localClassifyVoiceNote(raw) {
       const lower = raw.toLowerCase();
       const isTask = lower.includes('remind') || lower.includes('buy') || lower.includes('todo') || lower.includes('task');
       
+      const receiptCard = document.getElementById('orbReceiptCard');
+      const receiptContent = document.getElementById('receiptContent');
+
       if (isTask) {
         state.tasks.unshift({
           id: Date.now(),
@@ -1183,6 +1510,15 @@ Raw spoken text: "${rawTranscript.replace(/"/g, '\\"')}"`;
           highPriority: lower.includes('urgent') || lower.includes('important')
         });
         showToast('Logged to Planner Tasks', '✓');
+        if (receiptContent && receiptCard) {
+          receiptContent.innerHTML = `
+            <div class="p-2 rounded-xl bg-white border border-[#E8E2D8]">
+              <span class="text-[9px] uppercase font-bold text-amber-800">Task Logged</span>
+              <p class="font-bold text-stone-900">${escapeHtml(raw)}</p>
+            </div>
+          `;
+          receiptCard.classList.remove('hidden');
+        }
       } else {
         let tag = "General";
         if (lower.includes('brisket') || lower.includes('smoker') || lower.includes('grill') || lower.includes('meat') || lower.includes('cook')) {
@@ -1203,6 +1539,17 @@ Raw spoken text: "${rawTranscript.replace(/"/g, '\\"')}"`;
         state.notes.unshift(newSheet);
         state.activeNoteId = newSheet.id;
         showToast(`Filed to Notebook (${tag})`, '📝');
+
+        if (receiptContent && receiptCard) {
+          receiptContent.innerHTML = `
+            <div class="p-2 rounded-xl bg-white border border-[#E8E2D8]">
+              <span class="text-[9px] uppercase font-bold text-stone-700">Notebook (${escapeHtml(tag)})</span>
+              <p class="font-bold text-stone-900">${escapeHtml(newSheet.title)}</p>
+              <div class="text-[10px] text-stone-600 mt-1">• ${escapeHtml(raw)}</div>
+            </div>
+          `;
+          receiptCard.classList.remove('hidden');
+        }
       }
 
       saveState();
@@ -1459,12 +1806,14 @@ Raw spoken text: "${rawTranscript.replace(/"/g, '\\"')}"`;
       const vDash = document.getElementById('viewDashboard');
       const vPlan = document.getElementById('viewPlanner');
       const vNote = document.getElementById('viewNotebook');
+      const vTalk = document.getElementById('viewTalk');
 
       if (vDash) vDash.classList.toggle('hidden', tab !== 'dashboard');
       if (vPlan) vPlan.classList.toggle('hidden', tab !== 'planner');
       if (vNote) vNote.classList.toggle('hidden', tab !== 'notebook');
+      if (vTalk) vTalk.classList.toggle('hidden', tab !== 'talk');
 
-      ['dashboard', 'planner', 'notebook'].forEach(t => {
+      ['dashboard', 'planner', 'notebook', 'talk'].forEach(t => {
         const btn = document.getElementById(`nav-${t}`);
         if (btn) {
           if (t === tab) {
