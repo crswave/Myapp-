@@ -1,242 +1,590 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Life OS • Personal Hub</title>
-  <meta name="theme-color" content="#FAF6F0">
+  <meta name="theme-color" content="#0A0C26">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            serif: ['Newsreader', 'Georgia', 'serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-            sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-          },
-          colors: {
-            paper: { 50: '#FDFBF7', 100: '#FAF6F0', 200: '#F3EDE2', 300: '#E7DDD0', 400: '#D5C7B5', border: '#E8DED1' },
-            yacht: { sunset: '#E07A5F', sand: '#F4F1DE', sea: '#3D405B', sage: '#81B29A', gold: '#F2CC8F', dustyrose: '#C2847A' },
-            ink: { primary: '#242124', secondary: '#484349', muted: '#7A7276', faint: '#ACA5AA' }
-          }
-        }
-      }
-    }
-  </script>
-
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..900,0..100,0..1;1,9..144,400..900,0..100,0..1&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
+    /* ============================================================
+       LIFE OS — "Pacific Horizon"
+       Deep-space navy, a 70s sunset stripe palette, soft Cooper-ish
+       display type and mission-control mono labels.
+       ============================================================ */
     :root {
       --sat: env(safe-area-inset-top, 0px);
       --sab: env(safe-area-inset-bottom, 0px);
       --sal: env(safe-area-inset-left, 0px);
       --sar: env(safe-area-inset-right, 0px);
+
+      --deep: #080A20;
+      --space: #0D1030;
+      --panel: #171B47;
+      --panel-2: #1F2459;
+      --inset: #0F1236;
+      --line: rgba(245, 233, 208, 0.13);
+      --line-strong: rgba(245, 233, 208, 0.3);
+
+      --cream: #F5E9D0;
+      --sand: #CFC4AC;
+      --haze: #9A96BA;
+
+      --mustard: #F2B441;
+      --orange: #EE7B30;
+      --rust: #D2472F;
+      --plum: #8A2F62;
+      --teal: #47BFAE;
+      --ink: #141838;
+
+      --display: 'Fraunces', 'Cooper Black', Georgia, serif;
+      --mono: 'Space Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --sans: 'Outfit', system-ui, -apple-system, sans-serif;
+
+      --stripes: linear-gradient(to bottom,
+        var(--mustard) 0 25%, var(--orange) 25% 50%, var(--rust) 50% 75%, var(--plum) 75% 100%);
+      --sunset: linear-gradient(to bottom, #F8DF9E 0%, var(--mustard) 14%, var(--orange) 30%, var(--rust) 46%, var(--plum) 62%);
     }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    .hidden { display: none !important; }
 
     body {
-      background-color: #FAF6F0;
-      background-image:
-        radial-gradient(ellipse 90% 60% at 88% -5%, rgba(224, 122, 95, 0.08) 0%, transparent 60%),
-        radial-gradient(ellipse 70% 50% at 5% 100%, rgba(61, 64, 91, 0.06) 0%, transparent 65%),
-        radial-gradient(circle 350px at 50% 25%, rgba(242, 204, 143, 0.07) 0%, transparent 70%);
-      background-attachment: fixed;
-      color: #242124;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      color: var(--cream);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.4;
+      background:
+        radial-gradient(ellipse 130% 50% at 50% 112%, rgba(138, 47, 98, 0.6), transparent 70%),
+        radial-gradient(ellipse 70% 40% at 95% -8%, rgba(71, 191, 174, 0.12), transparent 60%),
+        linear-gradient(to bottom, #090B24 0%, var(--space) 45%, #1B1442 100%);
+      background-color: var(--space);
       overscroll-behavior-y: none;
       -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .college-ruled {
-      background-color: #FCF9F3;
-      background-image: linear-gradient(#D5E0EA 1px, transparent 1px);
-      background-size: 100% 28px;
-      line-height: 28px;
+    /* Starfield */
+    body::before {
+      content: "";
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        radial-gradient(circle at 24px 36px, rgba(245, 233, 208, 0.95) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 150px 96px, rgba(245, 233, 208, 0.7) 0 0.8px, transparent 1.4px),
+        radial-gradient(circle at 212px 210px, rgba(242, 180, 65, 0.9) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 78px 188px, rgba(245, 233, 208, 0.55) 0 0.7px, transparent 1.3px),
+        radial-gradient(circle at 40px 120px, rgba(245, 233, 208, 0.4) 0 0.6px, transparent 1.2px),
+        radial-gradient(circle at 118px 20px, rgba(71, 191, 174, 0.7) 0 0.8px, transparent 1.4px);
+      background-size: 260px 260px, 260px 260px, 260px 260px, 260px 260px, 170px 170px, 170px 170px;
+      -webkit-mask-image: linear-gradient(to bottom, #000 35%, transparent 88%);
+      mask-image: linear-gradient(to bottom, #000 35%, transparent 88%);
     }
-    .red-margin-line { border-left: 2px solid rgba(224, 122, 95, 0.45); }
+
+    /* Banded sun setting on the horizon */
+    body::after {
+      content: "";
+      position: fixed; z-index: 0; pointer-events: none;
+      left: 50%; bottom: -250px;
+      width: 400px; height: 400px; border-radius: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(to bottom, #F8DF9E 0%, var(--mustard) 9%, var(--orange) 20%, var(--rust) 30%, var(--plum) 40%);
+      opacity: 0.8;
+      -webkit-mask-image: linear-gradient(to bottom, #000 0 13%, transparent 13% 14.5%, #000 14.5% 19.5%, transparent 19.5% 22%, #000 22% 26%, transparent 26% 29.5%, #000 29.5% 32.5%, transparent 32.5% 37%, #000 37% 39%, transparent 39% 100%);
+      mask-image: linear-gradient(to bottom, #000 0 13%, transparent 13% 14.5%, #000 14.5% 19.5%, transparent 19.5% 22%, #000 22% 26%, transparent 26% 29.5%, #000 29.5% 32.5%, transparent 32.5% 37%, #000 37% 39%, transparent 39% 100%);
+    }
+
+    button, input, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; border: 0; background: none; padding: 0; }
+    input, textarea { background: transparent; border: 0; min-width: 0; }
+    input:focus, textarea:focus { outline: none; }
+    button:focus-visible, a:focus-visible { outline: 2px solid var(--mustard); outline-offset: 2px; }
+    ::placeholder { color: var(--haze); opacity: 0.75; }
+    a { color: inherit; text-decoration: none; }
 
     ::-webkit-scrollbar { width: 4px; height: 4px; }
-    ::-webkit-scrollbar-thumb { background: #D5C7B5; border-radius: 9999px; }
-
-    .paper-card {
-      background: #FFFFFF;
-      border: 1px solid #E8DED1;
-      box-shadow: 0 4px 18px -4px rgba(36, 33, 36, 0.04), 0 1px 3px 0 rgba(36, 33, 36, 0.02);
-    }
-
-    /* Edge-tucked rail: ONE transform rule handles both the tuck (X) and vertical centering (Y),
-       so nothing from Tailwind can override it. Hover only opens it on real mouse devices,
-       so it doesn't get stuck open after a tap on iPhone. */
-    .edge-tucked-rail {
-      top: 50%;
-      transform: translate(calc(100% - 20px), -50%);
-      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s ease;
-      touch-action: pan-y;
-      -webkit-user-select: none;
-      user-select: none;
-    }
-    .edge-tucked-rail.expanded {
-      transform: translate(0, -50%);
-      box-shadow: -8px 0 30px -5px rgba(61, 64, 91, 0.16);
-    }
-    @media (hover: hover) and (pointer: fine) {
-      .edge-tucked-rail:hover {
-        transform: translate(0, -50%);
-        box-shadow: -8px 0 30px -5px rgba(61, 64, 91, 0.16);
-      }
-    }
-
-    .rail-glass {
-      background: rgba(253, 251, 247, 0.94);
-      backdrop-filter: blur(24px) saturate(160%);
-      -webkit-backdrop-filter: blur(24px) saturate(160%);
-      border: 1px solid rgba(232, 222, 209, 0.95);
-      border-right: none;
-    }
+    ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 99px; }
 
     .no-select { -webkit-user-select: none; user-select: none; }
+    .ic { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .ic-sm { width: 14px; height: 14px; }
+    .ic-lg { width: 18px; height: 18px; }
 
-    @keyframes orbFloat {
-      0%, 100% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-10px) scale(1.02); }
+    /* ---------- Top bar ---------- */
+    .topbar {
+      flex: none; position: relative; z-index: 30;
+      padding: calc(var(--sat) + 12px) max(16px, var(--sar)) 12px max(16px, var(--sal));
+      background: rgba(9, 11, 36, 0.78);
+      -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
     }
-    @keyframes orbCosmicGlow {
-      0%, 100% { box-shadow: 0 0 40px 10px rgba(224, 122, 95, 0.24), 0 20px 50px -10px rgba(242, 204, 143, 0.32); }
-      50% { box-shadow: 0 0 65px 20px rgba(224, 122, 95, 0.38), 0 25px 65px -5px rgba(242, 204, 143, 0.45); }
+    .topbar::after {   /* the racing stripe */
+      content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 8px;
+      background: var(--stripes);
     }
-    @keyframes recordingRipple {
-      0% { transform: scale(0.95); opacity: 0.85; }
-      100% { transform: scale(1.6); opacity: 0; }
+    .topbar-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .sun-mark {
+      flex: none; width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(to bottom, #F8DF9E, var(--mustard) 30%, var(--orange) 60%, var(--rust));
+      -webkit-mask-image: linear-gradient(to bottom, #000 0 52%, transparent 52% 58%, #000 58% 68%, transparent 68% 76%, #000 76% 84%, transparent 84% 93%, #000 93%);
+      mask-image: linear-gradient(to bottom, #000 0 52%, transparent 52% 58%, #000 58% 68%, transparent 68% 76%, #000 76% 84%, transparent 84% 93%, #000 93%);
     }
-    .ai-orb-core { animation: orbFloat 4.6s ease-in-out infinite, orbCosmicGlow 4s ease-in-out infinite; }
-    .pulse-ring { animation: recordingRipple 1.8s cubic-bezier(0.2, 0.6, 0.35, 1) infinite; }
+    .greeting {
+      margin: 0; font-family: var(--display); font-style: italic; font-weight: 700;
+      font-variation-settings: "SOFT" 100, "WONK" 1;
+      font-size: clamp(19px, 5vw, 26px); line-height: 1; letter-spacing: -0.01em;
+    }
+    .tagline { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 3px 0 0; font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mustard); }
+    .topbar-tools { display: flex; align-items: center; gap: 6px; flex: none; }
+    .clock {
+      font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+      padding: 5px 10px; border-radius: 99px; color: var(--mustard);
+      background: var(--inset); border: 1px solid var(--line);
+    }
+    .icon-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--sand); transition: background 0.2s, color 0.2s; }
+    .icon-btn:hover { color: var(--cream); background: rgba(245, 233, 208, 0.08); }
+    .icon-btn.small { width: 28px; height: 28px; }
+
+    /* ---------- Viewport ---------- */
+    .viewport {
+      flex: 1; overflow-y: auto; position: relative; z-index: 1;
+      padding: 28px 30px max(40px, calc(var(--sab) + 28px)) max(16px, var(--sal));
+    }
+    .wrap { max-width: 1000px; margin: 0 auto; }
+    .view > * + * { margin-top: 22px; }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--sand);
+    }
+    .eyebrow .ic { color: var(--mustard); }
+    .row-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .link-btn { font-family: var(--display); font-style: italic; font-variation-settings: "SOFT" 100; font-size: 15px; color: var(--sand); }
+    .link-btn:hover { color: var(--mustard); }
+    .text-btn { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--sand); display: inline-flex; align-items: center; gap: 5px; text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
+    .text-btn:hover { color: var(--mustard); }
+
+    .card {
+      background: linear-gradient(to bottom, var(--panel-2), var(--panel));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: 0 14px 34px -18px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(245, 233, 208, 0.06);
+    }
+    .card-pad { padding: 16px; }
+    .card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px dashed var(--line-strong); }
+    .stack > * + * { margin-top: 8px; }
+    .scroll { overflow-y: auto; padding-right: 4px; }
+    .muted { color: var(--haze); font-size: 14px; margin: 0; }
+
+    /* ---------- Carousel ---------- */
+    .dots { display: flex; align-items: center; gap: 6px; }
+    .dots button { width: 8px; height: 8px; border-radius: 99px; background: var(--line-strong); transition: width 0.25s, background 0.25s; }
+    .dots button.active { width: 22px; background: var(--mustard); }
+    .carousel { position: relative; overflow: hidden; min-height: 196px; }
+    .carousel::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--stripes); }
+    .slide { padding: 16px 16px 16px 22px; }
+    .slide-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+    .tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 99px; border: 1px solid currentColor;
+    }
+    .tag.orange { color: var(--orange); } .tag.teal { color: var(--teal); }
+    .tag.mustard { color: var(--mustard); } .tag.cream { color: var(--cream); }
+    .tiny { font-family: var(--mono); font-size: 11px; color: var(--haze); }
+
+    /* Scoreboard */
+    .board {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 12px; margin-bottom: 8px; border-radius: 14px;
+      background: var(--inset); border: 1px solid var(--line);
+    }
+    .board-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .badge { flex: none; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; padding: 3px 7px; border-radius: 6px; background: var(--orange); color: var(--ink); }
+    .badge.live { background: var(--rust); color: var(--cream); animation: blink 1.6s ease-in-out infinite; }
+    .matchup { font-family: var(--mono); font-weight: 700; font-size: 17px; letter-spacing: 0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .matchup .pts { color: var(--mustard); margin: 0 2px 0 5px; }
+    .matchup .sep { color: var(--haze); margin: 0 7px; font-weight: 400; }
+    .board-status { flex: none; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--orange); text-align: right; }
+    .games { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+    .game { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--line); background: rgba(15, 18, 54, 0.55); }
+    .game .matchup { font-size: 13px; }
+    .game .lg { font-family: var(--mono); font-size: 10px; color: var(--haze); margin-right: 8px; font-weight: 400; }
+    .game .st { flex: none; font-family: var(--mono); font-size: 11px; color: var(--haze); }
+    .game .st.live { color: var(--orange); font-weight: 700; }
+
+    .news-item { display: block; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--line); background: rgba(15, 18, 54, 0.55); transition: border-color 0.2s; }
+    .news-item:hover { border-color: var(--teal); }
+    .news-item p { margin: 0; }
+    .news-title { font-family: var(--display); font-variation-settings: "SOFT" 100; font-size: 16px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .news-meta { font-family: var(--mono); font-size: 11px; color: var(--haze); margin-top: 2px !important; }
+
+    .comic { padding: 18px 14px; border-radius: 14px; text-align: center; background: var(--inset); border: 1px solid var(--line); }
+    .comic p { margin: 0; }
+    .comic-setup { font-family: var(--display); font-style: italic; font-variation-settings: "SOFT" 100, "WONK" 1; font-size: 19px; line-height: 1.25; }
+    .comic-punch { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--mustard); margin-top: 10px !important; }
+
+    .specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .spec { padding: 12px; border-radius: 14px; background: var(--inset); border: 1px solid var(--line); }
+    .spec span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--haze); }
+    .spec strong { display: block; margin-top: 4px; font-family: var(--display); font-variation-settings: "SOFT" 100; font-weight: 700; font-size: 19px; color: var(--mustard); }
+    .spec small { display: block; margin-top: 2px; font-size: 12px; color: var(--sand); }
+
+    /* ---------- Quick capture ---------- */
+    .capture { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px; border-radius: 99px; }
+    .capture input { flex: 1 1 200px; padding: 8px 12px; font-size: 15px; }
+    .capture-btns { display: flex; gap: 6px; flex: none; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+      font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+      padding: 9px 14px; border-radius: 99px; border: 1px solid transparent;
+      transition: transform 0.15s, filter 0.2s, background 0.2s;
+    }
+    .pill:active { transform: scale(0.96); }
+    .pill.primary { background: var(--mustard); color: var(--ink); }
+    .pill.primary:hover { filter: brightness(1.08); }
+    .pill.ghost { border-color: var(--line-strong); color: var(--cream); }
+    .pill.ghost:hover { background: rgba(245, 233, 208, 0.08); }
+    .pill.hot { background: var(--orange); color: var(--ink); }
+    .pill.hot:hover { filter: brightness(1.08); }
+    .toast { margin: 8px 0 0 !important; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--teal); }
+    @media (max-width: 520px) {
+      .tagline { font-size: 9px; letter-spacing: 0.05em; }
+      .clock { font-size: 11px; padding: 4px 8px; }
+      .topbar-tools { gap: 2px; }
+      .brand { gap: 10px; }
+      .capture { border-radius: 22px; }
+      .capture input { flex-basis: 100%; }
+      .capture-btns { width: 100%; }
+      .capture-btns .pill { flex: 1; justify-content: center; }
+    }
+
+    /* ---------- Rows: priorities, plans, goals, hours ---------- */
+    .item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--line); background: rgba(15, 18, 54, 0.55); font-size: 15px; }
+    .item.solid { background: linear-gradient(to bottom, var(--panel-2), var(--panel)); }
+    .item-label { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .item-text { flex: 1; min-width: 0; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    input.item-text { text-overflow: clip; }
+    .item-text.serif { font-family: var(--display); font-variation-settings: "SOFT" 100; font-weight: 400; font-size: 16px; }
+    .done { text-decoration: line-through; text-decoration-color: var(--orange); color: var(--haze); }
+    .chip {
+      flex: none; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-align: center;
+      padding: 4px 8px; border-radius: 99px; color: var(--mustard); border: 1px solid rgba(242, 180, 65, 0.4);
+    }
+    input.chip { width: 106px; padding: 4px 6px; }
+    input.chip:focus { border-color: var(--mustard); }
+    .chip.rose { color: #F09A86; border-color: rgba(240, 154, 134, 0.4); }
+    input.chip.rose { width: 76px; }
+    .chip.date { width: 62px; color: var(--teal); border-color: rgba(71, 191, 174, 0.45); border-radius: 8px; }
+    .time { flex: none; width: 76px; font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--mustard); border-bottom: 1px solid transparent; }
+    .time:focus { border-bottom-color: var(--orange); }
+    .x-btn { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; color: var(--haze); font-size: 13px; line-height: 1; opacity: 0.75; }
+    .x-btn:hover { color: var(--rust); background: rgba(210, 71, 47, 0.16); opacity: 1; }
+
+    input[type="checkbox"] {
+      -webkit-appearance: none; appearance: none; flex: none; margin: 0; cursor: pointer;
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 1.5px solid var(--sand); background: transparent; transition: background 0.2s, border-color 0.2s;
+    }
+    input[type="checkbox"]:checked {
+      border-color: var(--teal);
+      background: var(--teal) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23141838' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12 4 4 8-9'/%3E%3C/svg%3E") center / 13px no-repeat;
+    }
+
+    /* ---------- Plan view ---------- */
+    .view-title { margin: 0; font-family: var(--display); font-style: italic; font-weight: 700; font-variation-settings: "SOFT" 100, "WONK" 1; font-size: clamp(26px, 7vw, 34px); line-height: 1.05; letter-spacing: -0.01em; }
+    .view-sub { margin: 6px 0 0; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--haze); }
+    .grid-2 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .ledger { display: flex; flex-direction: column; justify-content: space-between; }
+    .add-btn {
+      width: 100%; margin-top: 12px; padding: 11px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: var(--cream);
+      border: 1px dashed var(--line-strong); transition: background 0.2s, border-color 0.2s;
+    }
+    .add-btn:hover { background: rgba(245, 233, 208, 0.06); border-color: var(--mustard); }
+    .add-btn .ic { color: var(--teal); }
+
+    /* ---------- Notes view: captain's log ---------- */
+    .notes-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tabs button { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 7px 12px; border-radius: 99px; color: var(--sand); border: 1px solid var(--line-strong); transition: background 0.2s, color 0.2s; }
+    .tabs button.active { background: var(--mustard); color: var(--ink); border-color: var(--mustard); }
+    .logbook {
+      position: relative; overflow: hidden; border-radius: 18px;
+      box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.8);
+      border-top: 10px solid var(--rust);
+    }
+    .logbook-holes { position: absolute; left: 12px; top: 0; bottom: 0; z-index: 2; display: flex; flex-direction: column; justify-content: space-around; padding: 48px 0; pointer-events: none; }
+    .logbook-holes i { width: 14px; height: 14px; border-radius: 50%; background: var(--space); box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.6); }
+    .college-ruled {
+      position: relative; min-height: 520px; padding: 16px 20px 16px 50px;
+      background-color: #F4E7C9;
+      background-image: linear-gradient(rgba(20, 24, 56, 0.16) 1px, transparent 1px);
+      background-size: 100% 28px; line-height: 28px; color: var(--ink);
+    }
+    .red-margin-line { position: absolute; left: 40px; top: 0; bottom: 0; border-left: 2px solid rgba(210, 71, 47, 0.55); pointer-events: none; }
+    .note-title { display: block; width: 100%; margin-bottom: 8px; font-family: var(--display); font-weight: 800; font-variation-settings: "SOFT" 100; font-size: 20px; line-height: 28px; color: var(--ink); }
+    .note-body { display: block; width: 100%; min-height: 440px; resize: none; font-family: var(--mono); font-size: 13px; line-height: 28px; color: var(--ink); }
+
+    /* ---------- Talk view: the ringed planet ---------- */
+    .view-talk { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 66vh; padding: 8px 0 24px; text-align: center; }
+    .view-talk > * + * { margin-top: 18px; }
+    .talk-intro { max-width: 340px; }
+    .talk-intro p { margin: 8px 0 0; color: var(--sand); font-size: 14px; }
+    .orb-stage { position: relative; width: 270px; height: 250px; display: grid; place-items: center; }
+    .orb-body { position: relative; width: 100%; height: 100%; display: grid; place-items: center; animation: orbFloat 5s ease-in-out infinite; }
+    .pulse-ring { position: absolute; inset: 30px 40px; border-radius: 50%; pointer-events: none; animation: recordingRipple 1.8s cubic-bezier(0.2, 0.6, 0.35, 1) infinite; }
+    #orbRipple1 { background: rgba(238, 123, 48, 0.3); }
+    #orbRipple2 { background: rgba(242, 180, 65, 0.25); animation-delay: 0.6s; }
+    .planet {
+      position: relative; z-index: 1; width: 168px; height: 168px; border-radius: 50%; overflow: hidden;
+      background: linear-gradient(166deg, #F8DF9E 0 15.6%, var(--mustard) 16.4% 33.6%, var(--orange) 34.4% 51.6%, var(--rust) 52.4% 69.6%, var(--plum) 70.4% 100%);
+      box-shadow: 0 0 50px 6px rgba(238, 123, 48, 0.32), 0 0 110px 20px rgba(138, 47, 98, 0.35);
+      color: var(--ink); display: grid; place-items: center;
+      transition: transform 0.2s, box-shadow 0.4s, filter 0.4s;
+    }
+    .planet::before {   /* sphere shading */
+      content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.4), transparent 42%), radial-gradient(circle at 74% 84%, rgba(8, 10, 32, 0.6), transparent 58%);
+    }
+    .planet:active { transform: scale(0.95); }
+    .planet .ic { position: relative; width: 34px; height: 34px; transform: translateY(-26px); }
+    .ring {
+      position: absolute; left: 50%; top: 50%; width: 266px; height: 70px; margin: -35px 0 0 -133px;
+      border-radius: 50%; border: 9px double var(--cream); opacity: 0.92;
+      transform: rotate(-14deg); pointer-events: none; transition: border-color 0.4s;
+    }
+    .ring.back { z-index: 0; -webkit-clip-path: inset(0 0 50% 0); clip-path: inset(0 0 50% 0); }
+    .ring.front { z-index: 3; -webkit-clip-path: inset(50% 0 0 0); clip-path: inset(50% 0 0 0); }
+    .orb-label { font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.22em; color: var(--mustard); margin-top: 4px !important; }
+    .orb-stage.listening .planet { filter: saturate(1.25) brightness(1.08); box-shadow: 0 0 70px 14px rgba(210, 71, 47, 0.55), 0 0 130px 30px rgba(238, 123, 48, 0.35); }
+    .orb-stage.listening .planet .ic { animation: blink 1s ease-in-out infinite; }
+    .orb-stage.listening .ring { border-color: var(--mustard); }
+    .orb-stage.listening + .orb-label { color: var(--orange); }
+    .talk-card { width: 100%; max-width: 440px; }
+    .transcript { margin: 6px 0 0; min-height: 40px; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-style: italic; font-variation-settings: "SOFT" 100; font-size: 17px; color: var(--cream); }
+    .receipt { text-align: left; border-color: rgba(71, 191, 174, 0.5); }
+    .receipt-body { font-size: 14px; color: var(--sand); white-space: pre-line; margin-top: 8px; }
+
+    @keyframes orbFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes recordingRipple { 0% { transform: scale(0.95); opacity: 0.85; } 100% { transform: scale(1.6); opacity: 0; } }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .animate-spin { animation: spin 0.9s linear infinite; }
+
+    /* ---------- Edge-tucked control rail ----------
+       ONE transform rule handles both the tuck (X) and vertical centering (Y).
+       Hover only opens it on real mouse devices, so it doesn't get stuck open
+       after a tap on iPhone. */
+    .edge-tucked-rail {
+      position: fixed; right: 0; top: 50%; z-index: 40; display: flex; align-items: center;
+      transform: translate(calc(100% - 20px), -50%);
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      touch-action: pan-y; -webkit-user-select: none; user-select: none;
+    }
+    .edge-tucked-rail.expanded { transform: translate(0, -50%); }
+    @media (hover: hover) and (pointer: fine) {
+      .edge-tucked-rail:hover { transform: translate(0, -50%); }
+    }
+    .rail-handle {
+      width: 20px; height: 84px; border-radius: 14px 0 0 14px; cursor: pointer;
+      display: grid; place-items: center;
+      background: var(--panel-2); border: 1px solid var(--line-strong); border-right: 0;
+    }
+    .rail-handle i { width: 4px; height: 36px; border-radius: 99px; background: var(--stripes); }
+    .rail-nav {
+      display: flex; flex-direction: column; gap: 6px; padding: 8px;
+      border-radius: 24px 0 0 24px;
+      background: rgba(15, 18, 54, 0.92);
+      -webkit-backdrop-filter: blur(22px) saturate(150%); backdrop-filter: blur(22px) saturate(150%);
+      border: 1px solid var(--line-strong); border-right: 0;
+      box-shadow: -14px 0 40px -8px rgba(0, 0, 0, 0.7);
+    }
+    .rail-nav button {
+      width: 52px; height: 52px; border-radius: 16px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+      color: var(--haze); font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+      transition: background 0.2s, color 0.2s;
+    }
+    .rail-nav button:hover { color: var(--cream); background: rgba(245, 233, 208, 0.08); }
+    .rail-nav button.active { background: var(--mustard); color: var(--ink); font-weight: 700; }
+    .rail-nav hr { width: 28px; margin: 2px auto; border: 0; border-top: 1px dashed var(--line-strong); }
+
+    /* ---------- Settings modal ---------- */
+    .modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(8, 10, 32, 0.72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .modal-card { width: 100%; max-width: 440px; padding: 22px; overflow: hidden; position: relative; }
+    .modal-card::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: linear-gradient(to right, var(--mustard) 0 25%, var(--orange) 25% 50%, var(--rust) 50% 75%, var(--plum) 75% 100%); }
+    .modal-title { margin: 0; font-family: var(--display); font-style: italic; font-weight: 700; font-variation-settings: "SOFT" 100, "WONK" 1; font-size: 22px; }
+    .field-label { display: block; margin-bottom: 6px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sand); }
+    .field-row { display: flex; gap: 8px; }
+    .field { flex: 1; padding: 10px 14px; border-radius: 12px; background: var(--inset); border: 1px solid var(--line-strong); font-size: 14px; }
+    .field:focus { border-color: var(--mustard); }
+    .hint { margin: 6px 0 0; font-size: 12px; color: var(--haze); }
+    .hint.mono { font-family: var(--mono); text-align: center; }
+    .hint.ok { color: var(--teal); } .hint.err { color: #F09A86; }
+    .divider { border: 0; border-top: 1px dashed var(--line-strong); margin: 16px 0; }
+    .wide { width: 100%; justify-content: center; }
+
+    @media (min-width: 640px) {
+      .viewport { padding: 32px 36px 48px; }
+      .games { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+      .card-pad { padding: 20px; }
+    }
+    @media (min-width: 1024px) {
+      .grid-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
   </style>
 </head>
-<body class="h-full w-full overflow-hidden text-ink-primary flex flex-col justify-between">
+<body>
+
+  <!-- Icon sprite (inline, so the app has no icon-library dependency) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+      <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+      <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></symbol>
+      <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/></symbol>
+      <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></symbol>
+      <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+      <symbol id="i-news" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h6M7 12h10M7 16h10"/></symbol>
+      <symbol id="i-smile" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></symbol>
+      <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+      <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+      <symbol id="i-check-square" viewBox="0 0 24 24"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
+      <symbol id="i-plus-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+      <symbol id="i-calendar-range" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h4M12 18h4"/></symbol>
+      <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></symbol>
+      <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+      <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="i-check-circle" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></symbol>
+    </defs>
+  </svg>
 
   <!-- ================= TOP HEADER BAR ================= -->
-  <header class="shrink-0 border-b border-paper-border bg-paper-100/90 backdrop-blur-md z-30 px-4 sm:px-6 pt-[calc(var(--sat)+10px)] pb-3 no-select">
-    <div class="max-w-6xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-3 h-3 rounded-full bg-gradient-to-tr from-yacht-sunset to-yacht-gold shadow-sm"></div>
-        <div>
-          <h1 id="headerGreeting" class="font-serif text-lg sm:text-xl font-medium tracking-tight text-ink-primary">Good evening, legend</h1>
-          <p class="text-xs font-mono tracking-wider uppercase text-ink-muted">Personal Hub • Pacific Horizon</p>
+  <header class="topbar no-select">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="sun-mark" aria-hidden="true"></div>
+        <div style="min-width:0">
+          <h1 id="headerGreeting" class="greeting">Good evening, legend</h1>
+          <p class="tagline">Personal Hub • Pacific Horizon</p>
         </div>
       </div>
-      <div class="flex items-center gap-3 pr-[max(0px,calc(var(--sar)-4px))]">
-        <span id="liveClock" class="font-mono text-xs font-semibold px-2.5 py-1 rounded-full bg-paper-200 text-ink-secondary border border-paper-border">12:00 PM</span>
-        <button onclick="toggleSettingsModal(true)" class="p-2 rounded-xl text-ink-secondary hover:text-ink-primary hover:bg-paper-200 transition-colors" title="Settings">
-          <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+      <div class="topbar-tools">
+        <span id="liveClock" class="clock">12:00 PM</span>
+        <button onclick="toggleSettingsModal(true)" class="icon-btn" title="Settings" aria-label="Settings">
+          <svg class="ic ic-lg"><use href="#i-sliders"/></svg>
         </button>
       </div>
     </div>
   </header>
 
   <!-- ================= MAIN SCROLLABLE VIEWPORT ================= -->
-  <main class="flex-1 overflow-y-auto relative z-10 px-4 sm:px-8 py-4 pl-[max(16px,var(--sal))] pr-7 sm:pr-8 pb-[max(32px,calc(var(--sab)+24px))]">
-    <div class="max-w-5xl mx-auto">
+  <main class="viewport">
+    <div class="wrap">
 
       <!-- ================= 1. DASHBOARD VIEW ================= -->
-      <section id="viewDash" class="space-y-6">
+      <section id="viewDash" class="view">
 
         <!-- QUICK HITS CAROUSEL -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between no-select">
-            <span class="text-xs font-mono font-semibold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-              <i data-lucide="compass" class="w-3.5 h-3.5 text-yacht-sunset"></i> Quick Hits Radar
-            </span>
-            <div class="flex items-center gap-2">
-              <div class="flex items-center gap-1.5" id="carouselDots">
-                <button onclick="goToSlide(0)" class="w-2 h-2 rounded-full bg-ink-primary transition-all" aria-label="Sports"></button>
-                <button onclick="goToSlide(1)" class="w-2 h-2 rounded-full bg-paper-300 transition-all" aria-label="News"></button>
-                <button onclick="goToSlide(2)" class="w-2 h-2 rounded-full bg-paper-300 transition-all" aria-label="Comic"></button>
-                <button onclick="goToSlide(3)" class="w-2 h-2 rounded-full bg-paper-300 transition-all" aria-label="Specs"></button>
+        <div>
+          <div class="row-head no-select">
+            <span class="eyebrow"><svg class="ic ic-sm"><use href="#i-compass"/></svg> Quick Hits Radar</span>
+            <div style="display:flex;align-items:center;gap:6px">
+              <div class="dots" id="carouselDots">
+                <button onclick="goToSlide(0)" class="active" aria-label="Sports"></button>
+                <button onclick="goToSlide(1)" aria-label="News"></button>
+                <button onclick="goToSlide(2)" aria-label="Comic"></button>
+                <button onclick="goToSlide(3)" aria-label="Specs"></button>
               </div>
-              <button onclick="goToSlide((APP_STATE.carouselIndex + 3) % 4)" class="p-1 rounded-lg text-ink-muted hover:text-ink-primary hover:bg-paper-200" aria-label="Previous">
-                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+              <button onclick="goToSlide((APP_STATE.carouselIndex + 3) % 4)" class="icon-btn small" aria-label="Previous">
+                <svg class="ic"><use href="#i-left"/></svg>
               </button>
-              <button onclick="goToSlide((APP_STATE.carouselIndex + 1) % 4)" class="p-1 rounded-lg text-ink-muted hover:text-ink-primary hover:bg-paper-200" aria-label="Next">
-                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              <button onclick="goToSlide((APP_STATE.carouselIndex + 1) % 4)" class="icon-btn small" aria-label="Next">
+                <svg class="ic"><use href="#i-right"/></svg>
               </button>
             </div>
           </div>
 
-          <div id="carouselWrapper" class="relative overflow-hidden rounded-2xl paper-card min-h-[175px]">
+          <div id="carouselWrapper" class="card carousel">
 
             <!-- Slide 0: Sports (live from ESPN) -->
-            <div id="slide-0" class="carousel-slide p-4 sm:p-5">
-              <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
-                <span class="text-xs font-mono font-semibold text-yacht-sunset bg-orange-50/80 px-2.5 py-0.5 rounded-full border border-orange-200/60 flex items-center gap-1">
-                  <i data-lucide="trophy" class="w-3 h-3"></i> ESPN Live Matchups
-                </span>
-                <button onclick="fetchLiveSports()" class="text-ink-muted hover:text-ink-primary p-1 rounded-lg hover:bg-paper-100" title="Refresh scores">
-                  <i data-lucide="refresh-cw" id="sportsRefreshIcon" class="w-4 h-4"></i>
+            <div id="slide-0" class="slide">
+              <div class="slide-head">
+                <span class="tag orange"><svg class="ic ic-sm"><use href="#i-trophy"/></svg> ESPN Live Matchups</span>
+                <button onclick="fetchLiveSports()" class="icon-btn small" title="Refresh scores" aria-label="Refresh scores">
+                  <svg class="ic" id="sportsRefreshIcon"><use href="#i-refresh"/></svg>
                 </button>
               </div>
-              <div class="mb-3 p-2.5 rounded-xl bg-paper-50 border border-paper-border flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                  <span id="featuredBadge" class="px-1.5 py-0.5 text-[11px] font-mono font-bold bg-yacht-sunset text-white rounded shrink-0">FEATURED</span>
-                  <span id="primetimeMatchup" class="text-sm font-semibold text-ink-primary truncate">Loading scores…</span>
+              <div class="board">
+                <div class="board-main">
+                  <span id="featuredBadge" class="badge">FEATURED</span>
+                  <span id="primetimeMatchup" class="matchup">Loading scores…</span>
                 </div>
-                <span id="primetimeStatus" class="font-mono text-xs font-bold text-yacht-sunset shrink-0"></span>
+                <span id="primetimeStatus" class="board-status"></span>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm" id="teamMatchupsContainer"></div>
+              <div class="games" id="teamMatchupsContainer"></div>
             </div>
 
             <!-- Slide 1: News (live from Hacker News) -->
-            <div id="slide-1" class="carousel-slide p-4 sm:p-5 hidden">
-              <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
-                <span class="text-xs font-mono font-semibold text-yacht-sage bg-emerald-50/80 px-2.5 py-0.5 rounded-full border border-emerald-200/60 flex items-center gap-1">
-                  <i data-lucide="newspaper" class="w-3 h-3"></i> Daily Dispatch
-                </span>
-                <span class="text-xs font-mono text-ink-muted">Hacker News top</span>
+            <div id="slide-1" class="slide hidden">
+              <div class="slide-head">
+                <span class="tag teal"><svg class="ic ic-sm"><use href="#i-news"/></svg> Daily Dispatch</span>
+                <span class="tiny">Hacker News top</span>
               </div>
-              <div id="newsList" class="space-y-2">
-                <p class="text-sm text-ink-muted">Loading headlines…</p>
+              <div id="newsList" class="stack">
+                <p class="muted">Loading headlines…</p>
               </div>
             </div>
 
             <!-- Slide 2: Comic -->
-            <div id="slide-2" class="carousel-slide p-4 sm:p-5 hidden">
-              <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
-                <span class="text-xs font-mono font-semibold text-yacht-dustyrose bg-rose-50/80 px-2.5 py-0.5 rounded-full border border-rose-200/60 flex items-center gap-1">
-                  <i data-lucide="smile" class="w-3 h-3"></i> Field Notes & Comic
-                </span>
-                <button onclick="rotateComicStrip()" class="text-xs font-mono text-ink-muted hover:text-ink-primary underline">Next strip</button>
+            <div id="slide-2" class="slide hidden">
+              <div class="slide-head">
+                <span class="tag mustard"><svg class="ic ic-sm"><use href="#i-smile"/></svg> Field Notes &amp; Comic</span>
+                <button onclick="rotateComicStrip()" class="text-btn">Next strip</button>
               </div>
-              <div class="p-3 rounded-xl bg-paper-50 border border-paper-border text-center">
-                <p id="comicSetup" class="font-serif text-base italic text-ink-primary"></p>
-                <p id="comicPunchline" class="font-mono text-xs font-semibold text-yacht-sea mt-2"></p>
+              <div class="comic">
+                <p id="comicSetup" class="comic-setup"></p>
+                <p id="comicPunchline" class="comic-punch"></p>
               </div>
             </div>
 
             <!-- Slide 3: Pit & Range -->
-            <div id="slide-3" class="carousel-slide p-4 sm:p-5 hidden">
-              <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
-                <span class="text-xs font-mono font-semibold text-ink-secondary bg-paper-200 px-2.5 py-0.5 rounded-full border border-paper-border flex items-center gap-1">
-                  <i data-lucide="flame" class="w-3 h-3 text-yacht-sunset"></i> Pit & Range Specs
-                </span>
-                <span class="text-xs font-mono text-ink-muted">Reference Sheet</span>
+            <div id="slide-3" class="slide hidden">
+              <div class="slide-head">
+                <span class="tag cream"><svg class="ic ic-sm"><use href="#i-flame"/></svg> Pit &amp; Range Specs</span>
+                <span class="tiny">Reference Sheet</span>
               </div>
-              <div class="grid grid-cols-2 gap-2 text-sm">
-                <div class="p-2.5 rounded-xl bg-paper-50 border border-paper-border">
-                  <span class="text-[11px] font-mono text-ink-muted uppercase">Smoked Brisket</span>
-                  <p class="font-semibold text-ink-primary mt-0.5">Wrap @ 165°F</p>
-                  <p class="text-xs text-ink-muted">Probe tender @ 203°F</p>
+              <div class="specs">
+                <div class="spec">
+                  <span>Smoked Brisket</span>
+                  <strong>Wrap @ 165°F</strong>
+                  <small>Probe tender @ 203°F</small>
                 </div>
-                <div class="p-2.5 rounded-xl bg-paper-50 border border-paper-border">
-                  <span class="text-[11px] font-mono text-ink-muted uppercase">54° Wedge Carry</span>
-                  <p class="font-semibold text-ink-primary mt-0.5">95 yds (Full)</p>
-                  <p class="text-xs text-ink-muted">75 yds (3/4 pitch)</p>
+                <div class="spec">
+                  <span>54° Wedge Carry</span>
+                  <strong>95 yds (Full)</strong>
+                  <small>75 yds (3/4 pitch)</small>
                 </div>
               </div>
             </div>
@@ -245,168 +593,143 @@
         </div>
 
         <!-- QUICK CAPTURE -->
-        <div class="paper-card rounded-2xl p-2.5 sm:p-3 flex items-center gap-2">
-          <div class="flex-1 min-w-0">
-            <input type="text" id="quickCaptureInput" enterkeyhint="done" placeholder="Quick idea, task, or note..." class="w-full bg-transparent border-0 px-2 py-1 text-sm text-ink-primary placeholder:text-ink-faint focus:outline-none focus:ring-0">
+        <div>
+          <div class="card capture">
+            <input type="text" id="quickCaptureInput" enterkeyhint="done" placeholder="Quick idea, task, or note...">
+            <div class="capture-btns no-select">
+              <button onclick="handleQuickCapture('task')" class="pill primary"><svg class="ic ic-sm"><use href="#i-plus"/></svg> Task</button>
+              <button onclick="handleQuickCapture('note')" class="pill ghost"><svg class="ic ic-sm"><use href="#i-pen"/></svg> Note</button>
+              <button onclick="switchView('talk')" class="pill hot"><svg class="ic ic-sm"><use href="#i-mic"/></svg> Talk</button>
+            </div>
           </div>
-          <div class="flex items-center gap-1.5 shrink-0 no-select">
-            <button onclick="handleQuickCapture('task')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-ink-primary text-white text-xs font-medium hover:bg-ink-secondary transition-colors whitespace-nowrap flex items-center gap-1">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Task
-            </button>
-            <button onclick="handleQuickCapture('note')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-paper-200 text-ink-primary border border-paper-border text-xs font-medium hover:bg-paper-300 transition-colors whitespace-nowrap flex items-center gap-1">
-              <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i> Note
-            </button>
-            <button onclick="switchView('talk')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-orange-50/80 text-yacht-sunset border border-orange-200/60 text-xs font-medium hover:bg-orange-100 transition-colors whitespace-nowrap flex items-center gap-1">
-              <i data-lucide="mic" class="w-3.5 h-3.5 text-yacht-sunset"></i> Talk
-            </button>
-          </div>
+          <p id="captureToast" class="toast hidden"></p>
         </div>
-        <p id="captureToast" class="hidden -mt-4 text-xs font-mono text-yacht-sage text-center"></p>
 
         <!-- TOP PRIORITIES -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-mono font-semibold uppercase tracking-wider text-ink-muted">Today's Priorities</span>
-            <button onclick="switchView('plan')" class="text-sm font-serif italic text-ink-muted hover:text-ink-primary">View full planner →</button>
+        <div>
+          <div class="row-head">
+            <span class="eyebrow">Today's Priorities</span>
+            <button onclick="switchView('plan')" class="link-btn">View full planner →</button>
           </div>
-          <div id="dashPrioritiesList" class="space-y-2"></div>
+          <div id="dashPrioritiesList" class="stack"></div>
         </div>
 
       </section>
 
       <!-- ================= 2. PLAN VIEW ================= -->
-      <section id="viewPlan" class="hidden space-y-6">
-        <div class="flex items-center justify-between pb-2 border-b border-paper-border">
-          <div>
-            <h2 class="font-serif text-xl sm:text-2xl font-medium text-ink-primary">Day & Month Agenda</h2>
-            <p class="text-xs font-mono text-ink-muted">Daily timeline, priority ledger, and monthly vision</p>
-          </div>
+      <section id="viewPlan" class="view hidden">
+        <div>
+          <h2 class="view-title">Day &amp; Month Agenda</h2>
+          <p class="view-sub">Daily timeline, priority ledger, and monthly vision</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="grid-2">
 
           <!-- PLAN YOUR DAY -->
-          <div class="paper-card rounded-2xl p-4 sm:p-5 flex flex-col">
-            <div class="flex items-center justify-between pb-3 border-b border-paper-border mb-3">
-              <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-                <i data-lucide="sun" class="w-4 h-4 text-yacht-sunset"></i> Plan Your Day
-              </span>
-              <button id="hoursToggleBtn" onclick="toggleAllHours()" class="text-xs font-mono text-ink-muted hover:text-ink-primary underline">Show all 24 hrs</button>
+          <div class="card card-pad">
+            <div class="card-head">
+              <span class="eyebrow"><svg class="ic"><use href="#i-sun"/></svg> Plan Your Day</span>
+              <button id="hoursToggleBtn" onclick="toggleAllHours()" class="text-btn">Show all 24 hrs</button>
             </div>
-            <div id="hourlyTimeline" class="space-y-2 max-h-[500px] overflow-y-auto pr-1"></div>
+            <div id="hourlyTimeline" class="stack scroll" style="max-height:500px"></div>
           </div>
 
           <!-- PRIORITY LEDGER -->
-          <div class="paper-card rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+          <div class="card card-pad ledger">
             <div>
-              <div class="flex items-center justify-between pb-3 border-b border-paper-border mb-3">
-                <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-                  <i data-lucide="check-square" class="w-4 h-4 text-yacht-sage"></i> Priority Ledger
-                </span>
-                <span class="text-xs font-mono text-ink-muted">Tap any item to edit</span>
+              <div class="card-head">
+                <span class="eyebrow"><svg class="ic"><use href="#i-check-square"/></svg> Priority Ledger</span>
+                <span class="tiny">Tap any item to edit</span>
               </div>
-              <div id="plannerTaskList" class="space-y-2 max-h-[440px] overflow-y-auto pr-1"></div>
+              <div id="plannerTaskList" class="stack scroll" style="max-height:440px"></div>
             </div>
-            <div class="pt-3 mt-2 border-t border-paper-border">
-              <button onclick="addNewPriorityItem()" class="w-full py-2.5 px-3 rounded-xl bg-paper-100 hover:bg-paper-200 border border-dashed border-paper-border text-xs font-mono font-medium text-ink-primary transition-all flex items-center justify-center gap-2">
-                <i data-lucide="plus-circle" class="w-4 h-4 text-yacht-sage"></i> Add a priority
-              </button>
-            </div>
+            <button onclick="addNewPriorityItem()" class="add-btn">
+              <svg class="ic"><use href="#i-plus-circle"/></svg> Add a priority
+            </button>
           </div>
 
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="grid-2">
 
           <!-- PLANS FOR THE MONTH -->
-          <div class="paper-card rounded-2xl p-4 sm:p-5 space-y-3">
-            <div class="flex items-center justify-between pb-3 border-b border-paper-border">
-              <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-                <i data-lucide="calendar-range" class="w-4 h-4 text-yacht-sea"></i> <span id="monthPlansHeading">Plans for the Month</span>
-              </span>
-              <button onclick="addNewMonthPlan()" class="text-xs font-mono text-yacht-sea hover:text-ink-primary font-medium flex items-center gap-1">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add plan
-              </button>
+          <div class="card card-pad">
+            <div class="card-head">
+              <span class="eyebrow"><svg class="ic"><use href="#i-calendar-range"/></svg> <span id="monthPlansHeading">Plans for the Month</span></span>
+              <button onclick="addNewMonthPlan()" class="text-btn"><svg class="ic ic-sm"><use href="#i-plus"/></svg> Add plan</button>
             </div>
-            <div id="monthPlansList" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"></div>
+            <div id="monthPlansList" class="stack scroll" style="max-height:300px"></div>
           </div>
 
           <!-- MONTH GOALS -->
-          <div class="paper-card rounded-2xl p-4 sm:p-5 space-y-3">
-            <div class="flex items-center justify-between pb-3 border-b border-paper-border">
-              <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-                <i data-lucide="target" class="w-4 h-4 text-yacht-dustyrose"></i> Month Goals
-              </span>
-              <button onclick="addNewMonthGoal()" class="text-xs font-mono text-yacht-dustyrose hover:text-ink-primary font-medium flex items-center gap-1">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add goal
-              </button>
+          <div class="card card-pad">
+            <div class="card-head">
+              <span class="eyebrow"><svg class="ic"><use href="#i-target"/></svg> Month Goals</span>
+              <button onclick="addNewMonthGoal()" class="text-btn"><svg class="ic ic-sm"><use href="#i-plus"/></svg> Add goal</button>
             </div>
-            <div id="monthGoalsList" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"></div>
+            <div id="monthGoalsList" class="stack scroll" style="max-height:300px"></div>
           </div>
 
         </div>
       </section>
 
       <!-- ================= 3. NOTES VIEW ================= -->
-      <section id="viewNotes" class="hidden space-y-4">
-        <div class="flex items-center justify-between gap-2 pb-2 border-b border-paper-border flex-wrap">
+      <section id="viewNotes" class="view hidden">
+        <div class="notes-head">
           <div>
-            <h2 class="font-serif text-xl font-medium text-ink-primary">Notebook & Logs</h2>
-            <p class="text-xs font-mono text-ink-muted">College-ruled loose-leaf binder</p>
+            <h2 class="view-title">Notebook &amp; Logs</h2>
+            <p class="view-sub">Captain's log • loose-leaf binder</p>
           </div>
-          <div class="flex items-center gap-1 no-select" id="notebookTabs">
-            <button data-tab="Smoker & Cooking" onclick="setNotebookTab('Smoker & Cooking')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-ink-primary text-white">Smoker</button>
-            <button data-tab="Golf Log" onclick="setNotebookTab('Golf Log')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">Golf</button>
-            <button data-tab="Workbench" onclick="setNotebookTab('Workbench')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">Workbench</button>
-            <button data-tab="General" onclick="setNotebookTab('General')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">General</button>
+          <div class="tabs no-select" id="notebookTabs">
+            <button data-tab="Smoker & Cooking" onclick="setNotebookTab('Smoker & Cooking')" class="active">Smoker</button>
+            <button data-tab="Golf Log" onclick="setNotebookTab('Golf Log')">Golf</button>
+            <button data-tab="Workbench" onclick="setNotebookTab('Workbench')">Workbench</button>
+            <button data-tab="General" onclick="setNotebookTab('General')">General</button>
           </div>
         </div>
 
-        <div class="paper-card rounded-2xl overflow-hidden relative border border-paper-border shadow-md">
-          <div class="absolute left-3 top-0 bottom-0 flex flex-col justify-around py-12 pointer-events-none z-20">
-            <div class="w-3.5 h-3.5 rounded-full bg-paper-300 border border-paper-border shadow-inner"></div>
-            <div class="w-3.5 h-3.5 rounded-full bg-paper-300 border border-paper-border shadow-inner"></div>
-            <div class="w-3.5 h-3.5 rounded-full bg-paper-300 border border-paper-border shadow-inner"></div>
-          </div>
-          <div class="college-ruled min-h-[520px] pl-12 pr-6 py-4 relative">
-            <div class="absolute left-10 top-0 bottom-0 red-margin-line pointer-events-none"></div>
-            <input id="noteSheetTitle" type="text" oninput="saveCurrentNoteContent()" class="w-full font-serif text-lg font-bold text-ink-primary bg-transparent border-0 focus:outline-none mb-2">
-            <textarea id="noteSheetContent" oninput="saveCurrentNoteContent()" class="w-full bg-transparent border-0 font-mono text-sm text-ink-primary leading-[28px] resize-none focus:outline-none min-h-[440px]" spellcheck="false"></textarea>
+        <div class="logbook">
+          <div class="logbook-holes"><i></i><i></i><i></i></div>
+          <div class="college-ruled">
+            <div class="red-margin-line"></div>
+            <input id="noteSheetTitle" type="text" oninput="saveCurrentNoteContent()" class="note-title">
+            <textarea id="noteSheetContent" oninput="saveCurrentNoteContent()" class="note-body" spellcheck="false"></textarea>
           </div>
         </div>
       </section>
 
       <!-- ================= 4. TALK VIEW ================= -->
-      <section id="viewTalk" class="hidden flex flex-col items-center justify-center min-h-[65vh] py-8 space-y-6">
-        <div class="text-center space-y-1.5 max-w-sm">
-          <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono uppercase tracking-wider bg-orange-100/70 text-yacht-sunset border border-orange-200">Cosmic Frequency</span>
-          <h2 class="font-serif text-2xl font-medium text-ink-primary">Voice Companion</h2>
-          <p class="text-sm text-ink-muted">Tap the orb to dictate thoughts, field notes, or reminders.</p>
+      <section id="viewTalk" class="view-talk hidden">
+        <div class="talk-intro">
+          <span class="tag orange">Cosmic Frequency</span>
+          <h2 class="view-title" style="margin-top:12px">Voice Companion</h2>
+          <p>Tap the planet to dictate thoughts, field notes, or reminders.</p>
         </div>
 
-        <div class="relative flex items-center justify-center w-64 h-64 my-4 no-select">
-          <div id="orbRipple1" class="absolute inset-0 rounded-full bg-yacht-sunset/20 pulse-ring hidden pointer-events-none"></div>
-          <div id="orbRipple2" class="absolute inset-4 rounded-full bg-yacht-gold/25 pulse-ring hidden pointer-events-none" style="animation-delay: 0.6s;"></div>
-          <button id="aiOrbButton" onclick="toggleVoiceSession()" class="ai-orb-core w-44 h-44 rounded-full relative z-10 focus:outline-none transition-transform active:scale-95 flex flex-col items-center justify-center p-4 text-center cursor-pointer" style="background: radial-gradient(circle at 35% 30%, #F4F1DE 0%, #F2CC8F 45%, #E07A5F 80%, #C2847A 100%);">
-            <div class="absolute top-3 left-6 w-16 h-8 rounded-full bg-white/45 blur-[2px] transform -rotate-12 pointer-events-none"></div>
-            <i data-lucide="mic" id="orbMicIcon" class="w-8 h-8 text-ink-primary mb-1 drop-shadow-sm transition-transform"></i>
-            <span id="orbStatusLabel" class="font-mono text-xs font-bold tracking-wider uppercase text-ink-primary drop-shadow-sm">TAP TO TALK</span>
-          </button>
-        </div>
-
-        <div class="w-full max-w-md paper-card rounded-2xl p-4 text-center space-y-2">
-          <span class="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Live Transcription</span>
-          <p id="orbTranscriptText" class="font-serif italic text-base text-ink-secondary min-h-[38px] flex items-center justify-center">"Listening... speak freely."</p>
-        </div>
-
-        <div id="orbReceiptCard" class="w-full max-w-md paper-card rounded-2xl p-4 border border-paper-border bg-paper-50 hidden space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-mono font-bold text-yacht-sunset flex items-center gap-1">
-              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-yacht-sage"></i> Structured & Saved
-            </span>
-            <button onclick="dismissReceiptCard()" class="text-sm text-ink-muted hover:text-ink-primary">✕</button>
+        <div class="orb-stage no-select" id="orbStage">
+          <div id="orbRipple1" class="pulse-ring hidden"></div>
+          <div id="orbRipple2" class="pulse-ring hidden"></div>
+          <div class="orb-body">
+            <span class="ring back"></span>
+            <button id="aiOrbButton" onclick="toggleVoiceSession()" class="planet" aria-label="Tap to talk">
+              <svg class="ic" id="orbMicIcon"><use href="#i-mic"/></svg>
+            </button>
+            <span class="ring front"></span>
           </div>
-          <div id="orbReceiptContent" class="text-sm text-ink-secondary space-y-1 whitespace-pre-line"></div>
+        </div>
+        <p id="orbStatusLabel" class="orb-label">TAP TO TALK</p>
+
+        <div class="card card-pad talk-card">
+          <span class="eyebrow">Live Transcription</span>
+          <p id="orbTranscriptText" class="transcript">"Listening... speak freely."</p>
+        </div>
+
+        <div id="orbReceiptCard" class="card card-pad talk-card receipt hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span class="eyebrow" style="color:var(--teal)"><svg class="ic ic-sm" style="color:var(--teal)"><use href="#i-check-circle"/></svg> Structured &amp; Saved</span>
+            <button onclick="dismissReceiptCard()" class="x-btn" aria-label="Dismiss">✕</button>
+          </div>
+          <div id="orbReceiptContent" class="receipt-body"></div>
         </div>
       </section>
 
@@ -414,59 +737,47 @@
   </main>
 
   <!-- ================= EDGE-TUCKED CONTROL RAIL ================= -->
-  <aside id="edgeRail" class="edge-tucked-rail fixed right-0 z-40 flex items-center">
-    <div onclick="toggleEdgeRail()" class="w-5 h-20 rounded-l-xl bg-paper-200/90 border border-r-0 border-paper-border flex items-center justify-center cursor-pointer shadow-sm text-ink-muted hover:text-ink-primary" aria-label="Open navigation">
-      <div class="w-1 h-8 rounded-full bg-paper-400"></div>
-    </div>
-    <nav class="rail-glass rounded-l-3xl p-1.5 sm:p-2 flex flex-col gap-2 shadow-xl border-l border-paper-border">
-      <button onclick="switchView('dash')" id="navBtn-dash" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-primary bg-paper-300/60 transition-all hover:bg-paper-200" title="Dashboard">
-        <i data-lucide="layout-grid" class="w-4 h-4"></i>
-        <span class="text-[10px] font-mono mt-0.5">Dash</span>
+  <aside id="edgeRail" class="edge-tucked-rail">
+    <div onclick="toggleEdgeRail()" class="rail-handle" aria-label="Open navigation"><i></i></div>
+    <nav class="rail-nav">
+      <button onclick="switchView('dash')" id="navBtn-dash" class="active" title="Dashboard">
+        <svg class="ic"><use href="#i-grid"/></svg><span>Dash</span>
       </button>
-      <button onclick="switchView('plan')" id="navBtn-plan" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Planner">
-        <i data-lucide="calendar" class="w-4 h-4"></i>
-        <span class="text-[10px] font-mono mt-0.5">Plan</span>
+      <button onclick="switchView('plan')" id="navBtn-plan" title="Planner">
+        <svg class="ic"><use href="#i-calendar"/></svg><span>Plan</span>
       </button>
-      <button onclick="switchView('notes')" id="navBtn-notes" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Notebook">
-        <i data-lucide="book-open" class="w-4 h-4"></i>
-        <span class="text-[10px] font-mono mt-0.5">Notes</span>
+      <button onclick="switchView('notes')" id="navBtn-notes" title="Notebook">
+        <svg class="ic"><use href="#i-book"/></svg><span>Notes</span>
       </button>
-      <button onclick="switchView('talk')" id="navBtn-talk" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-orange-50" title="Voice AI">
-        <i data-lucide="sparkles" class="w-4 h-4 text-yacht-sunset"></i>
-        <span class="text-[10px] font-mono mt-0.5">Talk</span>
+      <button onclick="switchView('talk')" id="navBtn-talk" title="Voice AI">
+        <svg class="ic"><use href="#i-sparkles"/></svg><span>Talk</span>
       </button>
-      <div class="w-7 h-[1px] bg-paper-border self-center my-0.5"></div>
-      <button onclick="toggleSettingsModal(true); collapseEdgeRail();" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Settings">
-        <i data-lucide="settings" class="w-4 h-4"></i>
-        <span class="text-[10px] font-mono mt-0.5">Set</span>
+      <hr>
+      <button onclick="toggleSettingsModal(true); collapseEdgeRail();" title="Settings">
+        <svg class="ic"><use href="#i-settings"/></svg><span>Set</span>
       </button>
     </nav>
   </aside>
 
   <!-- ================= SETTINGS MODAL ================= -->
-  <div id="settingsModal" class="fixed inset-0 bg-ink-primary/30 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="paper-card rounded-2xl max-w-md w-full p-6 space-y-4 border border-paper-border shadow-2xl">
-      <div class="flex items-center justify-between border-b border-paper-border pb-3">
-        <h3 class="font-serif text-lg font-bold text-ink-primary">Settings & AI Keys</h3>
-        <button onclick="toggleSettingsModal(false)" class="text-ink-muted hover:text-ink-primary p-1 rounded-lg">✕</button>
+  <div id="settingsModal" class="modal hidden">
+    <div class="card modal-card">
+      <div class="card-head" style="margin-top:4px">
+        <h3 class="modal-title">Settings &amp; AI Keys</h3>
+        <button onclick="toggleSettingsModal(false)" class="x-btn" aria-label="Close">✕</button>
       </div>
-      <div class="space-y-3 text-sm">
-        <div>
-          <label class="block font-mono text-xs uppercase text-ink-muted mb-1">Google AI Studio API Key</label>
-          <div class="flex gap-2">
-            <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="flex-1 px-3 py-2 rounded-xl bg-paper-100 border border-paper-border text-sm text-ink-primary focus:outline-none">
-            <button onclick="saveApiKey()" class="px-3 py-2 rounded-xl bg-ink-primary text-white font-medium hover:bg-ink-secondary">Save</button>
-          </div>
-          <p class="text-xs text-ink-muted mt-1">Stored locally in this browser only.</p>
-        </div>
-        <div class="border-t border-paper-border pt-3">
-          <label class="block font-mono text-xs uppercase text-ink-muted mb-1.5">Microphone Diagnostics</label>
-          <button onclick="testMicrophoneAccess()" class="w-full px-3 py-2 rounded-xl bg-paper-200 text-ink-primary border border-paper-border hover:bg-paper-300 font-mono text-xs flex items-center justify-center gap-1.5">
-            <i data-lucide="mic" class="w-3.5 h-3.5"></i> Test microphone access
-          </button>
-          <p id="micDiagnosticStatus" class="text-xs text-ink-muted mt-1 text-center font-mono"></p>
-        </div>
+      <label class="field-label" for="apiKeyInput">Google AI Studio API Key</label>
+      <div class="field-row">
+        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="field">
+        <button onclick="saveApiKey()" class="pill primary">Save</button>
       </div>
+      <p class="hint">Stored locally in this browser only.</p>
+      <hr class="divider">
+      <span class="field-label">Microphone Diagnostics</span>
+      <button onclick="testMicrophoneAccess()" class="pill ghost wide">
+        <svg class="ic ic-sm"><use href="#i-mic"/></svg> Test microphone access
+      </button>
+      <p id="micDiagnosticStatus" class="hint mono"></p>
     </div>
   </div>
 
@@ -617,14 +928,10 @@
         const sec = document.getElementById(`view${v.charAt(0).toUpperCase() + v.slice(1)}`);
         const btn = document.getElementById(`navBtn-${v}`);
         if (sec) sec.classList.toggle('hidden', v !== viewName);
-        if (btn) {
-          btn.classList.toggle('bg-paper-300/60', v === viewName);
-          btn.classList.toggle('text-ink-primary', v === viewName);
-          btn.classList.toggle('text-ink-muted', v !== viewName);
-        }
+        if (btn) btn.classList.toggle('active', v === viewName);
       });
+      document.querySelector('.viewport').scrollTop = 0;
       collapseEdgeRail();
-      if (window.lucide) lucide.createIcons();
     }
 
     // ================= CAROUSEL =================
@@ -634,11 +941,7 @@
         document.getElementById(`slide-${i}`)?.classList.toggle('hidden', i !== index);
       }
       const dots = document.getElementById('carouselDots')?.children || [];
-      for (let i = 0; i < dots.length; i++) {
-        dots[i].className = i === index
-          ? 'w-2 h-2 rounded-full bg-ink-primary transition-all'
-          : 'w-2 h-2 rounded-full bg-paper-300 transition-all';
-      }
+      for (let i = 0; i < dots.length; i++) dots[i].classList.toggle('active', i === index);
     }
 
     // Manual navigation: go to the slide AND restart the auto-advance timer,
@@ -679,6 +982,22 @@
 
     function gameStatusText(e) {
       return e.status?.type?.shortDetail || e.status?.type?.detail || 'Scheduled';
+    }
+
+    // "SF 24 – LAR 17" once a game has started; "SF @ LAR" before kickoff.
+    function matchupHTML(e) {
+      const sides = e.competitions?.[0]?.competitors || [];
+      const away = sides.find(c => c.homeAway === 'away') || sides[0];
+      const home = sides.find(c => c.homeAway === 'home') || sides[1];
+      const abbr = c => c?.team?.abbreviation || c?.team?.shortDisplayName || '';
+      if (!abbr(away) || !abbr(home)) return esc(e.shortName || e.name || 'Matchup');
+
+      const started = gameState(e) !== 'pre';
+      const hasScores = [away, home].every(c => c.score !== undefined && c.score !== null && c.score !== '');
+      if (!started || !hasScores) {
+        return `${esc(abbr(away))}<span class="sep">@</span>${esc(abbr(home))}`;
+      }
+      return `${esc(abbr(away))}<span class="pts">${esc(away.score)}</span><span class="sep">–</span>${esc(abbr(home))}<span class="pts">${esc(home.score)}</span>`;
     }
 
     async function fetchLiveSports() {
@@ -722,8 +1041,10 @@
         events.find(e => gameState(e) === 'pre') ||
         events[0];
 
-      badge.innerText = gameState(featured) === 'in' ? 'LIVE' : featured.league;
-      matchup.innerText = featured.shortName || featured.name;
+      const live = gameState(featured) === 'in';
+      badge.innerText = live ? 'LIVE' : featured.league;
+      badge.classList.toggle('live', live);
+      matchup.innerHTML = matchupHTML(featured);
       status.innerText = gameStatusText(featured);
 
       const others = events
@@ -732,11 +1053,9 @@
         .slice(0, 4);
 
       grid.innerHTML = others.map(e => `
-        <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2">
-          <span class="font-medium text-ink-primary truncate">
-            <span class="font-mono text-[11px] text-ink-muted mr-1">${esc(e.league)}</span>${esc(e.shortName || e.name)}
-          </span>
-          <span class="font-mono text-xs ${gameState(e) === 'in' ? 'text-yacht-sunset font-bold' : 'text-ink-muted'} shrink-0">${esc(gameStatusText(e))}</span>
+        <div class="game">
+          <span class="matchup"><span class="lg">${esc(e.league)}</span>${matchupHTML(e)}</span>
+          <span class="st ${gameState(e) === 'in' ? 'live' : ''}">${esc(gameStatusText(e))}</span>
         </div>
       `).join('');
 
@@ -756,13 +1075,13 @@
           try { if (item.url) domain = new URL(item.url).hostname.replace(/^www\./, ''); } catch (_) {}
           const link = item.url || `https://news.ycombinator.com/item?id=${item.id}`;
           return `
-            <a href="${esc(link)}" target="_blank" rel="noopener" class="block p-2.5 rounded-xl bg-paper-50 border border-paper-border hover:bg-paper-100">
-              <p class="font-serif text-base font-medium text-ink-primary line-clamp-1">${esc(item.title)}</p>
-              <p class="text-xs text-ink-muted mt-0.5">${esc(domain)} • ${item.score || 0} pts</p>
+            <a href="${esc(link)}" target="_blank" rel="noopener" class="news-item">
+              <p class="news-title">${esc(item.title)}</p>
+              <p class="news-meta">${esc(domain)} • ${item.score || 0} pts</p>
             </a>`;
         }).join('');
       } catch (_) {
-        list.innerHTML = '<p class="text-sm text-ink-muted">Headlines unavailable right now.</p>';
+        list.innerHTML = '<p class="muted">Headlines unavailable right now.</p>';
       }
     }
 
@@ -799,10 +1118,10 @@
         const hidden = !APP_STATE.showAllHours && (index < WAKING_START || index > WAKING_END) && !slot.event;
         if (hidden) return '';
         return `
-          <div class="p-2 sm:p-2.5 rounded-xl bg-paper-100 hover:bg-paper-200/70 border border-paper-border flex items-center gap-2 text-sm transition-colors">
-            <input type="text" value="${esc(slot.time)}" onchange="updateScheduleTime(${index}, this.value)" class="w-20 font-mono text-xs font-bold text-ink-muted bg-transparent border-b border-transparent focus:border-yacht-sunset focus:outline-none shrink-0">
-            <input type="text" value="${esc(slot.event)}" placeholder="Open — tap to plan" onchange="updateScheduleEvent(${index}, this.value)" class="flex-1 min-w-0 bg-transparent border-0 text-ink-primary font-serif placeholder:text-ink-faint focus:outline-none">
-            ${slot.event ? `<button onclick="clearScheduleSlot(${index})" class="text-ink-faint hover:text-ink-muted p-0.5" title="Clear slot">✕</button>` : ''}
+          <div class="item">
+            <input type="text" value="${esc(slot.time)}" onchange="updateScheduleTime(${index}, this.value)" class="time">
+            <input type="text" value="${esc(slot.event)}" placeholder="Open — tap to plan" onchange="updateScheduleEvent(${index}, this.value)" class="item-text serif">
+            ${slot.event ? `<button onclick="clearScheduleSlot(${index})" class="x-btn" title="Clear slot">✕</button>` : ''}
           </div>`;
       }).join('');
     }
@@ -819,25 +1138,23 @@
 
       if (dashList) {
         dashList.innerHTML = APP_STATE.priorities.length ? APP_STATE.priorities.map(item => `
-          <div class="p-2.5 rounded-xl paper-card flex items-center justify-between text-sm">
-            <label class="flex items-center gap-2 flex-1 min-w-0 pr-2">
-              <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})" class="rounded border-paper-border text-yacht-sunset">
-              <span class="${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} font-medium truncate">${esc(item.text)}</span>
+          <div class="item solid">
+            <label class="item-label">
+              <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})">
+              <span class="item-text ${item.done ? 'done' : ''}">${esc(item.text)}</span>
             </label>
-            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-paper-200 text-ink-muted shrink-0">${esc(item.category)}</span>
+            <span class="chip">${esc(item.category)}</span>
           </div>
-        `).join('') : '<p class="text-sm text-ink-muted px-1">Nothing on deck. Add a task above.</p>';
+        `).join('') : '<p class="muted">Nothing on deck. Add a task above.</p>';
       }
 
       if (planList) {
         planList.innerHTML = APP_STATE.priorities.map(item => `
-          <div class="p-2.5 rounded-xl paper-card flex items-center justify-between gap-2 text-sm group">
-            <div class="flex items-center gap-2 flex-1 min-w-0">
-              <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})" class="rounded border-paper-border text-yacht-sunset shrink-0">
-              <input type="text" value="${esc(item.text)}" onchange="updatePriorityText(${item.id}, this.value)" class="flex-1 min-w-0 bg-transparent border-0 font-medium ${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} focus:outline-none">
-            </div>
-            <input type="text" value="${esc(item.category)}" onchange="updatePriorityCategory(${item.id}, this.value)" class="text-[11px] font-mono uppercase px-2 py-0.5 rounded bg-paper-200 text-ink-muted border border-paper-border focus:border-ink-primary focus:outline-none w-24 text-center shrink-0" title="Edit category">
-            <button onclick="deletePriority(${item.id})" class="text-ink-faint hover:text-red-600 px-1 opacity-60 group-hover:opacity-100 transition-opacity" title="Delete">✕</button>
+          <div class="item">
+            <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})">
+            <input type="text" value="${esc(item.text)}" onchange="updatePriorityText(${item.id}, this.value)" class="item-text ${item.done ? 'done' : ''}">
+            <input type="text" value="${esc(item.category)}" onchange="updatePriorityCategory(${item.id}, this.value)" class="chip" title="Edit category">
+            <button onclick="deletePriority(${item.id})" class="x-btn" title="Delete">✕</button>
           </div>
         `).join('');
       }
@@ -868,12 +1185,12 @@
       const c = document.getElementById('monthPlansList');
       if (!c) return;
       c.innerHTML = APP_STATE.monthPlans.length ? APP_STATE.monthPlans.map(item => `
-        <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2 text-sm group">
-          <input type="text" value="${esc(item.date)}" onchange="updateMonthPlanDate(${item.id}, this.value)" class="w-16 font-mono text-xs font-bold text-yacht-sea bg-paper-200/80 border border-paper-border rounded px-1.5 py-0.5 text-center focus:outline-none shrink-0">
-          <input type="text" value="${esc(item.title)}" placeholder="What's the plan?" onchange="updateMonthPlanTitle(${item.id}, this.value)" class="flex-1 min-w-0 bg-transparent border-0 font-serif text-ink-primary placeholder:text-ink-faint focus:outline-none">
-          <button onclick="deleteMonthPlan(${item.id})" class="text-ink-faint hover:text-red-600 px-1 opacity-60 group-hover:opacity-100 transition-opacity" title="Delete">✕</button>
+        <div class="item">
+          <input type="text" value="${esc(item.date)}" onchange="updateMonthPlanDate(${item.id}, this.value)" class="chip date">
+          <input type="text" value="${esc(item.title)}" placeholder="What's the plan?" onchange="updateMonthPlanTitle(${item.id}, this.value)" class="item-text serif">
+          <button onclick="deleteMonthPlan(${item.id})" class="x-btn" title="Delete">✕</button>
         </div>
-      `).join('') : '<p class="text-sm text-ink-muted">No plans yet this month.</p>';
+      `).join('') : '<p class="muted">No plans yet this month.</p>';
     }
 
     function saveMonthPlans() { saveJSON('vibehub_month_plans', APP_STATE.monthPlans); renderMonthPlans(); }
@@ -890,13 +1207,13 @@
       const c = document.getElementById('monthGoalsList');
       if (!c) return;
       c.innerHTML = APP_STATE.monthGoals.length ? APP_STATE.monthGoals.map(item => `
-        <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2 text-sm group">
-          <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleMonthGoal(${item.id})" class="rounded border-paper-border text-yacht-sunset shrink-0">
-          <input type="text" value="${esc(item.goal)}" placeholder="New goal" onchange="updateMonthGoalText(${item.id}, this.value)" class="flex-1 min-w-0 bg-transparent border-0 font-medium ${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} placeholder:text-ink-faint focus:outline-none">
-          <input type="text" value="${esc(item.target)}" onchange="updateMonthGoalTarget(${item.id}, this.value)" class="text-[11px] font-mono uppercase px-2 py-0.5 rounded bg-rose-50/70 text-yacht-dustyrose border border-rose-200/50 focus:outline-none w-20 text-center shrink-0">
-          <button onclick="deleteMonthGoal(${item.id})" class="text-ink-faint hover:text-red-600 px-1 opacity-60 group-hover:opacity-100 transition-opacity" title="Delete">✕</button>
+        <div class="item">
+          <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleMonthGoal(${item.id})">
+          <input type="text" value="${esc(item.goal)}" placeholder="New goal" onchange="updateMonthGoalText(${item.id}, this.value)" class="item-text ${item.done ? 'done' : ''}">
+          <input type="text" value="${esc(item.target)}" onchange="updateMonthGoalTarget(${item.id}, this.value)" class="chip rose">
+          <button onclick="deleteMonthGoal(${item.id})" class="x-btn" title="Delete">✕</button>
         </div>
-      `).join('') : '<p class="text-sm text-ink-muted">No goals set yet.</p>';
+      `).join('') : '<p class="muted">No goals set yet.</p>';
     }
 
     function saveMonthGoals() { saveJSON('vibehub_month_goals', APP_STATE.monthGoals); renderMonthGoals(); }
@@ -919,13 +1236,11 @@
       document.getElementById('noteSheetTitle').value = tabData.title;
       document.getElementById('noteSheetContent').value = tabData.content;
       for (const btn of document.getElementById('notebookTabs').children) {
-        btn.className = btn.dataset.tab === tabName
-          ? 'px-2.5 py-1 text-xs font-mono rounded-lg bg-ink-primary text-white'
-          : 'px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary';
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
       }
     }
 
-    // Saves both title and body (title edits are saved now too)
+    // Saves both title and body
     function saveCurrentNoteContent() {
       APP_STATE.notesData[APP_STATE.activeNotebookTab] = {
         title: document.getElementById('noteSheetTitle').value,
@@ -1035,22 +1350,10 @@
     }
 
     function setOrbListening(on) {
-      const orb = document.getElementById('aiOrbButton');
-      const mic = document.getElementById('orbMicIcon');
-      const label = document.getElementById('orbStatusLabel');
+      document.getElementById('orbStage').classList.toggle('listening', on);
       document.getElementById('orbRipple1').classList.toggle('hidden', !on);
       document.getElementById('orbRipple2').classList.toggle('hidden', !on);
-      if (on) {
-        orb.style.background = 'radial-gradient(circle at 35% 30%, #F4F1DE 0%, #E07A5F 55%, #991B1B 100%)';
-        mic.setAttribute('class', 'w-8 h-8 text-white mb-1 animate-pulse');
-        label.innerText = "LISTENING...";
-        label.className = "font-mono text-xs font-bold tracking-wider uppercase text-white drop-shadow-sm";
-      } else {
-        orb.style.background = 'radial-gradient(circle at 35% 30%, #F4F1DE 0%, #F2CC8F 45%, #E07A5F 80%, #C2847A 100%)';
-        mic.setAttribute('class', 'w-8 h-8 text-ink-primary mb-1 drop-shadow-sm');
-        label.innerText = "TAP TO TALK";
-        label.className = "font-mono text-xs font-bold tracking-wider uppercase text-ink-primary drop-shadow-sm";
-      }
+      document.getElementById('orbStatusLabel').innerText = on ? 'LISTENING...' : 'TAP TO TALK';
     }
 
     function stopVoiceSession() {
@@ -1166,14 +1469,15 @@ Use task for anything actionable (reminders, to-dos). Use note for information w
     async function testMicrophoneAccess() {
       const s = document.getElementById('micDiagnosticStatus');
       s.innerText = "Requesting mic permission...";
+      s.className = "hint mono";
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         s.innerText = "✅ Microphone accessible!";
-        s.className = "text-xs text-yacht-sage mt-1 text-center font-mono";
+        s.className = "hint mono ok";
         stream.getTracks().forEach(t => t.stop());
       } catch (err) {
         s.innerText = `❌ Error: ${err.message}`;
-        s.className = "text-xs text-red-600 mt-1 text-center font-mono";
+        s.className = "hint mono err";
       }
     }
 
@@ -1208,8 +1512,6 @@ Use task for anything actionable (reminders, to-dos). Use note for information w
       document.getElementById('quickCaptureInput').addEventListener('keydown', e => {
         if (e.key === 'Enter') handleQuickCapture('task');
       });
-
-      if (window.lucide) lucide.createIcons();
     });
   </script>
 </body>
