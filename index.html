@@ -8,12 +8,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <!-- Google Fonts: Newsreader & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -25,35 +23,15 @@
             sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
           },
           colors: {
-            paper: {
-              50: '#FDFBF7',
-              100: '#FAF6F0',
-              200: '#F3EDE2',
-              300: '#E7DDD0',
-              400: '#D5C7B5',
-              border: '#E8DED1',
-            },
-            yacht: {
-              sunset: '#E07A5F',
-              sand: '#F4F1DE',
-              sea: '#3D405B',
-              sage: '#81B29A',
-              gold: '#F2CC8F',
-              dustyrose: '#C2847A',
-            },
-            ink: {
-              primary: '#242124',
-              secondary: '#484349',
-              muted: '#7A7276',
-              faint: '#ACA5AA',
-            }
+            paper: { 50: '#FDFBF7', 100: '#FAF6F0', 200: '#F3EDE2', 300: '#E7DDD0', 400: '#D5C7B5', border: '#E8DED1' },
+            yacht: { sunset: '#E07A5F', sand: '#F4F1DE', sea: '#3D405B', sage: '#81B29A', gold: '#F2CC8F', dustyrose: '#C2847A' },
+            ink: { primary: '#242124', secondary: '#484349', muted: '#7A7276', faint: '#ACA5AA' }
           }
         }
       }
     }
   </script>
 
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
@@ -66,8 +44,7 @@
 
     body {
       background-color: #FAF6F0;
-      /* Subtle cosmic yacht-rock vintage gradient backdrop */
-      background-image: 
+      background-image:
         radial-gradient(ellipse 90% 60% at 88% -5%, rgba(224, 122, 95, 0.08) 0%, transparent 60%),
         radial-gradient(ellipse 70% 50% at 5% 100%, rgba(61, 64, 91, 0.06) 0%, transparent 65%),
         radial-gradient(circle 350px at 50% 25%, rgba(242, 204, 143, 0.07) 0%, transparent 70%);
@@ -78,26 +55,16 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* College-Ruled Notebook Simulation */
     .college-ruled {
       background-color: #FCF9F3;
       background-image: linear-gradient(#D5E0EA 1px, transparent 1px);
       background-size: 100% 28px;
       line-height: 28px;
     }
+    .red-margin-line { border-left: 2px solid rgba(224, 122, 95, 0.45); }
 
-    .red-margin-line {
-      border-left: 2px solid rgba(224, 122, 95, 0.45);
-    }
-
-    ::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #D5C7B5;
-      border-radius: 9999px;
-    }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-thumb { background: #D5C7B5; border-radius: 9999px; }
 
     .paper-card {
       background: #FFFFFF;
@@ -105,18 +72,26 @@
       box-shadow: 0 4px 18px -4px rgba(36, 33, 36, 0.04), 0 1px 3px 0 rgba(36, 33, 36, 0.02);
     }
 
-    /* Solution 2: Auto-collapsing Edge-Tucked Rail */
+    /* Edge-tucked rail: ONE transform rule handles both the tuck (X) and vertical centering (Y),
+       so nothing from Tailwind can override it. Hover only opens it on real mouse devices,
+       so it doesn't get stuck open after a tap on iPhone. */
     .edge-tucked-rail {
-      transform: translateX(calc(100% - 16px));
+      top: 50%;
+      transform: translate(calc(100% - 20px), -50%);
       transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s ease;
       touch-action: pan-y;
+      -webkit-user-select: none;
+      user-select: none;
     }
-
-    .edge-tucked-rail:hover,
-    .edge-tucked-rail:focus-within,
     .edge-tucked-rail.expanded {
-      transform: translateX(0);
+      transform: translate(0, -50%);
       box-shadow: -8px 0 30px -5px rgba(61, 64, 91, 0.16);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .edge-tucked-rail:hover {
+        transform: translate(0, -50%);
+        box-shadow: -8px 0 30px -5px rgba(61, 64, 91, 0.16);
+      }
     }
 
     .rail-glass {
@@ -127,46 +102,34 @@
       border-right: none;
     }
 
-    /* Cosmic Yacht-Rock Floating Orb */
+    .no-select { -webkit-user-select: none; user-select: none; }
+
     @keyframes orbFloat {
       0%, 100% { transform: translateY(0px) scale(1); }
       50% { transform: translateY(-10px) scale(1.02); }
     }
-
     @keyframes orbCosmicGlow {
-      0%, 100% {
-        box-shadow: 0 0 40px 10px rgba(224, 122, 95, 0.24), 0 20px 50px -10px rgba(242, 204, 143, 0.32);
-      }
-      50% {
-        box-shadow: 0 0 65px 20px rgba(224, 122, 95, 0.38), 0 25px 65px -5px rgba(242, 204, 143, 0.45);
-      }
+      0%, 100% { box-shadow: 0 0 40px 10px rgba(224, 122, 95, 0.24), 0 20px 50px -10px rgba(242, 204, 143, 0.32); }
+      50% { box-shadow: 0 0 65px 20px rgba(224, 122, 95, 0.38), 0 25px 65px -5px rgba(242, 204, 143, 0.45); }
     }
-
     @keyframes recordingRipple {
       0% { transform: scale(0.95); opacity: 0.85; }
       100% { transform: scale(1.6); opacity: 0; }
     }
-
-    .ai-orb-core {
-      animation: orbFloat 4.6s ease-in-out infinite, orbCosmicGlow 4s ease-in-out infinite;
-    }
-
-    .pulse-ring {
-      animation: recordingRipple 1.8s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
-    }
+    .ai-orb-core { animation: orbFloat 4.6s ease-in-out infinite, orbCosmicGlow 4s ease-in-out infinite; }
+    .pulse-ring { animation: recordingRipple 1.8s cubic-bezier(0.2, 0.6, 0.35, 1) infinite; }
   </style>
 </head>
-<body class="h-full w-full select-none overflow-hidden text-ink-primary flex flex-col justify-between">
+<body class="h-full w-full overflow-hidden text-ink-primary flex flex-col justify-between">
 
   <!-- ================= TOP HEADER BAR ================= -->
-  <header class="shrink-0 border-b border-paper-border bg-paper-100/90 backdrop-blur-md z-30 px-4 sm:px-6 pt-[calc(var(--sat)+10px)] pb-3">
+  <header class="shrink-0 border-b border-paper-border bg-paper-100/90 backdrop-blur-md z-30 px-4 sm:px-6 pt-[calc(var(--sat)+10px)] pb-3 no-select">
     <div class="max-w-6xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <!-- Subtle 70s Yacht Sun Pip -->
         <div class="w-3 h-3 rounded-full bg-gradient-to-tr from-yacht-sunset to-yacht-gold shadow-sm"></div>
         <div>
           <h1 id="headerGreeting" class="font-serif text-lg sm:text-xl font-medium tracking-tight text-ink-primary">Good evening, legend</h1>
-          <p class="text-[11px] font-mono tracking-wider uppercase text-ink-muted">Personal Hub • Pacific Horizon</p>
+          <p class="text-xs font-mono tracking-wider uppercase text-ink-muted">Personal Hub • Pacific Horizon</p>
         </div>
       </div>
       <div class="flex items-center gap-3 pr-[max(0px,calc(var(--sar)-4px))]">
@@ -179,119 +142,101 @@
   </header>
 
   <!-- ================= MAIN SCROLLABLE VIEWPORT ================= -->
-  <!-- Clean padding right (pr-4 sm:pr-8) because edge-tucked rail hides offscreen -->
-  <main class="flex-1 overflow-y-auto relative z-10 px-4 sm:px-8 py-4 pl-[max(16px,var(--sal))] pb-[max(32px,calc(var(--sab)+24px))]">
+  <main class="flex-1 overflow-y-auto relative z-10 px-4 sm:px-8 py-4 pl-[max(16px,var(--sal))] pr-7 sm:pr-8 pb-[max(32px,calc(var(--sab)+24px))]">
     <div class="max-w-5xl mx-auto">
 
       <!-- ================= 1. DASHBOARD VIEW ================= -->
       <section id="viewDash" class="space-y-6">
 
-        <!-- QUICK HITS 4-CARD REVOLVING CAROUSEL -->
+        <!-- QUICK HITS CAROUSEL -->
         <div class="space-y-2">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between no-select">
             <span class="text-xs font-mono font-semibold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
               <i data-lucide="compass" class="w-3.5 h-3.5 text-yacht-sunset"></i> Quick Hits Radar
             </span>
             <div class="flex items-center gap-2">
-              <div class="flex items-center gap-1" id="carouselDots">
-                <button onclick="setCarouselSlide(0)" class="w-2 h-2 rounded-full bg-ink-primary transition-all"></button>
-                <button onclick="setCarouselSlide(1)" class="w-2 h-2 rounded-full bg-paper-300 transition-all"></button>
-                <button onclick="setCarouselSlide(2)" class="w-2 h-2 rounded-full bg-paper-300 transition-all"></button>
-                <button onclick="setCarouselSlide(3)" class="w-2 h-2 rounded-full bg-paper-300 transition-all"></button>
+              <div class="flex items-center gap-1.5" id="carouselDots">
+                <button onclick="goToSlide(0)" class="w-2 h-2 rounded-full bg-ink-primary transition-all" aria-label="Sports"></button>
+                <button onclick="goToSlide(1)" class="w-2 h-2 rounded-full bg-paper-300 transition-all" aria-label="News"></button>
+                <button onclick="goToSlide(2)" class="w-2 h-2 rounded-full bg-paper-300 transition-all" aria-label="Comic"></button>
+                <button onclick="goToSlide(3)" class="w-2 h-2 rounded-full bg-paper-300 transition-all" aria-label="Specs"></button>
               </div>
-              <button onclick="prevCarouselSlide()" class="p-1 rounded-lg text-ink-muted hover:text-ink-primary hover:bg-paper-200">
-                <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+              <button onclick="goToSlide((APP_STATE.carouselIndex + 3) % 4)" class="p-1 rounded-lg text-ink-muted hover:text-ink-primary hover:bg-paper-200" aria-label="Previous">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
               </button>
-              <button onclick="nextCarouselSlide()" class="p-1 rounded-lg text-ink-muted hover:text-ink-primary hover:bg-paper-200">
-                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              <button onclick="goToSlide((APP_STATE.carouselIndex + 1) % 4)" class="p-1 rounded-lg text-ink-muted hover:text-ink-primary hover:bg-paper-200" aria-label="Next">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
               </button>
             </div>
           </div>
 
-          <!-- Carousel Container -->
           <div id="carouselWrapper" class="relative overflow-hidden rounded-2xl paper-card min-h-[175px]">
-            
-            <!-- Slide 0: Sports Radar -->
-            <div id="slide-0" class="carousel-slide p-4 sm:p-5 transition-opacity duration-300">
+
+            <!-- Slide 0: Sports (live from ESPN) -->
+            <div id="slide-0" class="carousel-slide p-4 sm:p-5">
               <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
                 <span class="text-xs font-mono font-semibold text-yacht-sunset bg-orange-50/80 px-2.5 py-0.5 rounded-full border border-orange-200/60 flex items-center gap-1">
                   <i data-lucide="trophy" class="w-3 h-3"></i> ESPN Live Matchups
                 </span>
-                <button onclick="fetchLiveSports(true)" class="text-ink-muted hover:text-ink-primary p-1 rounded-lg hover:bg-paper-100" title="Refresh Live Scores">
-                  <i data-lucide="refresh-cw" id="sportsRefreshIcon" class="w-3.5 h-3.5"></i>
+                <button onclick="fetchLiveSports()" class="text-ink-muted hover:text-ink-primary p-1 rounded-lg hover:bg-paper-100" title="Refresh scores">
+                  <i data-lucide="refresh-cw" id="sportsRefreshIcon" class="w-4 h-4"></i>
                 </button>
               </div>
-              <div id="primetimeContainer" class="mb-3 p-2.5 rounded-xl bg-paper-50 border border-paper-border flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="px-1.5 py-0.5 text-[10px] font-mono font-bold bg-yacht-sunset text-white rounded">PRIMETIME</span>
-                  <span id="primetimeMatchup" class="text-xs font-semibold text-ink-primary">Seahawks vs Bears</span>
+              <div class="mb-3 p-2.5 rounded-xl bg-paper-50 border border-paper-border flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                  <span id="featuredBadge" class="px-1.5 py-0.5 text-[11px] font-mono font-bold bg-yacht-sunset text-white rounded shrink-0">FEATURED</span>
+                  <span id="primetimeMatchup" class="text-sm font-semibold text-ink-primary truncate">Loading scores…</span>
                 </div>
-                <span id="primetimeStatus" class="font-mono text-xs font-bold text-yacht-sunset">8:15 PM ET</span>
+                <span id="primetimeStatus" class="font-mono text-xs font-bold text-yacht-sunset shrink-0"></span>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="teamMatchupsContainer">
-                <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between">
-                  <span class="font-medium text-ink-primary">SF 49ers vs Rams</span>
-                  <span class="font-mono text-[11px] text-ink-muted">Sun 4:25 PM</span>
-                </div>
-                <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between">
-                  <span class="font-medium text-ink-primary">OKC Thunder @ DAL</span>
-                  <span class="font-mono text-[11px] text-ink-muted">Final 118-110</span>
-                </div>
-              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm" id="teamMatchupsContainer"></div>
             </div>
 
-            <!-- Slide 1: News Pulse -->
-            <div id="slide-1" class="carousel-slide p-4 sm:p-5 hidden transition-opacity duration-300">
+            <!-- Slide 1: News (live from Hacker News) -->
+            <div id="slide-1" class="carousel-slide p-4 sm:p-5 hidden">
               <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
                 <span class="text-xs font-mono font-semibold text-yacht-sage bg-emerald-50/80 px-2.5 py-0.5 rounded-full border border-emerald-200/60 flex items-center gap-1">
                   <i data-lucide="newspaper" class="w-3 h-3"></i> Daily Dispatch
                 </span>
-                <span class="text-[11px] font-mono text-ink-muted">Pacific Edition</span>
+                <span class="text-xs font-mono text-ink-muted">Hacker News top</span>
               </div>
-              <div class="space-y-2">
-                <div class="p-2.5 rounded-xl bg-paper-50 border border-paper-border">
-                  <p class="font-serif text-sm font-medium text-ink-primary line-clamp-1">Space Exploration: Artemis Moon Landings Target Next Flight Window</p>
-                  <p class="text-[11px] text-ink-muted mt-0.5">Reuters • Aerospace & Science</p>
-                </div>
-                <div class="p-2.5 rounded-xl bg-paper-50 border border-paper-border">
-                  <p class="font-serif text-sm font-medium text-ink-primary line-clamp-1">Hardware & Silicon: New Edge AI Chipsets Target Sub-Watt Efficiency</p>
-                  <p class="text-[11px] text-ink-muted mt-0.5">Ars Technica • Hardware</p>
-                </div>
+              <div id="newsList" class="space-y-2">
+                <p class="text-sm text-ink-muted">Loading headlines…</p>
               </div>
             </div>
 
-            <!-- Slide 2: Daily Comic -->
-            <div id="slide-2" class="carousel-slide p-4 sm:p-5 hidden transition-opacity duration-300">
+            <!-- Slide 2: Comic -->
+            <div id="slide-2" class="carousel-slide p-4 sm:p-5 hidden">
               <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
                 <span class="text-xs font-mono font-semibold text-yacht-dustyrose bg-rose-50/80 px-2.5 py-0.5 rounded-full border border-rose-200/60 flex items-center gap-1">
                   <i data-lucide="smile" class="w-3 h-3"></i> Field Notes & Comic
                 </span>
-                <button onclick="rotateComicStrip()" class="text-[11px] font-mono text-ink-muted hover:text-ink-primary underline">Next Strip</button>
+                <button onclick="rotateComicStrip()" class="text-xs font-mono text-ink-muted hover:text-ink-primary underline">Next strip</button>
               </div>
               <div class="p-3 rounded-xl bg-paper-50 border border-paper-border text-center">
-                <p id="comicSetup" class="font-serif text-sm italic text-ink-primary">"There are only 10 types of people in the world..."</p>
-                <p id="comicPunchline" class="font-mono text-xs font-semibold text-yacht-sea mt-2">"...Those who understand binary, and those who don't."</p>
+                <p id="comicSetup" class="font-serif text-base italic text-ink-primary"></p>
+                <p id="comicPunchline" class="font-mono text-xs font-semibold text-yacht-sea mt-2"></p>
               </div>
             </div>
 
-            <!-- Slide 3: Pit & Range Guide -->
-            <div id="slide-3" class="carousel-slide p-4 sm:p-5 hidden transition-opacity duration-300">
+            <!-- Slide 3: Pit & Range -->
+            <div id="slide-3" class="carousel-slide p-4 sm:p-5 hidden">
               <div class="flex items-center justify-between pb-2 border-b border-paper-border mb-3">
                 <span class="text-xs font-mono font-semibold text-ink-secondary bg-paper-200 px-2.5 py-0.5 rounded-full border border-paper-border flex items-center gap-1">
                   <i data-lucide="flame" class="w-3 h-3 text-yacht-sunset"></i> Pit & Range Specs
                 </span>
-                <span class="text-[11px] font-mono text-ink-muted">Reference Sheet</span>
+                <span class="text-xs font-mono text-ink-muted">Reference Sheet</span>
               </div>
-              <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="grid grid-cols-2 gap-2 text-sm">
                 <div class="p-2.5 rounded-xl bg-paper-50 border border-paper-border">
-                  <span class="text-[10px] font-mono text-ink-muted uppercase">Smoked Brisket</span>
+                  <span class="text-[11px] font-mono text-ink-muted uppercase">Smoked Brisket</span>
                   <p class="font-semibold text-ink-primary mt-0.5">Wrap @ 165°F</p>
-                  <p class="text-[11px] text-ink-muted">Probe Tender @ 203°F</p>
+                  <p class="text-xs text-ink-muted">Probe tender @ 203°F</p>
                 </div>
                 <div class="p-2.5 rounded-xl bg-paper-50 border border-paper-border">
-                  <span class="text-[10px] font-mono text-ink-muted uppercase">54° Wedge Carry</span>
+                  <span class="text-[11px] font-mono text-ink-muted uppercase">54° Wedge Carry</span>
                   <p class="font-semibold text-ink-primary mt-0.5">95 yds (Full)</p>
-                  <p class="text-[11px] text-ink-muted">75 yds (3/4 Pitch)</p>
+                  <p class="text-xs text-ink-muted">75 yds (3/4 pitch)</p>
                 </div>
               </div>
             </div>
@@ -299,12 +244,12 @@
           </div>
         </div>
 
-        <!-- QUICK CAPTURE CAPSULE -->
+        <!-- QUICK CAPTURE -->
         <div class="paper-card rounded-2xl p-2.5 sm:p-3 flex items-center gap-2">
           <div class="flex-1 min-w-0">
-            <input type="text" id="quickCaptureInput" placeholder="Quick idea, task, or note..." class="w-full bg-transparent border-0 px-2 py-1 text-sm text-ink-primary placeholder:text-ink-faint focus:outline-none focus:ring-0">
+            <input type="text" id="quickCaptureInput" enterkeyhint="done" placeholder="Quick idea, task, or note..." class="w-full bg-transparent border-0 px-2 py-1 text-sm text-ink-primary placeholder:text-ink-faint focus:outline-none focus:ring-0">
           </div>
-          <div class="flex items-center gap-1.5 shrink-0">
+          <div class="flex items-center gap-1.5 shrink-0 no-select">
             <button onclick="handleQuickCapture('task')" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-ink-primary text-white text-xs font-medium hover:bg-ink-secondary transition-colors whitespace-nowrap flex items-center gap-1">
               <i data-lucide="plus" class="w-3.5 h-3.5"></i> Task
             </button>
@@ -316,102 +261,87 @@
             </button>
           </div>
         </div>
+        <p id="captureToast" class="hidden -mt-4 text-xs font-mono text-yacht-sage text-center"></p>
 
-        <!-- TOP PRIORITIES SUMMARY -->
+        <!-- TOP PRIORITIES -->
         <div class="space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-xs font-mono font-semibold uppercase tracking-wider text-ink-muted">Today's Priorities</span>
-            <button onclick="switchView('plan')" class="text-xs font-serif italic text-ink-muted hover:text-ink-primary">View Full Planner →</button>
+            <button onclick="switchView('plan')" class="text-sm font-serif italic text-ink-muted hover:text-ink-primary">View full planner →</button>
           </div>
           <div id="dashPrioritiesList" class="space-y-2"></div>
         </div>
 
       </section>
 
-      <!-- ================= 2. REVAMPED PLAN VIEW ================= -->
+      <!-- ================= 2. PLAN VIEW ================= -->
       <section id="viewPlan" class="hidden space-y-6">
         <div class="flex items-center justify-between pb-2 border-b border-paper-border">
           <div>
-            <h2 class="font-serif text-xl sm:text-2xl font-medium text-ink-primary">Executive Day & Monthly Agenda</h2>
-            <p class="text-xs font-mono text-ink-muted">24-hour daily timeline, priority ledger, and monthly vision</p>
+            <h2 class="font-serif text-xl sm:text-2xl font-medium text-ink-primary">Day & Month Agenda</h2>
+            <p class="text-xs font-mono text-ink-muted">Daily timeline, priority ledger, and monthly vision</p>
           </div>
         </div>
 
-        <!-- TOP ROW: Plan Your Day (24-Hour) & Priority Ledger -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-          <!-- 1. PLAN YOUR DAY (24-Hour Scrollable Slots) -->
+          <!-- PLAN YOUR DAY -->
           <div class="paper-card rounded-2xl p-4 sm:p-5 flex flex-col">
             <div class="flex items-center justify-between pb-3 border-b border-paper-border mb-3">
               <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-                <i data-lucide="sun" class="w-4 h-4 text-yacht-sunset"></i> Plan Your Day (24 Hours)
+                <i data-lucide="sun" class="w-4 h-4 text-yacht-sunset"></i> Plan Your Day
               </span>
-              <span class="text-[11px] font-mono text-ink-muted">Editable times & tasks</span>
+              <button id="hoursToggleBtn" onclick="toggleAllHours()" class="text-xs font-mono text-ink-muted hover:text-ink-primary underline">Show all 24 hrs</button>
             </div>
-            
-            <div id="hourlyTimeline" class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-              <!-- Dynamically populated 24 hours -->
-            </div>
+            <div id="hourlyTimeline" class="space-y-2 max-h-[500px] overflow-y-auto pr-1"></div>
           </div>
 
-          <!-- 2. PRIORITY LEDGER -->
+          <!-- PRIORITY LEDGER -->
           <div class="paper-card rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between pb-3 border-b border-paper-border mb-3">
                 <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
                   <i data-lucide="check-square" class="w-4 h-4 text-yacht-sage"></i> Priority Ledger
                 </span>
-                <span class="text-[11px] font-mono text-ink-muted">Click any item or tag to edit</span>
+                <span class="text-xs font-mono text-ink-muted">Tap any item to edit</span>
               </div>
-              
-              <div id="plannerTaskList" class="space-y-2 max-h-[440px] overflow-y-auto pr-1">
-                <!-- Dynamically populated priorities -->
-              </div>
+              <div id="plannerTaskList" class="space-y-2 max-h-[440px] overflow-y-auto pr-1"></div>
             </div>
-
-            <!-- Add a Priority Tab Button (Always positioned underneath) -->
             <div class="pt-3 mt-2 border-t border-paper-border">
               <button onclick="addNewPriorityItem()" class="w-full py-2.5 px-3 rounded-xl bg-paper-100 hover:bg-paper-200 border border-dashed border-paper-border text-xs font-mono font-medium text-ink-primary transition-all flex items-center justify-center gap-2">
-                <i data-lucide="plus-circle" class="w-4 h-4 text-yacht-sage"></i> + Add a Priority
+                <i data-lucide="plus-circle" class="w-4 h-4 text-yacht-sage"></i> Add a priority
               </button>
             </div>
           </div>
 
         </div>
 
-        <!-- BOTTOM ROW: Plans for the Month & Month Goals -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-          <!-- 3. PLANS FOR THE MONTH -->
+          <!-- PLANS FOR THE MONTH -->
           <div class="paper-card rounded-2xl p-4 sm:p-5 space-y-3">
             <div class="flex items-center justify-between pb-3 border-b border-paper-border">
               <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
-                <i data-lucide="calendar-range" class="w-4 h-4 text-yacht-sea"></i> Plans for the Month
+                <i data-lucide="calendar-range" class="w-4 h-4 text-yacht-sea"></i> <span id="monthPlansHeading">Plans for the Month</span>
               </span>
               <button onclick="addNewMonthPlan()" class="text-xs font-mono text-yacht-sea hover:text-ink-primary font-medium flex items-center gap-1">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Plan
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add plan
               </button>
             </div>
-            
-            <div id="monthPlansList" class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
-              <!-- Dynamically populated month plans -->
-            </div>
+            <div id="monthPlansList" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"></div>
           </div>
 
-          <!-- 4. MONTH GOALS -->
+          <!-- MONTH GOALS -->
           <div class="paper-card rounded-2xl p-4 sm:p-5 space-y-3">
             <div class="flex items-center justify-between pb-3 border-b border-paper-border">
               <span class="text-xs font-mono font-bold uppercase tracking-wider text-ink-muted flex items-center gap-1.5">
                 <i data-lucide="target" class="w-4 h-4 text-yacht-dustyrose"></i> Month Goals
               </span>
               <button onclick="addNewMonthGoal()" class="text-xs font-mono text-yacht-dustyrose hover:text-ink-primary font-medium flex items-center gap-1">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Goal
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add goal
               </button>
             </div>
-            
-            <div id="monthGoalsList" class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
-              <!-- Dynamically populated month goals -->
-            </div>
+            <div id="monthGoalsList" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"></div>
           </div>
 
         </div>
@@ -419,16 +349,16 @@
 
       <!-- ================= 3. NOTES VIEW ================= -->
       <section id="viewNotes" class="hidden space-y-4">
-        <div class="flex items-center justify-between pb-2 border-b border-paper-border">
+        <div class="flex items-center justify-between gap-2 pb-2 border-b border-paper-border flex-wrap">
           <div>
             <h2 class="font-serif text-xl font-medium text-ink-primary">Notebook & Logs</h2>
             <p class="text-xs font-mono text-ink-muted">College-ruled loose-leaf binder</p>
           </div>
-          <div class="flex items-center gap-1" id="notebookTabs">
-            <button onclick="setNotebookTab('Smoker & Cooking')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-ink-primary text-white">Smoker</button>
-            <button onclick="setNotebookTab('Golf Log')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">Golf</button>
-            <button onclick="setNotebookTab('Workbench')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">Workbench</button>
-            <button onclick="setNotebookTab('General')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">General</button>
+          <div class="flex items-center gap-1 no-select" id="notebookTabs">
+            <button data-tab="Smoker & Cooking" onclick="setNotebookTab('Smoker & Cooking')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-ink-primary text-white">Smoker</button>
+            <button data-tab="Golf Log" onclick="setNotebookTab('Golf Log')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">Golf</button>
+            <button data-tab="Workbench" onclick="setNotebookTab('Workbench')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">Workbench</button>
+            <button data-tab="General" onclick="setNotebookTab('General')" class="px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary">General</button>
           </div>
         </div>
 
@@ -438,92 +368,77 @@
             <div class="w-3.5 h-3.5 rounded-full bg-paper-300 border border-paper-border shadow-inner"></div>
             <div class="w-3.5 h-3.5 rounded-full bg-paper-300 border border-paper-border shadow-inner"></div>
           </div>
-
           <div class="college-ruled min-h-[520px] pl-12 pr-6 py-4 relative">
             <div class="absolute left-10 top-0 bottom-0 red-margin-line pointer-events-none"></div>
-            <input id="noteSheetTitle" type="text" class="w-full font-serif text-lg font-bold text-ink-primary bg-transparent border-0 focus:outline-none mb-2" value="Texas Style Smoked Brisket Master Checklist">
-            <textarea id="noteSheetContent" oninput="saveCurrentNoteContent()" class="w-full bg-transparent border-0 font-mono text-xs sm:text-sm text-ink-primary leading-[28px] resize-none focus:outline-none min-h-[440px]" spellcheck="false"></textarea>
+            <input id="noteSheetTitle" type="text" oninput="saveCurrentNoteContent()" class="w-full font-serif text-lg font-bold text-ink-primary bg-transparent border-0 focus:outline-none mb-2">
+            <textarea id="noteSheetContent" oninput="saveCurrentNoteContent()" class="w-full bg-transparent border-0 font-mono text-sm text-ink-primary leading-[28px] resize-none focus:outline-none min-h-[440px]" spellcheck="false"></textarea>
           </div>
         </div>
       </section>
 
-      <!-- ================= 4. TALK VIEW (Cosmic 70s Floating Orb) ================= -->
+      <!-- ================= 4. TALK VIEW ================= -->
       <section id="viewTalk" class="hidden flex flex-col items-center justify-center min-h-[65vh] py-8 space-y-6">
         <div class="text-center space-y-1.5 max-w-sm">
-          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-orange-100/70 text-yacht-sunset border border-orange-200">Cosmic Frequency</span>
+          <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono uppercase tracking-wider bg-orange-100/70 text-yacht-sunset border border-orange-200">Cosmic Frequency</span>
           <h2 class="font-serif text-2xl font-medium text-ink-primary">Voice Companion</h2>
-          <p class="text-xs text-ink-muted">Tap the orb to dictate stream-of-consciousness thoughts, field notes, or reminders.</p>
+          <p class="text-sm text-ink-muted">Tap the orb to dictate thoughts, field notes, or reminders.</p>
         </div>
 
-        <div class="relative flex items-center justify-center w-64 h-64 my-4">
+        <div class="relative flex items-center justify-center w-64 h-64 my-4 no-select">
           <div id="orbRipple1" class="absolute inset-0 rounded-full bg-yacht-sunset/20 pulse-ring hidden pointer-events-none"></div>
           <div id="orbRipple2" class="absolute inset-4 rounded-full bg-yacht-gold/25 pulse-ring hidden pointer-events-none" style="animation-delay: 0.6s;"></div>
-
-          <!-- Subtle 70s Yacht Sunset Orb Gradient -->
           <button id="aiOrbButton" onclick="toggleVoiceSession()" class="ai-orb-core w-44 h-44 rounded-full relative z-10 focus:outline-none transition-transform active:scale-95 flex flex-col items-center justify-center p-4 text-center cursor-pointer" style="background: radial-gradient(circle at 35% 30%, #F4F1DE 0%, #F2CC8F 45%, #E07A5F 80%, #C2847A 100%);">
             <div class="absolute top-3 left-6 w-16 h-8 rounded-full bg-white/45 blur-[2px] transform -rotate-12 pointer-events-none"></div>
             <i data-lucide="mic" id="orbMicIcon" class="w-8 h-8 text-ink-primary mb-1 drop-shadow-sm transition-transform"></i>
-            <span id="orbStatusLabel" class="font-mono text-[11px] font-bold tracking-wider uppercase text-ink-primary drop-shadow-sm">TAP TO TALK</span>
+            <span id="orbStatusLabel" class="font-mono text-xs font-bold tracking-wider uppercase text-ink-primary drop-shadow-sm">TAP TO TALK</span>
           </button>
         </div>
 
         <div class="w-full max-w-md paper-card rounded-2xl p-4 text-center space-y-2">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-ink-muted">Live Transcription Stream</span>
-          <p id="orbTranscriptText" class="font-serif italic text-sm text-ink-secondary min-h-[38px] flex items-center justify-center">
-            "Listening... speak freely."
-          </p>
+          <span class="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Live Transcription</span>
+          <p id="orbTranscriptText" class="font-serif italic text-base text-ink-secondary min-h-[38px] flex items-center justify-center">"Listening... speak freely."</p>
         </div>
 
         <div id="orbReceiptCard" class="w-full max-w-md paper-card rounded-2xl p-4 border border-paper-border bg-paper-50 hidden space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-xs font-mono font-bold text-yacht-sunset flex items-center gap-1">
-              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-yacht-sage"></i> AI Structured & Saved
+              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-yacht-sage"></i> Structured & Saved
             </span>
-            <button onclick="dismissReceiptCard()" class="text-xs text-ink-muted hover:text-ink-primary">✕</button>
+            <button onclick="dismissReceiptCard()" class="text-sm text-ink-muted hover:text-ink-primary">✕</button>
           </div>
-          <div id="orbReceiptContent" class="text-xs text-ink-secondary space-y-1"></div>
+          <div id="orbReceiptContent" class="text-sm text-ink-secondary space-y-1 whitespace-pre-line"></div>
         </div>
       </section>
 
     </div>
   </main>
 
-  <!-- ================= SOLUTION 2: AUTO-COLLAPSING EDGE-TUCKED CONTROL RAIL ================= -->
-  <!-- Tucks into the right bezel; expands on hover, touch, or click of the mini pull-tab -->
-  <aside id="edgeRail" class="edge-tucked-rail fixed right-0 top-1/2 -translate-y-1/2 z-40 flex items-center">
-    
-    <!-- Mini Grab Tab Indicator -->
-    <div onclick="toggleEdgeRail()" class="w-4 h-16 rounded-l-xl bg-paper-200/90 border border-r-0 border-paper-border flex items-center justify-center cursor-pointer shadow-sm text-ink-muted hover:text-ink-primary">
+  <!-- ================= EDGE-TUCKED CONTROL RAIL ================= -->
+  <aside id="edgeRail" class="edge-tucked-rail fixed right-0 z-40 flex items-center">
+    <div onclick="toggleEdgeRail()" class="w-5 h-20 rounded-l-xl bg-paper-200/90 border border-r-0 border-paper-border flex items-center justify-center cursor-pointer shadow-sm text-ink-muted hover:text-ink-primary" aria-label="Open navigation">
       <div class="w-1 h-8 rounded-full bg-paper-400"></div>
     </div>
-
-    <!-- The Navigation Capsule -->
     <nav class="rail-glass rounded-l-3xl p-1.5 sm:p-2 flex flex-col gap-2 shadow-xl border-l border-paper-border">
-      <button onclick="switchView('dash')" id="navBtn-dash" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex flex-col items-center justify-center text-ink-primary bg-paper-300/60 transition-all hover:bg-paper-200" title="Dashboard">
+      <button onclick="switchView('dash')" id="navBtn-dash" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-primary bg-paper-300/60 transition-all hover:bg-paper-200" title="Dashboard">
         <i data-lucide="layout-grid" class="w-4 h-4"></i>
-        <span class="text-[9px] font-mono mt-0.5">Dash</span>
+        <span class="text-[10px] font-mono mt-0.5">Dash</span>
       </button>
-
-      <button onclick="switchView('plan')" id="navBtn-plan" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Planner">
+      <button onclick="switchView('plan')" id="navBtn-plan" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Planner">
         <i data-lucide="calendar" class="w-4 h-4"></i>
-        <span class="text-[9px] font-mono mt-0.5">Plan</span>
+        <span class="text-[10px] font-mono mt-0.5">Plan</span>
       </button>
-
-      <button onclick="switchView('notes')" id="navBtn-notes" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Notebook">
+      <button onclick="switchView('notes')" id="navBtn-notes" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Notebook">
         <i data-lucide="book-open" class="w-4 h-4"></i>
-        <span class="text-[9px] font-mono mt-0.5">Notes</span>
+        <span class="text-[10px] font-mono mt-0.5">Notes</span>
       </button>
-
-      <button onclick="switchView('talk')" id="navBtn-talk" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex flex-col items-center justify-center text-yacht-sunset hover:text-ink-primary transition-all hover:bg-orange-50" title="Voice AI">
-        <i data-lucide="sparkles" class="w-4 h-4"></i>
-        <span class="text-[9px] font-mono mt-0.5">Talk</span>
+      <button onclick="switchView('talk')" id="navBtn-talk" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-orange-50" title="Voice AI">
+        <i data-lucide="sparkles" class="w-4 h-4 text-yacht-sunset"></i>
+        <span class="text-[10px] font-mono mt-0.5">Talk</span>
       </button>
-
       <div class="w-7 h-[1px] bg-paper-border self-center my-0.5"></div>
-
-      <button onclick="toggleSettingsModal(true)" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Settings">
+      <button onclick="toggleSettingsModal(true); collapseEdgeRail();" class="w-12 h-12 rounded-2xl flex flex-col items-center justify-center text-ink-muted hover:text-ink-primary transition-all hover:bg-paper-200" title="Settings">
         <i data-lucide="settings" class="w-4 h-4"></i>
-        <span class="text-[9px] font-mono mt-0.5">Set</span>
+        <span class="text-[10px] font-mono mt-0.5">Set</span>
       </button>
     </nav>
   </aside>
@@ -535,49 +450,77 @@
         <h3 class="font-serif text-lg font-bold text-ink-primary">Settings & AI Keys</h3>
         <button onclick="toggleSettingsModal(false)" class="text-ink-muted hover:text-ink-primary p-1 rounded-lg">✕</button>
       </div>
-
-      <div class="space-y-3 text-xs">
+      <div class="space-y-3 text-sm">
         <div>
-          <label class="block font-mono uppercase text-ink-muted mb-1">Google AI Studio API Key</label>
+          <label class="block font-mono text-xs uppercase text-ink-muted mb-1">Google AI Studio API Key</label>
           <div class="flex gap-2">
-            <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="flex-1 px-3 py-2 rounded-xl bg-paper-100 border border-paper-border text-xs text-ink-primary focus:outline-none">
+            <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="flex-1 px-3 py-2 rounded-xl bg-paper-100 border border-paper-border text-sm text-ink-primary focus:outline-none">
             <button onclick="saveApiKey()" class="px-3 py-2 rounded-xl bg-ink-primary text-white font-medium hover:bg-ink-secondary">Save</button>
           </div>
-          <p class="text-[11px] text-ink-muted mt-1">Stored locally in your device's browser memory.</p>
+          <p class="text-xs text-ink-muted mt-1">Stored locally in this browser only.</p>
         </div>
-
         <div class="border-t border-paper-border pt-3">
-          <label class="block font-mono uppercase text-ink-muted mb-1.5">Microphone Diagnostics</label>
-          <button onclick="testMicrophoneAccess()" class="w-full px-3 py-2 rounded-xl bg-paper-200 text-ink-primary border border-paper-border hover:bg-paper-300 font-mono text-[11px] flex items-center justify-center gap-1.5">
-            <i data-lucide="mic" class="w-3.5 h-3.5"></i> Test Safari Microphone Access
+          <label class="block font-mono text-xs uppercase text-ink-muted mb-1.5">Microphone Diagnostics</label>
+          <button onclick="testMicrophoneAccess()" class="w-full px-3 py-2 rounded-xl bg-paper-200 text-ink-primary border border-paper-border hover:bg-paper-300 font-mono text-xs flex items-center justify-center gap-1.5">
+            <i data-lucide="mic" class="w-3.5 h-3.5"></i> Test microphone access
           </button>
-          <p id="micDiagnosticStatus" class="text-[11px] text-ink-muted mt-1 text-center font-mono"></p>
+          <p id="micDiagnosticStatus" class="text-xs text-ink-muted mt-1 text-center font-mono"></p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ================= APPLICATION SCRIPT ================= -->
   <script>
-    // --- Edge Rail Toggle Helper ---
+    // ================= HELPERS =================
+    // Escape user text before putting it into HTML / value="" attributes,
+    // so quotes like 6" or <tags> don't break the inputs.
+    function esc(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function loadJSON(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (_) { return fallback; }
+    }
+
+    function saveJSON(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {}
+    }
+
+    function todayShortDate() {
+      return new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function currentMonthKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    }
+
+    const NOTE_TABS = ['Smoker & Cooking', 'Golf Log', 'Workbench', 'General'];
+    const TASK_CATEGORIES = ['HOME & GRILL', 'GOLF', 'WORKBENCH', 'GENERAL'];
+
+    // ================= EDGE RAIL =================
     function toggleEdgeRail() {
-      const rail = document.getElementById('edgeRail');
-      if (rail) {
-        rail.classList.toggle('expanded');
-      }
+      document.getElementById('edgeRail')?.classList.toggle('expanded');
     }
-
-    // Auto-tuck rail after tapping a nav option
     function collapseEdgeRail() {
-      const rail = document.getElementById('edgeRail');
-      if (rail) {
-        rail.classList.remove('expanded');
+      document.getElementById('edgeRail')?.classList.remove('expanded');
+      if (document.activeElement && document.getElementById('edgeRail').contains(document.activeElement)) {
+        document.activeElement.blur();
       }
     }
+    // Tap anywhere outside the rail to tuck it away
+    document.addEventListener('click', (e) => {
+      const rail = document.getElementById('edgeRail');
+      if (rail && !rail.contains(e.target)) rail.classList.remove('expanded');
+    });
 
-    // --- Generate Default 24 Hours ---
+    // ================= DEFAULT DATA =================
     function generateDefault24Hours() {
-      const hours = [];
       const presets = {
         7: "Espresso & daily dispatch overview",
         9: "Work sprint & team syncs",
@@ -585,49 +528,47 @@
         16: "Range practice / golf drills",
         18: "Dinner & pellet smoker check"
       };
+      const hours = [];
       for (let h = 0; h < 24; h++) {
         const period = h >= 12 ? 'PM' : 'AM';
         const displayH = h % 12 === 0 ? 12 : h % 12;
-        const formattedTime = `${String(displayH).padStart(2, '0')}:00 ${period}`;
-        hours.push({
-          time: formattedTime,
-          event: presets[h] || ""
-        });
+        hours.push({ time: `${String(displayH).padStart(2, '0')}:00 ${period}`, event: presets[h] || "" });
       }
       return hours;
     }
 
-    // --- State Storage ---
     const APP_STATE = {
       activeView: 'dash',
       carouselIndex: 0,
       carouselTimer: null,
+      comicIndex: 0,
+      showAllHours: false,
       activeNotebookTab: 'Smoker & Cooking',
       isRecording: false,
       speechRecognizer: null,
-      activeAudioStream: null,
-      
-      hourlySchedule: JSON.parse(localStorage.getItem('vibehub_24h_schedule')) || generateDefault24Hours(),
-      
-      priorities: JSON.parse(localStorage.getItem('vibehub_priorities_v2')) || [
+      lastTranscript: '',
+
+      hourlySchedule: loadJSON('vibehub_24h_schedule', generateDefault24Hours()),
+
+      priorities: loadJSON('vibehub_priorities_v2', [
         { id: 1, text: "Prep brisket dry rub (16 mesh pepper + kosher salt)", category: "HOME & GRILL", done: false },
         { id: 2, text: "Range session: 50yd wedge touch & tempo drills", category: "GOLF", done: false },
         { id: 3, text: "Check Grandstream ATA VoIP configuration", category: "WORKBENCH", done: true }
-      ],
+      ]),
 
-      monthPlans: JSON.parse(localStorage.getItem('vibehub_month_plans')) || [
+      monthPlans: loadJSON('vibehub_month_plans', [
         { id: 1, date: "Nov 14", title: "Weekend brisket cook & patio smoke test" },
         { id: 2, date: "Nov 21", title: "Golf outing & short game practice session" },
         { id: 3, date: "Nov 28", title: "Family holiday dinner & DIY project review" }
-      ],
+      ]),
 
-      monthGoals: JSON.parse(localStorage.getItem('vibehub_month_goals')) || [
+      monthGoals: loadJSON('vibehub_month_goals', [
         { id: 1, goal: "Dial in 54° wedge carry consistency (target 95 yds)", target: "GOLF", done: false },
         { id: 2, goal: "Complete Asterisk VoIP bridge setup on Doritos phone", target: "TECH", done: false },
         { id: 3, goal: "Host backyard smoker cookout for family", target: "HOME", done: true }
-      ],
+      ]),
 
-      notesData: JSON.parse(localStorage.getItem('vibehub_notebook_v1')) || {
+      notesData: loadJSON('vibehub_notebook_v1', {
         'Smoker & Cooking': {
           title: "Texas Style Smoked Brisket Master Checklist",
           content: "• Trim hard fat to uniform 1/4 inch flat layer.\n• Rub: 50% coarse 16-mesh black pepper, 45% kosher salt, 5% granulated garlic.\n• Temperature: 225°F Traeger Silverton with Post Oak pellets.\n• Peach butcher paper boat wrap at 165°F bark stall.\n• Pull probe-tender at 203°F internal. Rest minimum 3 hours in cooler."
@@ -644,10 +585,32 @@
           title: "Quick Ideas & Reference",
           content: "• Call local butcher for prime grade brisket flats.\n• Book Saturday tee time 7 days ahead."
         }
-      }
+      })
     };
 
-    // --- View Navigation ---
+    // Make sure every notebook tab exists (older saved data might be missing one)
+    NOTE_TABS.forEach(t => {
+      if (!APP_STATE.notesData[t]) APP_STATE.notesData[t] = { title: t, content: "" };
+    });
+
+    // ================= MONTH ROLLOVER =================
+    function checkMonthRollover() {
+      const key = currentMonthKey();
+      const saved = localStorage.getItem('vibehub_month_key');
+      if (saved && saved !== key) {
+        if (confirm("New month! Clear last month's plans and completed goals?")) {
+          APP_STATE.monthPlans = [];
+          APP_STATE.monthGoals = APP_STATE.monthGoals.filter(g => !g.done);
+          saveJSON('vibehub_month_plans', APP_STATE.monthPlans);
+          saveJSON('vibehub_month_goals', APP_STATE.monthGoals);
+        }
+      }
+      try { localStorage.setItem('vibehub_month_key', key); } catch (_) {}
+      const monthName = new Date().toLocaleDateString('en-US', { month: 'long' });
+      document.getElementById('monthPlansHeading').innerText = `Plans for ${monthName}`;
+    }
+
+    // ================= VIEW NAVIGATION =================
     function switchView(viewName) {
       APP_STATE.activeView = viewName;
       ['dash', 'plan', 'notes', 'talk'].forEach(v => {
@@ -664,327 +627,369 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    // --- Carousel Controls ---
+    // ================= CAROUSEL =================
     function setCarouselSlide(index) {
       APP_STATE.carouselIndex = index;
       for (let i = 0; i < 4; i++) {
-        const slide = document.getElementById(`slide-${i}`);
-        if (slide) slide.classList.toggle('hidden', i !== index);
+        document.getElementById(`slide-${i}`)?.classList.toggle('hidden', i !== index);
       }
-      const dots = document.getElementById('carouselDots')?.children;
-      if (dots) {
-        for (let i = 0; i < dots.length; i++) {
-          dots[i].className = i === index ? 'w-2 h-2 rounded-full bg-ink-primary transition-all' : 'w-2 h-2 rounded-full bg-paper-300 transition-all';
-        }
+      const dots = document.getElementById('carouselDots')?.children || [];
+      for (let i = 0; i < dots.length; i++) {
+        dots[i].className = i === index
+          ? 'w-2 h-2 rounded-full bg-ink-primary transition-all'
+          : 'w-2 h-2 rounded-full bg-paper-300 transition-all';
       }
     }
 
-    function nextCarouselSlide() {
-      setCarouselSlide((APP_STATE.carouselIndex + 1) % 4);
-    }
-
-    function prevCarouselSlide() {
-      setCarouselSlide((APP_STATE.carouselIndex + 3) % 4);
+    // Manual navigation: go to the slide AND restart the auto-advance timer,
+    // so it doesn't jump away right after you pick a slide.
+    function goToSlide(index) {
+      setCarouselSlide(index);
+      startCarousel();
     }
 
     function startCarousel() {
       if (APP_STATE.carouselTimer) clearInterval(APP_STATE.carouselTimer);
-      APP_STATE.carouselTimer = setInterval(nextCarouselSlide, 8000);
+      APP_STATE.carouselTimer = setInterval(() => {
+        setCarouselSlide((APP_STATE.carouselIndex + 1) % 4);
+      }, 10000);
     }
 
-    // --- ESPN Scoreboard Live Polling ---
-    async function fetchLiveSports(isManual = false) {
-      const icon = document.getElementById('sportsRefreshIcon');
-      if (icon) icon.classList.add('animate-spin');
-
-      try {
-        const [nflRes, nbaRes] = await Promise.allSettled([
-          fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'),
-          fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard')
-        ]);
-
-        if (nflRes.status === 'fulfilled') {
-          const nflData = await nflRes.value.json();
-          const primeGame = nflData.events?.find(e => e.competitions?.[0]?.broadcast?.toLowerCase().includes('espn') || e.name?.includes('49ers')) || nflData.events?.[0];
-          if (primeGame) {
-            document.getElementById('primetimeMatchup').innerText = primeGame.shortName || primeGame.name;
-            document.getElementById('primetimeStatus').innerText = primeGame.status?.type?.detail || "Scheduled";
+    // Swipe left/right on the carousel
+    (function enableCarouselSwipe() {
+      let startX = null;
+      document.addEventListener('DOMContentLoaded', () => {
+        const wrap = document.getElementById('carouselWrapper');
+        wrap.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+        wrap.addEventListener('touchend', e => {
+          if (startX === null) return;
+          const dx = e.changedTouches[0].clientX - startX;
+          if (Math.abs(dx) > 40) {
+            goToSlide((APP_STATE.carouselIndex + (dx < 0 ? 1 : 3)) % 4);
           }
+          startX = null;
+        });
+      });
+    })();
+
+    // ================= SPORTS (ESPN) =================
+    const FAVORITE_TEAMS = ['49ers', 'Thunder'];
+
+    function gameState(e) { return e.status?.type?.state || 'pre'; } // pre | in | post
+
+    function gameStatusText(e) {
+      return e.status?.type?.shortDetail || e.status?.type?.detail || 'Scheduled';
+    }
+
+    async function fetchLiveSports() {
+      const icon = document.getElementById('sportsRefreshIcon');
+      icon?.classList.add('animate-spin');
+
+      const leagues = [
+        { tag: 'NFL', url: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard' },
+        { tag: 'NBA', url: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard' }
+      ];
+
+      const results = await Promise.allSettled(leagues.map(l => fetch(l.url).then(r => r.json())));
+      let events = [];
+      results.forEach((res, i) => {
+        if (res.status === 'fulfilled' && Array.isArray(res.value?.events)) {
+          events.push(...res.value.events.map(e => ({ ...e, league: leagues[i].tag })));
         }
-      } catch (err) {
-        console.warn('Sports live scoreboard fallback active', err);
-      } finally {
-        if (icon) icon.classList.remove('animate-spin');
+      });
+
+      const matchup = document.getElementById('primetimeMatchup');
+      const status = document.getElementById('primetimeStatus');
+      const badge = document.getElementById('featuredBadge');
+      const grid = document.getElementById('teamMatchupsContainer');
+
+      if (!events.length) {
+        matchup.innerText = 'Scores unavailable right now';
+        status.innerText = '';
+        grid.innerHTML = '';
+        icon?.classList.remove('animate-spin');
+        return;
+      }
+
+      const isFav = e => FAVORITE_TEAMS.some(t => (e.name || '').includes(t));
+      const rank = { in: 0, pre: 1, post: 2 };
+
+      // Featured: a live favorite > upcoming favorite > any live game > next game > anything
+      const featured =
+        events.find(e => isFav(e) && gameState(e) === 'in') ||
+        events.find(e => isFav(e) && gameState(e) === 'pre') ||
+        events.find(e => gameState(e) === 'in') ||
+        events.find(e => gameState(e) === 'pre') ||
+        events[0];
+
+      badge.innerText = gameState(featured) === 'in' ? 'LIVE' : featured.league;
+      matchup.innerText = featured.shortName || featured.name;
+      status.innerText = gameStatusText(featured);
+
+      const others = events
+        .filter(e => e !== featured)
+        .sort((a, b) => (isFav(b) - isFav(a)) || (rank[gameState(a)] - rank[gameState(b)]))
+        .slice(0, 4);
+
+      grid.innerHTML = others.map(e => `
+        <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2">
+          <span class="font-medium text-ink-primary truncate">
+            <span class="font-mono text-[11px] text-ink-muted mr-1">${esc(e.league)}</span>${esc(e.shortName || e.name)}
+          </span>
+          <span class="font-mono text-xs ${gameState(e) === 'in' ? 'text-yacht-sunset font-bold' : 'text-ink-muted'} shrink-0">${esc(gameStatusText(e))}</span>
+        </div>
+      `).join('');
+
+      icon?.classList.remove('animate-spin');
+    }
+
+    // ================= NEWS (Hacker News) =================
+    async function fetchNews() {
+      const list = document.getElementById('newsList');
+      try {
+        const ids = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json').then(r => r.json());
+        const items = await Promise.all(
+          ids.slice(0, 3).map(id => fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then(r => r.json()))
+        );
+        list.innerHTML = items.filter(Boolean).map(item => {
+          let domain = 'news.ycombinator.com';
+          try { if (item.url) domain = new URL(item.url).hostname.replace(/^www\./, ''); } catch (_) {}
+          const link = item.url || `https://news.ycombinator.com/item?id=${item.id}`;
+          return `
+            <a href="${esc(link)}" target="_blank" rel="noopener" class="block p-2.5 rounded-xl bg-paper-50 border border-paper-border hover:bg-paper-100">
+              <p class="font-serif text-base font-medium text-ink-primary line-clamp-1">${esc(item.title)}</p>
+              <p class="text-xs text-ink-muted mt-0.5">${esc(domain)} • ${item.score || 0} pts</p>
+            </a>`;
+        }).join('');
+      } catch (_) {
+        list.innerHTML = '<p class="text-sm text-ink-muted">Headlines unavailable right now.</p>';
       }
     }
 
-    // --- 24-Hour Day Planner ---
-    function renderHourlyTimeline() {
-      const container = document.getElementById('hourlyTimeline');
-      if (!container) return;
+    // ================= COMIC =================
+    const COMICS = [
+      ["There are only 10 types of people in the world...", "...those who understand binary, and those who don't."],
+      ["Why did the pitmaster get promoted?", "He always delivered under low and slow pressure."],
+      ["Why do golfers carry two pairs of pants?", "In case they get a hole in one."],
+      ["What's a VoIP phone's favorite music?", "Anything with a good SIP-hop beat."],
+      ["How does brisket stay calm?", "It just pushes through the stall."]
+    ];
 
-      container.innerHTML = APP_STATE.hourlySchedule.map((slot, index) => `
-        <div class="p-2 sm:p-2.5 rounded-xl bg-paper-100 hover:bg-paper-200/70 border border-paper-border flex items-center gap-2 text-xs transition-colors">
-          <input type="text" value="${slot.time}" onchange="updateScheduleTime(${index}, this.value)" class="w-20 font-mono font-bold text-ink-muted bg-transparent border-b border-transparent focus:border-yacht-sunset focus:outline-none shrink-0" title="Click to edit hour">
-          <input type="text" value="${slot.event}" placeholder="Empty slot - tap to plan" onchange="updateScheduleEvent(${index}, this.value)" class="flex-1 bg-transparent border-0 text-ink-primary font-serif placeholder:text-ink-faint focus:outline-none">
-          ${slot.event ? `<button onclick="clearScheduleSlot(${index})" class="text-ink-faint hover:text-ink-muted p-0.5" title="Clear slot">✕</button>` : ''}
-        </div>
-      `).join('');
+    function rotateComicStrip() {
+      const [setup, punch] = COMICS[APP_STATE.comicIndex % COMICS.length];
+      document.getElementById('comicSetup').innerText = `"${setup}"`;
+      document.getElementById('comicPunchline').innerText = `"${punch}"`;
+      APP_STATE.comicIndex++;
     }
 
-    function updateScheduleTime(index, val) {
-      APP_STATE.hourlySchedule[index].time = val;
-      localStorage.setItem('vibehub_24h_schedule', JSON.stringify(APP_STATE.hourlySchedule));
-    }
+    // ================= DAY PLANNER =================
+    const WAKING_START = 6;  // 6 AM
+    const WAKING_END = 23;   // through 11 PM
 
-    function updateScheduleEvent(index, val) {
-      APP_STATE.hourlySchedule[index].event = val;
-      localStorage.setItem('vibehub_24h_schedule', JSON.stringify(APP_STATE.hourlySchedule));
-    }
-
-    function clearScheduleSlot(index) {
-      APP_STATE.hourlySchedule[index].event = "";
-      localStorage.setItem('vibehub_24h_schedule', JSON.stringify(APP_STATE.hourlySchedule));
+    function toggleAllHours() {
+      APP_STATE.showAllHours = !APP_STATE.showAllHours;
+      document.getElementById('hoursToggleBtn').innerText = APP_STATE.showAllHours ? 'Waking hours only' : 'Show all 24 hrs';
       renderHourlyTimeline();
     }
 
-    // --- Priorities Ledger ---
+    function renderHourlyTimeline() {
+      const container = document.getElementById('hourlyTimeline');
+      if (!container) return;
+      container.innerHTML = APP_STATE.hourlySchedule.map((slot, index) => {
+        const hidden = !APP_STATE.showAllHours && (index < WAKING_START || index > WAKING_END) && !slot.event;
+        if (hidden) return '';
+        return `
+          <div class="p-2 sm:p-2.5 rounded-xl bg-paper-100 hover:bg-paper-200/70 border border-paper-border flex items-center gap-2 text-sm transition-colors">
+            <input type="text" value="${esc(slot.time)}" onchange="updateScheduleTime(${index}, this.value)" class="w-20 font-mono text-xs font-bold text-ink-muted bg-transparent border-b border-transparent focus:border-yacht-sunset focus:outline-none shrink-0">
+            <input type="text" value="${esc(slot.event)}" placeholder="Open — tap to plan" onchange="updateScheduleEvent(${index}, this.value)" class="flex-1 min-w-0 bg-transparent border-0 text-ink-primary font-serif placeholder:text-ink-faint focus:outline-none">
+            ${slot.event ? `<button onclick="clearScheduleSlot(${index})" class="text-ink-faint hover:text-ink-muted p-0.5" title="Clear slot">✕</button>` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    function saveSchedule() { saveJSON('vibehub_24h_schedule', APP_STATE.hourlySchedule); }
+    function updateScheduleTime(i, val) { APP_STATE.hourlySchedule[i].time = val; saveSchedule(); }
+    function updateScheduleEvent(i, val) { APP_STATE.hourlySchedule[i].event = val; saveSchedule(); renderHourlyTimeline(); }
+    function clearScheduleSlot(i) { APP_STATE.hourlySchedule[i].event = ""; saveSchedule(); renderHourlyTimeline(); }
+
+    // ================= PRIORITIES =================
     function renderPriorities() {
       const dashList = document.getElementById('dashPrioritiesList');
       const planList = document.getElementById('plannerTaskList');
 
       if (dashList) {
-        dashList.innerHTML = APP_STATE.priorities.map(item => `
-          <div class="p-2.5 rounded-xl paper-card flex items-center justify-between text-xs">
-            <div class="flex items-center gap-2 flex-1 min-w-0 pr-2">
+        dashList.innerHTML = APP_STATE.priorities.length ? APP_STATE.priorities.map(item => `
+          <div class="p-2.5 rounded-xl paper-card flex items-center justify-between text-sm">
+            <label class="flex items-center gap-2 flex-1 min-w-0 pr-2">
               <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})" class="rounded border-paper-border text-yacht-sunset">
-              <span class="${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} font-medium truncate">${item.text}</span>
-            </div>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-paper-200 text-ink-muted shrink-0">${item.category}</span>
+              <span class="${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} font-medium truncate">${esc(item.text)}</span>
+            </label>
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-paper-200 text-ink-muted shrink-0">${esc(item.category)}</span>
           </div>
-        `).join('');
+        `).join('') : '<p class="text-sm text-ink-muted px-1">Nothing on deck. Add a task above.</p>';
       }
 
       if (planList) {
         planList.innerHTML = APP_STATE.priorities.map(item => `
-          <div class="p-2.5 rounded-xl paper-card flex items-center justify-between gap-2 text-xs group">
+          <div class="p-2.5 rounded-xl paper-card flex items-center justify-between gap-2 text-sm group">
             <div class="flex items-center gap-2 flex-1 min-w-0">
               <input type="checkbox" ${item.done ? 'checked' : ''} onchange="togglePriority(${item.id})" class="rounded border-paper-border text-yacht-sunset shrink-0">
-              <input type="text" value="${item.text}" onchange="updatePriorityText(${item.id}, this.value)" class="flex-1 bg-transparent border-0 font-medium ${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} focus:outline-none">
+              <input type="text" value="${esc(item.text)}" onchange="updatePriorityText(${item.id}, this.value)" class="flex-1 min-w-0 bg-transparent border-0 font-medium ${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} focus:outline-none">
             </div>
-            <input type="text" value="${item.category}" onchange="updatePriorityCategory(${item.id}, this.value)" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-paper-200 text-ink-muted border border-paper-border focus:border-ink-primary focus:outline-none w-24 text-center shrink-0" title="Click to edit category">
+            <input type="text" value="${esc(item.category)}" onchange="updatePriorityCategory(${item.id}, this.value)" class="text-[11px] font-mono uppercase px-2 py-0.5 rounded bg-paper-200 text-ink-muted border border-paper-border focus:border-ink-primary focus:outline-none w-24 text-center shrink-0" title="Edit category">
             <button onclick="deletePriority(${item.id})" class="text-ink-faint hover:text-red-600 px-1 opacity-60 group-hover:opacity-100 transition-opacity" title="Delete">✕</button>
           </div>
         `).join('');
       }
     }
 
-    function togglePriority(id) {
-      const p = APP_STATE.priorities.find(x => x.id === id);
-      if (p) p.done = !p.done;
-      savePriorities();
-    }
-
-    function updatePriorityText(id, newText) {
-      const p = APP_STATE.priorities.find(x => x.id === id);
-      if (p) p.text = newText;
-      savePriorities();
-    }
-
-    function updatePriorityCategory(id, newCat) {
-      const p = APP_STATE.priorities.find(x => x.id === id);
-      if (p) p.category = newCat.toUpperCase();
-      savePriorities();
-    }
-
-    function deletePriority(id) {
-      APP_STATE.priorities = APP_STATE.priorities.filter(x => x.id !== id);
-      savePriorities();
-    }
+    function savePriorities() { saveJSON('vibehub_priorities_v2', APP_STATE.priorities); renderPriorities(); }
+    function togglePriority(id) { const p = APP_STATE.priorities.find(x => x.id === id); if (p) p.done = !p.done; savePriorities(); }
+    function updatePriorityText(id, v) { const p = APP_STATE.priorities.find(x => x.id === id); if (p) p.text = v; savePriorities(); }
+    function updatePriorityCategory(id, v) { const p = APP_STATE.priorities.find(x => x.id === id); if (p) p.category = v.toUpperCase(); savePriorities(); }
+    function deletePriority(id) { APP_STATE.priorities = APP_STATE.priorities.filter(x => x.id !== id); savePriorities(); }
 
     function addNewPriorityItem() {
-      APP_STATE.priorities.push({
-        id: Date.now(),
-        text: "New actionable priority",
-        category: "FOCUS",
-        done: false
-      });
+      const id = Date.now();
+      APP_STATE.priorities.push({ id, text: "", category: "FOCUS", done: false });
       savePriorities();
       setTimeout(() => {
         const list = document.getElementById('plannerTaskList');
-        if (list) list.scrollTop = list.scrollHeight;
+        if (!list) return;
+        list.scrollTop = list.scrollHeight;
+        const inputs = list.querySelectorAll('input[type="text"]');
+        // Focus the new item's text field (second-to-last text input; last is its category)
+        inputs[inputs.length - 2]?.focus();
       }, 50);
     }
 
-    function savePriorities() {
-      localStorage.setItem('vibehub_priorities_v2', JSON.stringify(APP_STATE.priorities));
-      renderPriorities();
-    }
-
-    // --- Plans for the Month ---
+    // ================= MONTH PLANS =================
     function renderMonthPlans() {
-      const container = document.getElementById('monthPlansList');
-      if (!container) return;
-
-      container.innerHTML = APP_STATE.monthPlans.map(item => `
-        <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2 text-xs group">
-          <input type="text" value="${item.date}" onchange="updateMonthPlanDate(${item.id}, this.value)" class="w-16 font-mono font-bold text-yacht-sea bg-paper-200/80 border border-paper-border rounded px-1.5 py-0.5 text-center focus:outline-none shrink-0" title="Click date to edit">
-          <input type="text" value="${item.title}" onchange="updateMonthPlanTitle(${item.id}, this.value)" class="flex-1 bg-transparent border-0 font-serif text-ink-primary focus:outline-none">
+      const c = document.getElementById('monthPlansList');
+      if (!c) return;
+      c.innerHTML = APP_STATE.monthPlans.length ? APP_STATE.monthPlans.map(item => `
+        <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2 text-sm group">
+          <input type="text" value="${esc(item.date)}" onchange="updateMonthPlanDate(${item.id}, this.value)" class="w-16 font-mono text-xs font-bold text-yacht-sea bg-paper-200/80 border border-paper-border rounded px-1.5 py-0.5 text-center focus:outline-none shrink-0">
+          <input type="text" value="${esc(item.title)}" placeholder="What's the plan?" onchange="updateMonthPlanTitle(${item.id}, this.value)" class="flex-1 min-w-0 bg-transparent border-0 font-serif text-ink-primary placeholder:text-ink-faint focus:outline-none">
           <button onclick="deleteMonthPlan(${item.id})" class="text-ink-faint hover:text-red-600 px-1 opacity-60 group-hover:opacity-100 transition-opacity" title="Delete">✕</button>
         </div>
-      `).join('');
+      `).join('') : '<p class="text-sm text-ink-muted">No plans yet this month.</p>';
     }
 
-    function updateMonthPlanDate(id, val) {
-      const item = APP_STATE.monthPlans.find(x => x.id === id);
-      if (item) item.date = val;
-      saveMonthPlans();
-    }
-
-    function updateMonthPlanTitle(id, val) {
-      const item = APP_STATE.monthPlans.find(x => x.id === id);
-      if (item) item.title = val;
-      saveMonthPlans();
-    }
-
-    function deleteMonthPlan(id) {
-      APP_STATE.monthPlans = APP_STATE.monthPlans.filter(x => x.id !== id);
-      saveMonthPlans();
-    }
-
+    function saveMonthPlans() { saveJSON('vibehub_month_plans', APP_STATE.monthPlans); renderMonthPlans(); }
+    function updateMonthPlanDate(id, v) { const i = APP_STATE.monthPlans.find(x => x.id === id); if (i) i.date = v; saveMonthPlans(); }
+    function updateMonthPlanTitle(id, v) { const i = APP_STATE.monthPlans.find(x => x.id === id); if (i) i.title = v; saveMonthPlans(); }
+    function deleteMonthPlan(id) { APP_STATE.monthPlans = APP_STATE.monthPlans.filter(x => x.id !== id); saveMonthPlans(); }
     function addNewMonthPlan() {
-      APP_STATE.monthPlans.push({
-        id: Date.now(),
-        date: "Nov 30",
-        title: "New monthly milestone or plan"
-      });
+      APP_STATE.monthPlans.push({ id: Date.now(), date: todayShortDate(), title: "" });
       saveMonthPlans();
     }
 
-    function saveMonthPlans() {
-      localStorage.setItem('vibehub_month_plans', JSON.stringify(APP_STATE.monthPlans));
-      renderMonthPlans();
-    }
-
-    // --- Month Goals ---
+    // ================= MONTH GOALS =================
     function renderMonthGoals() {
-      const container = document.getElementById('monthGoalsList');
-      if (!container) return;
-
-      container.innerHTML = APP_STATE.monthGoals.map(item => `
-        <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2 text-xs group">
+      const c = document.getElementById('monthGoalsList');
+      if (!c) return;
+      c.innerHTML = APP_STATE.monthGoals.length ? APP_STATE.monthGoals.map(item => `
+        <div class="p-2.5 rounded-xl bg-paper-100 border border-paper-border flex items-center justify-between gap-2 text-sm group">
           <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleMonthGoal(${item.id})" class="rounded border-paper-border text-yacht-sunset shrink-0">
-          <input type="text" value="${item.goal}" onchange="updateMonthGoalText(${item.id}, this.value)" class="flex-1 bg-transparent border-0 font-medium ${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} focus:outline-none">
-          <input type="text" value="${item.target}" onchange="updateMonthGoalTarget(${item.id}, this.value)" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-rose-50/70 text-yacht-dustyrose border border-rose-200/50 focus:outline-none w-20 text-center shrink-0" title="Click to edit category">
+          <input type="text" value="${esc(item.goal)}" placeholder="New goal" onchange="updateMonthGoalText(${item.id}, this.value)" class="flex-1 min-w-0 bg-transparent border-0 font-medium ${item.done ? 'line-through text-ink-faint' : 'text-ink-primary'} placeholder:text-ink-faint focus:outline-none">
+          <input type="text" value="${esc(item.target)}" onchange="updateMonthGoalTarget(${item.id}, this.value)" class="text-[11px] font-mono uppercase px-2 py-0.5 rounded bg-rose-50/70 text-yacht-dustyrose border border-rose-200/50 focus:outline-none w-20 text-center shrink-0">
           <button onclick="deleteMonthGoal(${item.id})" class="text-ink-faint hover:text-red-600 px-1 opacity-60 group-hover:opacity-100 transition-opacity" title="Delete">✕</button>
         </div>
-      `).join('');
+      `).join('') : '<p class="text-sm text-ink-muted">No goals set yet.</p>';
     }
 
-    function toggleMonthGoal(id) {
-      const g = APP_STATE.monthGoals.find(x => x.id === id);
-      if (g) g.done = !g.done;
-      saveMonthGoals();
-    }
-
-    function updateMonthGoalText(id, val) {
-      const g = APP_STATE.monthGoals.find(x => x.id === id);
-      if (g) g.goal = val;
-      saveMonthGoals();
-    }
-
-    function updateMonthGoalTarget(id, val) {
-      const g = APP_STATE.monthGoals.find(x => x.id === id);
-      if (g) g.target = val.toUpperCase();
-      saveMonthGoals();
-    }
-
-    function deleteMonthGoal(id) {
-      APP_STATE.monthGoals = APP_STATE.monthGoals.filter(x => x.id !== id);
-      saveMonthGoals();
-    }
-
+    function saveMonthGoals() { saveJSON('vibehub_month_goals', APP_STATE.monthGoals); renderMonthGoals(); }
+    function toggleMonthGoal(id) { const g = APP_STATE.monthGoals.find(x => x.id === id); if (g) g.done = !g.done; saveMonthGoals(); }
+    function updateMonthGoalText(id, v) { const g = APP_STATE.monthGoals.find(x => x.id === id); if (g) g.goal = v; saveMonthGoals(); }
+    function updateMonthGoalTarget(id, v) { const g = APP_STATE.monthGoals.find(x => x.id === id); if (g) g.target = v.toUpperCase(); saveMonthGoals(); }
+    function deleteMonthGoal(id) { APP_STATE.monthGoals = APP_STATE.monthGoals.filter(x => x.id !== id); saveMonthGoals(); }
     function addNewMonthGoal() {
-      APP_STATE.monthGoals.push({
-        id: Date.now(),
-        goal: "New target or monthly aspiration",
-        target: "GOAL",
-        done: false
-      });
+      APP_STATE.monthGoals.push({ id: Date.now(), goal: "", target: "GOAL", done: false });
       saveMonthGoals();
     }
 
-    function saveMonthGoals() {
-      localStorage.setItem('vibehub_month_goals', JSON.stringify(APP_STATE.monthGoals));
-      renderMonthGoals();
-    }
+    // ================= NOTEBOOK =================
+    function saveNotes() { saveJSON('vibehub_notebook_v1', APP_STATE.notesData); }
 
-    // --- Notebook Tabs & Content ---
     function setNotebookTab(tabName) {
+      if (!NOTE_TABS.includes(tabName)) tabName = 'General';
       APP_STATE.activeNotebookTab = tabName;
-      const tabData = APP_STATE.notesData[tabName] || { title: tabName, content: "" };
+      const tabData = APP_STATE.notesData[tabName];
       document.getElementById('noteSheetTitle').value = tabData.title;
       document.getElementById('noteSheetContent').value = tabData.content;
-
-      const tabs = document.getElementById('notebookTabs').children;
-      for (let btn of tabs) {
-        const isActive = btn.innerText.includes(tabName.split(' ')[0]);
-        btn.className = isActive ? 'px-2.5 py-1 text-xs font-mono rounded-lg bg-ink-primary text-white' : 'px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary';
+      for (const btn of document.getElementById('notebookTabs').children) {
+        btn.className = btn.dataset.tab === tabName
+          ? 'px-2.5 py-1 text-xs font-mono rounded-lg bg-ink-primary text-white'
+          : 'px-2.5 py-1 text-xs font-mono rounded-lg bg-paper-200 text-ink-secondary';
       }
     }
 
+    // Saves both title and body (title edits are saved now too)
     function saveCurrentNoteContent() {
-      const tab = APP_STATE.activeNotebookTab;
-      APP_STATE.notesData[tab] = {
+      APP_STATE.notesData[APP_STATE.activeNotebookTab] = {
         title: document.getElementById('noteSheetTitle').value,
         content: document.getElementById('noteSheetContent').value
       };
-      localStorage.setItem('vibehub_notebook_v1', JSON.stringify(APP_STATE.notesData));
+      saveNotes();
     }
 
-    // --- Quick Capture ---
+    // Single path for appending a note bullet — always persists
+    function appendNote(tab, text) {
+      if (!NOTE_TABS.includes(tab)) tab = 'General';
+      const page = APP_STATE.notesData[tab];
+      page.content = (page.content ? page.content + '\n' : '') + `• ${text}`;
+      saveNotes();
+      setNotebookTab(tab);
+      return tab;
+    }
+
+    // ================= QUICK CAPTURE =================
+    function showCaptureToast(msg) {
+      const t = document.getElementById('captureToast');
+      t.innerText = msg;
+      t.classList.remove('hidden');
+      clearTimeout(showCaptureToast._timer);
+      showCaptureToast._timer = setTimeout(() => t.classList.add('hidden'), 2200);
+    }
+
     function handleQuickCapture(type) {
       const input = document.getElementById('quickCaptureInput');
       const val = input.value.trim();
       if (!val) return;
-
       if (type === 'task') {
         APP_STATE.priorities.unshift({ id: Date.now(), text: val, category: 'GENERAL', done: false });
         savePriorities();
+        showCaptureToast('✓ Added to priorities');
       } else {
-        const curTab = APP_STATE.activeNotebookTab;
-        APP_STATE.notesData[curTab].content += `\n• ${val}`;
-        setNotebookTab(curTab);
+        const tab = appendNote(APP_STATE.activeNotebookTab, val);
+        showCaptureToast(`✓ Saved to ${tab} notes`);
       }
       input.value = '';
     }
 
-    // --- Safari Voice Engine (Rabbit R1 Orb) ---
+    // ================= VOICE =================
     async function toggleVoiceSession() {
-      if (APP_STATE.isRecording) {
-        stopVoiceSession();
-      } else {
-        await startVoiceSession();
-      }
+      if (APP_STATE.isRecording) stopVoiceSession();
+      else await startVoiceSession();
     }
 
     async function startVoiceSession() {
       const transcriptEl = document.getElementById('orbTranscriptText');
-      const orbButton = document.getElementById('aiOrbButton');
-      const micIcon = document.getElementById('orbMicIcon');
-      const statusLabel = document.getElementById('orbStatusLabel');
-
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        APP_STATE.activeAudioStream = stream;
-      } catch (err) {
-        transcriptEl.innerText = "⚠️ Microphone permission denied in Safari. Tap Settings to verify.";
-        return;
-      }
 
       const SpeechClass = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechClass) {
-        transcriptEl.innerText = "Speech recognition is unavailable on this browser.";
+        transcriptEl.innerText = "Speech recognition isn't available in this browser.";
+        return;
+      }
+
+      // Ask for mic permission, then release it right away so the recognizer
+      // can take the mic itself (holding it open can conflict on iOS).
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(t => t.stop());
+      } catch (err) {
+        transcriptEl.innerText = "⚠️ Microphone permission denied. Check Settings → Test microphone.";
         return;
       }
 
@@ -993,39 +998,32 @@
         recognizer.continuous = false;
         recognizer.interimResults = true;
         recognizer.lang = 'en-US';
+        APP_STATE.lastTranscript = '';
 
         recognizer.onstart = () => {
           APP_STATE.isRecording = true;
-          document.getElementById('orbRipple1').classList.remove('hidden');
-          document.getElementById('orbRipple2').classList.remove('hidden');
-          orbButton.style.background = 'radial-gradient(circle at 35% 30%, #F4F1DE 0%, #E07A5F 55%, #991B1B 100%)';
-          micIcon.className = "w-8 h-8 text-white mb-1 animate-pulse";
-          statusLabel.innerText = "LISTENING...";
-          statusLabel.className = "font-mono text-[11px] font-bold tracking-wider uppercase text-white drop-shadow-sm";
-          transcriptEl.innerText = "Listening to your voice...";
+          setOrbListening(true);
+          transcriptEl.innerText = "Listening...";
         };
 
         recognizer.onresult = (event) => {
           let text = '';
-          for (let i = event.resultIndex; i < event.results.length; ++i) {
-            text += event.results[i][0].transcript;
-          }
-          transcriptEl.innerText = `"${text}"`;
+          for (let i = 0; i < event.results.length; i++) text += event.results[i][0].transcript;
+          APP_STATE.lastTranscript = text.trim();
+          transcriptEl.innerText = `"${APP_STATE.lastTranscript}"`;
         };
 
         recognizer.onerror = (e) => {
-          if (e.error !== 'aborted') {
-            transcriptEl.innerText = `⚠️ Voice capture event: ${e.error}`;
+          if (e.error !== 'aborted' && e.error !== 'no-speech') {
+            transcriptEl.innerText = `⚠️ Voice capture error: ${e.error}`;
           }
-          stopVoiceSession();
         };
 
         recognizer.onend = () => {
-          const rawSpoken = transcriptEl.innerText.replace(/"/g, '').trim();
+          const spoken = APP_STATE.lastTranscript;
           stopVoiceSession();
-          if (rawSpoken && rawSpoken !== "Listening to your voice..." && rawSpoken !== "Listening... speak freely.") {
-            processVoiceWithGemini(rawSpoken);
-          }
+          if (spoken) processVoiceWithGemini(spoken);
+          else if (transcriptEl.innerText === 'Listening...') transcriptEl.innerText = '"Didn\'t catch that — tap to try again."';
         };
 
         APP_STATE.speechRecognizer = recognizer;
@@ -1036,51 +1034,53 @@
       }
     }
 
-    function stopVoiceSession() {
-      APP_STATE.isRecording = false;
-      document.getElementById('orbRipple1').classList.add('hidden');
-      document.getElementById('orbRipple2').classList.add('hidden');
-      
-      const orbButton = document.getElementById('aiOrbButton');
-      const micIcon = document.getElementById('orbMicIcon');
-      const statusLabel = document.getElementById('orbStatusLabel');
-
-      orbButton.style.background = 'radial-gradient(circle at 35% 30%, #F4F1DE 0%, #F2CC8F 45%, #E07A5F 80%, #C2847A 100%)';
-      micIcon.className = "w-8 h-8 text-ink-primary mb-1 drop-shadow-sm";
-      statusLabel.innerText = "TAP TO TALK";
-      statusLabel.className = "font-mono text-[11px] font-bold tracking-wider uppercase text-ink-primary drop-shadow-sm";
-
-      if (APP_STATE.speechRecognizer) {
-        try { APP_STATE.speechRecognizer.stop(); } catch (_) {}
-        APP_STATE.speechRecognizer = null;
-      }
-      if (APP_STATE.activeAudioStream) {
-        APP_STATE.activeAudioStream.getTracks().forEach(t => t.stop());
-        APP_STATE.activeAudioStream = null;
+    function setOrbListening(on) {
+      const orb = document.getElementById('aiOrbButton');
+      const mic = document.getElementById('orbMicIcon');
+      const label = document.getElementById('orbStatusLabel');
+      document.getElementById('orbRipple1').classList.toggle('hidden', !on);
+      document.getElementById('orbRipple2').classList.toggle('hidden', !on);
+      if (on) {
+        orb.style.background = 'radial-gradient(circle at 35% 30%, #F4F1DE 0%, #E07A5F 55%, #991B1B 100%)';
+        mic.setAttribute('class', 'w-8 h-8 text-white mb-1 animate-pulse');
+        label.innerText = "LISTENING...";
+        label.className = "font-mono text-xs font-bold tracking-wider uppercase text-white drop-shadow-sm";
+      } else {
+        orb.style.background = 'radial-gradient(circle at 35% 30%, #F4F1DE 0%, #F2CC8F 45%, #E07A5F 80%, #C2847A 100%)';
+        mic.setAttribute('class', 'w-8 h-8 text-ink-primary mb-1 drop-shadow-sm');
+        label.innerText = "TAP TO TALK";
+        label.className = "font-mono text-xs font-bold tracking-wider uppercase text-ink-primary drop-shadow-sm";
       }
     }
 
-    // --- Gemini Structuring Pipeline ---
+    function stopVoiceSession() {
+      APP_STATE.isRecording = false;
+      setOrbListening(false);
+      const r = APP_STATE.speechRecognizer;
+      APP_STATE.speechRecognizer = null;
+      if (r) { try { r.stop(); } catch (_) {} }
+    }
+
+    // ================= GEMINI STRUCTURING =================
     async function processVoiceWithGemini(rawSpeech) {
       const transcriptEl = document.getElementById('orbTranscriptText');
-      transcriptEl.innerText = "Thinking & structuring notes...";
-
       const apiKey = localStorage.getItem('vibehub_gemini_api_key_v1') || '';
-      if (!apiKey) {
-        handleOfflineVoiceParse(rawSpeech);
-        return;
-      }
+      if (!apiKey) { handleOfflineVoiceParse(rawSpeech); return; }
 
-      const prompt = `You are a personal OS assistant. Parse this spoken note: "${rawSpeech}".
+      transcriptEl.innerText = "Thinking & structuring...";
+
+      const prompt = `You are a personal OS assistant. Parse this spoken note: ${JSON.stringify(rawSpeech)}.
 Return strictly a JSON object with this schema:
 {
-  "destination": "planner" | "notes" | "both",
   "task": { "text": "string or null", "category": "HOME & GRILL" | "GOLF" | "WORKBENCH" | "GENERAL" },
   "note": { "tab": "Smoker & Cooking" | "Golf Log" | "Workbench" | "General", "bullet": "string or null" }
-}`;
+}
+Use task for anything actionable (reminders, to-dos). Use note for information worth keeping. Either may be null.`;
 
+      // Step 1: talk to Gemini. Only network/parse failures fall back to offline parsing.
+      let parsed;
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1088,107 +1088,127 @@ Return strictly a JSON object with this schema:
             generationConfig: { responseMimeType: "application/json" }
           })
         });
-
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const json = await response.json();
-        const parsed = JSON.parse(json.candidates[0].content.parts[0].text);
-        executeStructuredVoiceOutput(parsed, rawSpeech);
+        parsed = JSON.parse(json.candidates?.[0]?.content?.parts?.[0]?.text || '{}');
       } catch (err) {
+        console.warn('Gemini unavailable, using offline parse:', err);
         handleOfflineVoiceParse(rawSpeech);
+        return;
       }
+
+      // Step 2: file the result (validated, so a weird tab/category can't crash it
+      // or cause the same item to be added twice).
+      executeStructuredVoiceOutput(parsed, rawSpeech);
     }
 
     function handleOfflineVoiceParse(rawSpeech) {
       const lower = rawSpeech.toLowerCase();
-      if (lower.includes('remind') || lower.includes('todo') || lower.includes('task')) {
+      if (/\b(remind|todo|to do|task|need to|don't forget)\b/.test(lower)) {
         APP_STATE.priorities.unshift({ id: Date.now(), text: rawSpeech, category: 'GENERAL', done: false });
         savePriorities();
         showReceipt("Task added to Priority Ledger", rawSpeech);
       } else {
-        const tab = lower.includes('smoker') || lower.includes('brisket') ? 'Smoker & Cooking' : (lower.includes('golf') ? 'Golf Log' : 'General');
-        APP_STATE.notesData[tab].content += `\n• ${rawSpeech}`;
-        setNotebookTab(tab);
+        let tab = 'General';
+        if (/smoker|brisket|traeger|rub|pellet|bbq/.test(lower)) tab = 'Smoker & Cooking';
+        else if (/golf|wedge|range|swing|tee/.test(lower)) tab = 'Golf Log';
+        else if (/voip|asterisk|pi\b|raspberry|ata|sip|router/.test(lower)) tab = 'Workbench';
+        appendNote(tab, rawSpeech);
         showReceipt(`Note added to ${tab}`, rawSpeech);
       }
+      document.getElementById('orbTranscriptText').innerText = `"${rawSpeech}"`;
     }
 
     function executeStructuredVoiceOutput(data, rawSpeech) {
-      let receiptText = "";
-      if (data.task && data.task.text) {
-        APP_STATE.priorities.unshift({ id: Date.now(), text: data.task.text, category: data.task.category || 'GENERAL', done: false });
+      const lines = [];
+      const taskText = data?.task?.text;
+      if (taskText) {
+        const cat = TASK_CATEGORIES.includes(data.task.category) ? data.task.category : 'GENERAL';
+        APP_STATE.priorities.unshift({ id: Date.now(), text: taskText, category: cat, done: false });
         savePriorities();
-        receiptText += `✓ Task added: "${data.task.text}"\n`;
+        lines.push(`✓ Task added: "${taskText}"`);
       }
-      if (data.note && data.note.bullet) {
-        const tab = data.note.tab || 'General';
-        APP_STATE.notesData[tab].content += `\n• ${data.note.bullet}`;
-        setNotebookTab(tab);
-        receiptText += `✓ Note logged under [${tab}]`;
+      const bullet = data?.note?.bullet;
+      if (bullet) {
+        const tab = appendNote(data.note.tab, bullet);
+        lines.push(`✓ Note saved under ${tab}`);
       }
-      showReceipt("Successfully Parsed & Filed", receiptText || rawSpeech);
+      if (!lines.length) {
+        // Model returned nothing usable — still keep what was said
+        const tab = appendNote('General', rawSpeech);
+        lines.push(`✓ Saved to ${tab} notes`);
+      }
+      document.getElementById('orbTranscriptText').innerText = `"${rawSpeech}"`;
+      showReceipt("Parsed & filed", lines.join('\n'));
     }
 
     function showReceipt(title, details) {
-      const card = document.getElementById('orbReceiptCard');
-      const content = document.getElementById('orbReceiptContent');
-      content.innerText = `${title}\n${details}`;
-      card.classList.remove('hidden');
+      document.getElementById('orbReceiptContent').innerText = `${title}\n${details}`;
+      document.getElementById('orbReceiptCard').classList.remove('hidden');
     }
-
     function dismissReceiptCard() {
       document.getElementById('orbReceiptCard').classList.add('hidden');
     }
 
-    // --- Settings & Diagnostics ---
+    // ================= SETTINGS =================
     function toggleSettingsModal(open) {
       document.getElementById('settingsModal').classList.toggle('hidden', !open);
-      if (open) {
-        document.getElementById('apiKeyInput').value = localStorage.getItem('vibehub_gemini_api_key_v1') || '';
-      }
+      if (open) document.getElementById('apiKeyInput').value = localStorage.getItem('vibehub_gemini_api_key_v1') || '';
     }
 
     function saveApiKey() {
       const key = document.getElementById('apiKeyInput').value.trim();
-      localStorage.setItem('vibehub_gemini_api_key_v1', key);
+      try { localStorage.setItem('vibehub_gemini_api_key_v1', key); } catch (_) {}
       alert('API key saved locally.');
       toggleSettingsModal(false);
     }
 
     async function testMicrophoneAccess() {
-      const statusEl = document.getElementById('micDiagnosticStatus');
-      statusEl.innerText = "Requesting Safari mic permissions...";
+      const s = document.getElementById('micDiagnosticStatus');
+      s.innerText = "Requesting mic permission...";
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        statusEl.innerText = "✅ Microphone accessible and active!";
-        statusEl.className = "text-[11px] text-yacht-sage mt-1 text-center font-mono";
+        s.innerText = "✅ Microphone accessible!";
+        s.className = "text-xs text-yacht-sage mt-1 text-center font-mono";
         stream.getTracks().forEach(t => t.stop());
       } catch (err) {
-        statusEl.innerText = `❌ Error: ${err.message}`;
-        statusEl.className = "text-[11px] text-red-600 mt-1 text-center font-mono";
+        s.innerText = `❌ Error: ${err.message}`;
+        s.className = "text-xs text-red-600 mt-1 text-center font-mono";
       }
     }
 
-    // --- Clock & Header Greetings ---
+    // ================= CLOCK & GREETING =================
     function updateClock() {
       const now = new Date();
-      document.getElementById('liveClock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const hrs = now.getHours();
+      document.getElementById('liveClock').innerText = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      const h = now.getHours();
       let g = "Good evening, legend";
-      if (hrs >= 4 && hrs < 12) g = "Good morning, legend";
-      else if (hrs >= 12 && hrs < 17) g = "Good afternoon, legend";
+      if (h >= 4 && h < 12) g = "Good morning, legend";
+      else if (h >= 12 && h < 17) g = "Good afternoon, legend";
       document.getElementById('headerGreeting').innerText = g;
     }
 
-    // --- App Init ---
+    // ================= INIT =================
     window.addEventListener('DOMContentLoaded', () => {
+      checkMonthRollover();
       updateClock();
-      setInterval(updateClock, 1000);
+      setInterval(updateClock, 15000);
       renderPriorities();
       renderHourlyTimeline();
       renderMonthPlans();
       renderMonthGoals();
       setNotebookTab('Smoker & Cooking');
+      rotateComicStrip();
       startCarousel();
       fetchLiveSports();
+      fetchNews();
+      setInterval(fetchLiveSports, 5 * 60 * 1000);   // refresh scores every 5 min
+      setInterval(fetchNews, 30 * 60 * 1000);        // refresh headlines every 30 min
+
+      document.getElementById('quickCaptureInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') handleQuickCapture('task');
+      });
+
       if (window.lucide) lucide.createIcons();
     });
   </script>
