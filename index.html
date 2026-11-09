@@ -344,7 +344,7 @@
     .view-talk > * + * { margin-top: 18px; }
     .talk-intro { max-width: 340px; }
     .talk-intro p { margin: 8px 0 0; color: var(--sand); font-size: 14px; }
-    .orb-stage { width: 260px; height: 220px; display: grid; place-items: center; }
+    .orb-stage { width: 260px; height: 240px; display: grid; place-items: center; }
     .orbit { position: relative; width: 100%; height: 100%; display: grid; place-items: center; border-radius: 50%; transition: transform 0.2s; }
     .orbit:active { transform: scale(0.96); }
     .orbit-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 0 8px rgba(245, 233, 208, 0.55)) drop-shadow(0 0 26px rgba(242, 180, 65, 0.35)); transition: filter 0.6s; }
@@ -711,10 +711,10 @@
 
         <div class="orb-stage no-select" id="orbStage">
           <button id="aiOrbButton" onclick="toggleVoiceSession()" class="orbit" aria-label="Tap to talk">
-            <svg class="orbit-svg" viewBox="0 0 260 220" aria-hidden="true">
-              <g transform="rotate(-22 130 110)">
-                <ellipse class="orbit-ring" cx="130" cy="110" rx="96" ry="54"/>
-                <circle id="orbDot" class="orbit-dot" r="16" cx="226" cy="110"/>
+            <svg class="orbit-svg" viewBox="0 0 260 240" aria-hidden="true">
+              <g id="orbGroup" transform="rotate(-22 130 120)">
+                <ellipse id="orbRing" class="orbit-ring" cx="130" cy="120" rx="96" ry="54"/>
+                <circle id="orbDot" class="orbit-dot" r="16" cx="226" cy="120"/>
               </g>
             </svg>
             <svg class="ic orbit-mic" id="orbMicIcon"><use href="#i-mic"/></svg>
@@ -860,6 +860,8 @@
       activeNotebookTab: 'Smoker & Cooking',
       isRecording: false,
       speechRecognizer: null,
+      recorder: null,          // fallback audio recorder (see VOICE)
+      preferRecorder: false,   // set once live speech recognition has failed here
       lastTranscript: '',
 
       hourlySchedule: loadJSON('vibehub_24h_schedule', generateDefault24Hours()),
@@ -1366,30 +1368,24 @@
     }
 
     // ================= VOICE =================
-    async function toggleVoiceSession() {
-      if (APP_STATE.isRecording) stopVoiceSession();
-      else await startVoiceSession();
+    // Two ways to hear you:
+    //  1) Live speech recognition (shows words as you speak). On iPhone this
+    //     must start directly from the tap, and it often isn't available when
+    //     the app is opened from the home screen.
+    //  2) Fallback: record the audio and let Gemini transcribe it. Needs the
+    //     API key from Settings. Used automatically when (1) fails.
+    function geminiKey() { return localStorage.getItem('vibehub_gemini_api_key_v1') || ''; }
+    function setTranscript(msg) { document.getElementById('orbTranscriptText').innerText = msg; }
+
+    function toggleVoiceSession() {
+      if (APP_STATE.isRecording) { stopVoiceSession(); return; }
+      const SpeechClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechClass && !APP_STATE.preferRecorder) startVoiceSession(SpeechClass);
+      else startRecorderSession();
     }
 
-    async function startVoiceSession() {
-      const transcriptEl = document.getElementById('orbTranscriptText');
-
-      const SpeechClass = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechClass) {
-        transcriptEl.innerText = "Speech recognition isn't available in this browser.";
-        return;
-      }
-
-      // Ask for mic permission, then release it right away so the recognizer
-      // can take the mic itself (holding it open can conflict on iOS).
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach(t => t.stop());
-      } catch (err) {
-        transcriptEl.innerText = "⚠️ Microphone permission denied. Check Settings → Test microphone.";
-        return;
-      }
-
+    function startVoiceSession(SpeechClass) {
+      let failed = false;
       try {
         const recognizer = new SpeechClass();
         recognizer.continuous = false;
@@ -1400,50 +1396,124 @@
         recognizer.onstart = () => {
           APP_STATE.isRecording = true;
           setOrbListening(true);
-          transcriptEl.innerText = "Listening...";
+          setTranscript("Listening...");
         };
 
         recognizer.onresult = (event) => {
           let text = '';
           for (let i = 0; i < event.results.length; i++) text += event.results[i][0].transcript;
           APP_STATE.lastTranscript = text.trim();
-          transcriptEl.innerText = `"${APP_STATE.lastTranscript}"`;
+          setTranscript(`"${APP_STATE.lastTranscript}"`);
         };
 
         recognizer.onerror = (e) => {
-          if (e.error !== 'aborted' && e.error !== 'no-speech') {
-            transcriptEl.innerText = `⚠️ Voice capture error: ${e.error}`;
+          if (e.error === 'aborted') return;
+          if (e.error === 'no-speech') { setTranscript('"Didn\'t catch that — tap to try again."'); return; }
+          failed = true;
+          // The phone refused live recognition: switch to recording from now on
+          APP_STATE.preferRecorder = true;
+          if (geminiKey()) {
+            startRecorderSession();
+          } else if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+            setTranscript("⚠️ This device blocked live speech recognition. On iPhone, turn on Settings → General → Keyboard → Enable Dictation and open the app in Safari — or add a Gemini API key in Settings so I can record instead.");
+          } else {
+            setTranscript(`⚠️ Voice capture error: ${e.error}`);
           }
         };
 
         recognizer.onend = () => {
           const spoken = APP_STATE.lastTranscript;
-          stopVoiceSession();
-          if (spoken) processVoiceWithGemini(spoken);
-          else if (transcriptEl.innerText === 'Listening...') transcriptEl.innerText = '"Didn\'t catch that — tap to try again."';
+          if (APP_STATE.speechRecognizer !== recognizer) return;   // already replaced by the recorder
+          APP_STATE.speechRecognizer = null;
+          if (failed) { if (!APP_STATE.recorder) { APP_STATE.isRecording = false; setOrbListening(false); } return; }
+          APP_STATE.isRecording = false;
+          setOrbListening(false);
+          if (spoken) { processVoiceWithGemini(spoken); return; }
+          // It listened but heard nothing. If we can record instead, do that next time.
+          if (geminiKey()) {
+            APP_STATE.preferRecorder = true;
+            setTranscript('"Didn\'t catch that — tap again and I\'ll record instead."');
+          } else {
+            setTranscript('"Didn\'t catch that — tap to try again."');
+          }
         };
 
         APP_STATE.speechRecognizer = recognizer;
-        recognizer.start();
+        recognizer.start();   // must run straight from the tap (no awaits before it)
       } catch (e) {
-        transcriptEl.innerText = `Initialization error: ${e.message}`;
-        stopVoiceSession();
+        APP_STATE.speechRecognizer = null;
+        APP_STATE.preferRecorder = true;
+        if (geminiKey()) startRecorderSession();
+        else setTranscript(`Voice couldn't start: ${e.message}`);
       }
     }
 
-    // The dot circles the ring; it eases down to a slow drift while you're
-    // talking and eases back up to speed when you're done.
-    const ORBIT = { angle: 0, speed: 1.5, target: 1.5, idle: 1.5, listening: 0.3, running: false, last: 0 };
+    // Fallback: record audio, tap again to stop, Gemini transcribes and files it.
+    async function startRecorderSession() {
+      if (!geminiKey()) {
+        setTranscript("Speech recognition isn't available here. Add a Gemini API key in Settings and I can record your voice instead.");
+        return;
+      }
+      if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+        setTranscript("This browser can't record audio.");
+        return;
+      }
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (err) {
+        setTranscript("⚠️ Microphone permission denied. Check Settings → Test microphone.");
+        return;
+      }
+      try {
+        const mime = ['audio/mp4', 'audio/webm', 'audio/ogg'].find(t => MediaRecorder.isTypeSupported(t)) || '';
+        const rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+        const chunks = [];
+        rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+        rec.onstop = () => {
+          stream.getTracks().forEach(t => t.stop());
+          clearTimeout(rec._limit);
+          const type = (rec.mimeType || mime || 'audio/mp4').split(';')[0];
+          const blob = new Blob(chunks, { type });
+          if (blob.size < 1000) { setTranscript('"Didn\'t catch that — tap to try again."'); return; }
+          processAudioWithGemini(blob, type);
+        };
+        APP_STATE.recorder = rec;
+        APP_STATE.isRecording = true;
+        setOrbListening(true);
+        setTranscript("Recording… tap the ring when you're done.");
+        rec.start();
+        rec._limit = setTimeout(() => { if (APP_STATE.recorder === rec) stopVoiceSession(); }, 60000);   // 1 min cap
+      } catch (e) {
+        stream.getTracks().forEach(t => t.stop());
+        APP_STATE.recorder = null;
+        APP_STATE.isRecording = false;
+        setOrbListening(false);
+        setTranscript(`Recording couldn't start: ${e.message}`);
+      }
+    }
+
+    // The dot circles the ring while the ring itself slowly turns and tilts.
+    // Everything eases down to a slow drift while you're talking and eases
+    // back up to speed when you're done.
+    const ORBIT = { angle: 0, turn: -22, phase: 0, speed: 1.5, target: 1.5, idle: 1.5, listening: 0.3, running: false, last: 0 };
+    const ORBIT_CX = 130, ORBIT_CY = 120, ORBIT_RX = 96;
 
     function orbitFrame(now) {
       if (APP_STATE.activeView !== 'talk') { ORBIT.running = false; return; }
       const dt = Math.min(0.05, (now - ORBIT.last) / 1000);
       ORBIT.last = now;
       ORBIT.speed += (ORBIT.target - ORBIT.speed) * Math.min(1, dt * 2.2);
+      const pace = ORBIT.speed / ORBIT.idle;                  // 1 at full speed, 0.2 while listening
       ORBIT.angle = (ORBIT.angle + ORBIT.speed * dt) % (Math.PI * 2);
+      ORBIT.turn = (ORBIT.turn + 14 * pace * dt) % 360;       // the ring turns: one lap every ~26s
+      ORBIT.phase += 0.7 * pace * dt;
+      const ry = 54 + 12 * Math.sin(ORBIT.phase);             // and tilts toward / away from you
+      document.getElementById('orbGroup').setAttribute('transform', `rotate(${ORBIT.turn.toFixed(2)} ${ORBIT_CX} ${ORBIT_CY})`);
+      document.getElementById('orbRing').setAttribute('ry', ry.toFixed(2));
       const dot = document.getElementById('orbDot');
-      dot.setAttribute('cx', (130 + 96 * Math.cos(ORBIT.angle)).toFixed(2));
-      dot.setAttribute('cy', (110 + 54 * Math.sin(ORBIT.angle)).toFixed(2));
+      dot.setAttribute('cx', (ORBIT_CX + ORBIT_RX * Math.cos(ORBIT.angle)).toFixed(2));
+      dot.setAttribute('cy', (ORBIT_CY + ry * Math.sin(ORBIT.angle)).toFixed(2));
       requestAnimationFrame(orbitFrame);
     }
 
@@ -1463,9 +1533,11 @@
     function stopVoiceSession() {
       APP_STATE.isRecording = false;
       setOrbListening(false);
+      const rec = APP_STATE.recorder;
+      APP_STATE.recorder = null;
+      if (rec && rec.state !== 'inactive') { try { rec.stop(); } catch (_) {} }
       const r = APP_STATE.speechRecognizer;
-      APP_STATE.speechRecognizer = null;
-      if (r) { try { r.stop(); } catch (_) {} }
+      if (r) { try { r.stop(); } catch (_) {} }   // its onend files whatever was heard
     }
 
     // ================= GEMINI STRUCTURING =================
@@ -1507,6 +1579,45 @@ Use task for anything actionable (reminders, to-dos). Use note for information w
       // Step 2: file the result (validated, so a weird tab/category can't crash it
       // or cause the same item to be added twice).
       executeStructuredVoiceOutput(parsed, rawSpeech);
+    }
+
+    // Fallback path: send the recording itself to Gemini, which transcribes it
+    // and sorts it into a task and/or note in one go.
+    async function processAudioWithGemini(blob, mimeType) {
+      setTranscript("Transcribing…");
+      const prompt = `You are a personal OS assistant. Transcribe this voice note, then sort it.
+Return strictly a JSON object with this schema:
+{
+  "transcript": "exactly what was said, or an empty string if there was no speech",
+  "task": { "text": "string or null", "category": "HOME & GRILL" | "GOLF" | "WORKBENCH" | "GENERAL" },
+  "note": { "tab": "Smoker & Cooking" | "Golf Log" | "Workbench" | "General", "bullet": "string or null" }
+}
+Use task for anything actionable (reminders, to-dos). Use note for information worth keeping. Either may be null.`;
+      try {
+        const base64 = await new Promise((resolve, reject) => {
+          const fr = new FileReader();
+          fr.onload = () => resolve(String(fr.result).split(',')[1] || '');
+          fr.onerror = () => reject(fr.error);
+          fr.readAsDataURL(blob);
+        });
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(geminiKey())}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: mimeType, data: base64 } }] }],
+            generationConfig: { responseMimeType: "application/json" }
+          })
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const json = await response.json();
+        const parsed = JSON.parse(json.candidates?.[0]?.content?.parts?.[0]?.text || '{}');
+        const said = (parsed.transcript || '').trim();
+        if (!said) { setTranscript('"Didn\'t catch that — tap to try again."'); return; }
+        executeStructuredVoiceOutput(parsed, said);
+      } catch (err) {
+        console.warn('Audio transcription failed:', err);
+        setTranscript(`⚠️ Couldn't transcribe that recording (${err.message}). Check your API key in Settings.`);
+      }
     }
 
     function handleOfflineVoiceParse(rawSpeech) {
