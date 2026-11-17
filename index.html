@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +6,7 @@
 <title>Personal Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* Layout idea: one quiet column; the assistant block is the single loud element, the rundown slides sideways beneath it. */
 :root{
@@ -124,6 +123,11 @@ main{overflow-x:clip}
 .meta{display:flex;flex-wrap:wrap;gap:8px;font-size:13px;color:var(--muted)}
 .meta .late{color:var(--crit);font-weight:500}
 .meta .flag{color:var(--crit);font-weight:500}
+.meta .rep{display:inline-flex;align-items:center;gap:4px}
+.meta .rep svg{width:12px;height:12px}
+.meta .proj{background:var(--sunk);color:var(--ink);padding:0 7px;border-radius:6px;font-weight:500}
+select.field{appearance:none;-webkit-appearance:none;padding-right:28px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 15px) 52%,calc(100% - 10px) 52%;background-size:5px 5px;background-repeat:no-repeat}
+.add select.field{flex:0 1 150px}
 .icon-btn{width:34px;height:34px;flex:none;display:grid;place-items:center;border-radius:9px;color:var(--muted)}
 .icon-btn:hover{background:var(--sunk);color:var(--ink)}
 .icon-btn svg{width:18px;height:18px}
@@ -191,6 +195,7 @@ input[type="date"].field{flex:0 1 150px}
 .past{display:flex;flex-direction:column;gap:2px;padding:13px 16px;border-top:1px solid var(--line);text-align:left;width:100%}
 .card > .past:first-child{border-top:0}
 .past b{font-size:13px;color:var(--muted);font-weight:600}
+.otd-l{display:block;color:var(--accent);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1px}
 .past span,.note span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
 .notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
 .note{text-align:left;padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-height:92px}
@@ -207,11 +212,13 @@ input[type="date"].field{flex:0 1 150px}
 .sheet h2{font-family:var(--display);font-weight:600;font-size:20px}
 .sheet label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:500;color:var(--muted)}
 .sheet label.inline{flex-direction:row;align-items:center;gap:10px;font-size:15px;color:var(--ink)}
-.sheet .field{flex:none;width:100%}
+.sheet .field,.sheet input[type="date"].field,.sheet select.field{flex:none;width:100%}
 .sheet textarea.field{min-height:150px;resize:vertical;line-height:1.5}
 .sheet .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .sheet .acts{display:flex;gap:8px;align-items:center}
 .sheet .acts .sp{flex:1}
+.btn.wide{width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn.wide svg{width:18px;height:18px}
 .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:50;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:14px;max-width:calc(100% - 32px)}
 .loading{color:var(--muted);padding:40px 0}
 .stage{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px}
@@ -230,6 +237,10 @@ input[type="date"].field{flex:0 1 150px}
 .hello .dline{margin-top:6px;font-size:14px;color:var(--muted);display:flex;column-gap:12px;row-gap:2px;flex-wrap:wrap}
 .hello .dline .sun{white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
 .hello .dline .sun i{width:7px;height:7px;border-radius:50%;background:var(--gold,#B3995D)}
+.wx{margin-top:6px;display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:14px;color:var(--muted)}
+.wx svg{width:18px;height:18px;flex:none;color:var(--ink)}
+.wx b{color:var(--ink);font-weight:600}
+.wx-r{font-size:12.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:999px}
 .hello .score{flex:none;gap:4px}
 .hello .score svg{width:46px;height:46px}
 .gstrip{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--r);background:color-mix(in srgb,var(--accent) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 22%,var(--line));border-left:4px solid var(--gold,#B3995D)}
@@ -262,13 +273,14 @@ input[type="date"].field{flex:0 1 150px}
 .hint{font-size:13px;color:var(--faint);padding:0 2px}
 
 /* Juno bar: always at hand, never in the way */
-.jbar{order:9;position:sticky;bottom:78px;z-index:5;display:flex;align-items:center;gap:8px;padding:7px 7px 7px 12px;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.dock{order:9;position:sticky;bottom:78px;z-index:5;display:flex;flex-direction:column;gap:8px}
+@media (min-width:1100px){.dock{bottom:20px}}
+.jbar{display:flex;align-items:center;gap:8px;padding:7px 7px 7px 12px;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
 .jbar input{flex:1;min-width:0;border:0;background:transparent;padding:10px 4px}
 .jbar input:focus{outline:0}
 .jbar .rbtn{width:40px;height:40px;background:var(--sunk);color:var(--ink)}
 .jbar .rbtn.go{background:var(--accent);color:var(--accent-ink)}
 .jbar .rbtn[aria-pressed="true"]{background:var(--crit);color:#fff}
-@media (min-width:1100px){.jbar{bottom:20px}}
 .jorb{--o:var(--accent);width:26px;height:26px;flex:none;border-radius:50%;position:relative;
   background:radial-gradient(circle at 34% 30%,color-mix(in srgb,var(--o) 30%,#fff) 0,var(--o) 52%,color-mix(in srgb,var(--o) 55%,#000) 100%);
   box-shadow:0 0 0 3px color-mix(in srgb,var(--o) 16%,transparent),0 0 14px color-mix(in srgb,var(--o) 45%,transparent);
@@ -281,6 +293,45 @@ input[type="date"].field{flex:0 1 150px}
 @keyframes listen{50%{box-shadow:0 0 0 9px color-mix(in srgb,var(--o) 14%,transparent),0 0 22px color-mix(in srgb,var(--o) 60%,transparent);transform:scale(1.08)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+
+/* Juno's in-place reply on Today, and receipts for what it changed */
+.ireply{display:flex;flex-direction:column;gap:8px;padding:12px 12px 12px 14px;background:var(--surface);border:1px solid color-mix(in srgb,var(--accent) 28%,var(--line));border-radius:18px;box-shadow:var(--shadow);animation:up .2s ease-out}
+.ir-h{display:flex;align-items:center;gap:9px;min-width:0}
+.ir-h .jorb{width:18px;height:18px}
+.ir-h b{font-family:var(--display);font-weight:600;font-size:15px;flex:none}
+.ir-q{flex:1;min-width:0;font-size:13.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ir-h .icon-btn{width:30px;height:30px;margin:-4px -4px -4px 0}
+.ir-a{font-size:15.5px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}
+.ir-a.wait{color:var(--muted)}
+.ir-more{align-self:flex-start;font-size:13.5px;font-weight:500;color:var(--accent)}
+.rcpts{display:flex;flex-direction:column;gap:6px;align-self:stretch}
+.thread > .rcpts{align-self:flex-start;max-width:88%;margin-top:-4px}
+.rcpt{display:flex;align-items:center;gap:9px;padding:7px 8px 7px 9px;border-radius:11px;background:var(--accent-soft);font-size:14px;min-width:0}
+.rcpt i{width:20px;height:20px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-style:normal;font-size:12px;font-weight:700;line-height:1}
+.rcpt span{flex:1;min-width:0;overflow-wrap:anywhere}
+.rcpt button{flex:none;font-size:13px;font-weight:600;color:var(--accent);padding:4px 6px;border-radius:7px}
+.rcpt button:hover{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.rcpt em{flex:none;font-style:normal;font-size:12.5px;color:var(--muted)}
+.rcpt.off{background:var(--sunk);color:var(--muted)}
+.rcpt.off span{text-decoration:line-through}
+.rcpt.off i{background:var(--faint)}
+.ireply{max-height:min(46vh,340px);overflow-y:auto;overscroll-behavior:contain}
+
+/* Photos and read-aloud */
+.pchip{display:flex;align-items:center;gap:10px;padding:6px 6px 6px 6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);font-size:14px;color:var(--muted)}
+.pchip img{width:44px;height:44px;object-fit:cover;border-radius:9px;flex:none}
+.pchip span{flex:1;min-width:0}
+.ptag{display:flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;opacity:.85;margin-bottom:3px}
+.ptag svg{width:14px;height:14px}
+.aiwrap{display:flex;align-items:flex-end;gap:4px;align-self:flex-start;max-width:94%}
+.aiwrap .msg{max-width:none;min-width:0}
+.spk{width:32px;height:32px;flex:none;display:grid;place-items:center;border-radius:50%;color:var(--muted)}
+.spk svg{width:17px;height:17px}
+.spk:hover{background:var(--sunk);color:var(--ink)}
+.spk[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);animation:breathe 1.6s ease-in-out infinite}
+.ir-h .spk{width:30px;height:30px;margin:-4px 0}
+.jbar .rbtn[data-act="photo"]{background:transparent;color:var(--muted)}
+.composer .rbtn[data-act="photo"]{background:transparent;color:var(--muted)}
 
 /* Rundown tab */
 .stack{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
@@ -313,13 +364,14 @@ input[type="date"].field{flex:0 1 150px}
 .msg.ai{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:5px}
 .msg.note{align-self:center;background:none;color:var(--muted);font-size:14px;padding:2px 8px;text-align:center}
 .msg.wait{color:var(--muted)}
-.composer{position:sticky;bottom:76px;display:flex;gap:8px;align-items:center;padding:8px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.cdock{position:sticky;bottom:76px;z-index:5;display:flex;flex-direction:column;gap:8px}
+.composer{display:flex;gap:8px;align-items:center;padding:8px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
 .composer input{flex:1;min-width:0;border:0;background:transparent;padding:10px 8px}
 .composer input:focus{outline:0}
 .composer .rbtn{background:var(--sunk);color:var(--ink)}
 .composer .rbtn.go{background:var(--accent);color:var(--accent-ink)}
 .composer .rbtn[aria-pressed="true"]{background:var(--crit);color:#fff}
-@media (min-width:1100px){.composer{bottom:20px}}
+@media (min-width:1100px){.cdock{bottom:20px}}
 .vn-status{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--muted)}
 .vn-status .orb{color:var(--faint)}
 .vn-status.on{color:var(--crit)}
@@ -352,6 +404,177 @@ input[type="date"].field{flex:0 1 150px}
 .side .set svg{width:19px;height:19px}
 .side .set + .status{margin-top:0}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== Redesign: one wide, calm typeface (Sora), one accent used sparingly, ink for everything else ===== */
+:root{--display:"Sora","Avenir Next","Segoe UI",system-ui,sans-serif;--body:"Sora","Avenir Next","Segoe UI",system-ui,sans-serif;--r:18px;--r-sm:12px}
+body{font-size:15.5px;letter-spacing:-0.005em}
+.topbar{display:none}
+.netpill{display:none}
+.netpill[data-s="error"]{display:flex;position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:30;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 11px;box-shadow:var(--shadow)}
+main{padding-top:20px}
+.col{gap:24px}
+
+/* Headings: medium, tight */
+.page-h h1,.hello h1,.stage h1{font-weight:500;letter-spacing:-0.035em}
+.page-h h1{font-size:30px}
+.page-h p{font-size:14.5px}
+.sec{gap:6px}
+.sec-h{align-items:center}
+.sec-h h2{font-family:var(--body);font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0}
+.sec-h .more{font-size:13.5px;color:var(--muted);font-weight:500}
+.sec-h .more:hover{color:var(--ink)}
+.sheet h2{font-weight:500}
+
+/* Cards: soft, borderless. Flat lists for everything that is not the one thing to do now. */
+.card{border:0;border-radius:var(--r)}
+.flat{display:flex;flex-direction:column}
+.flat > .row{padding:12px 0;border-top:0;border-bottom:1px solid var(--line)}
+.flat > .row:last-child{border-bottom:0}
+.flat > .empty{padding:10px 0}
+.row .title{font-size:15.5px}
+.check{border-color:var(--faint)}
+.check svg{stroke:var(--bg)}
+.check[aria-pressed="true"]{background:var(--ink);border-color:var(--ink)}
+.check.pri{border-color:var(--crit)}
+.btn{border-radius:14px;font-weight:500;padding:11px 18px}
+.btn.ghost{background:var(--sunk)}
+.field{border-radius:12px}
+.icon-btn{border-radius:50%}
+
+/* Top line: date, weather, avatar */
+.tline{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tl-l{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:13.5px;color:var(--muted);min-width:0}
+.tl-l b{color:var(--ink);font-weight:600}
+.tl-l .dot{width:3px;height:3px;border-radius:50%;background:var(--faint)}
+.tl-l svg{width:18px;height:18px;color:var(--ink);flex:none}
+.avatar{width:36px;height:36px;flex:none;border-radius:50%;background:var(--sunk);color:var(--ink);font-weight:600;font-size:14px;display:grid;place-items:center}
+.avatar svg{width:18px;height:18px}
+.hello{flex-direction:column;align-items:stretch;gap:8px}
+.hello h1{font-size:clamp(28px,8.4vw,34px);line-height:1.08}
+.hello .sub{font-size:15px;color:var(--muted);line-height:1.45}
+
+/* Next up: the only raised card on Today */
+.nextup{border:0;padding:18px;gap:14px;border-radius:22px}
+.nextup .lab{font-size:12px;letter-spacing:.07em}
+.nextup .big .title{font-weight:500;font-size:22px;letter-spacing:-0.02em}
+.nextup .acts .btn{flex:1;height:46px;padding:0 14px;font-size:15px}
+.nextup .acts.solo .btn{flex:none}
+
+/* Evening */
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tile{background:var(--surface);border-radius:18px;padding:13px 14px;display:flex;flex-direction:column;gap:1px;box-shadow:var(--shadow)}
+.tile b{font-family:var(--display);font-weight:500;font-size:28px;letter-spacing:-0.03em;line-height:1.1}
+.tile span{font-size:12.5px;color:var(--muted)}
+.jcard{background:var(--surface);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow)}
+.jcard .lab{font-size:12px;font-weight:600;letter-spacing:.07em;color:var(--accent)}
+.jcard label.q{font-family:var(--display);font-weight:500;font-size:19px;line-height:1.25;letter-spacing:-0.015em}
+.jcard .entry{min-height:72px;padding:11px 12px;background:var(--sunk);border-radius:14px}
+.mv{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mv .btn{padding:9px 14px;font-size:14px}
+
+/* Habits: chips go solid ink when done */
+.hchips{padding:0}
+.hchip{border-color:var(--line);font-size:14.5px;padding:8px 14px 8px 10px}
+.hchip i{border-color:var(--faint)}
+.hchip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.hchip[aria-pressed="true"] i{background:transparent;border-color:transparent}
+.hchip[aria-pressed="true"] i svg{stroke:var(--bg)}
+
+/* Team row: quiet, flat */
+.trow{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:var(--sunk);color:var(--ink)}
+.trow .badge{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;letter-spacing:.02em}
+.trow .tt{flex:1;min-width:0;display:flex;flex-direction:column}
+.trow .tt b{font-size:14.5px;font-weight:600}
+.trow .tt span{font-size:13px;color:var(--muted)}
+.trow > svg{width:18px;height:18px;color:var(--muted);flex:none}
+.gstrip{border:0;border-left:0;background:var(--sunk)}
+
+/* Weather pill */
+.wx-r{background:var(--sunk);color:var(--ink)}
+
+/* Juno bar */
+.dock{gap:8px}
+.dock::before{content:"";position:absolute;left:-16px;right:-16px;bottom:-12px;top:-22px;z-index:-1;background:linear-gradient(to bottom,transparent,var(--bg) 40%);pointer-events:none}
+.jbar{border:0;border-radius:20px;padding:6px 6px 6px 14px;min-height:56px}
+.jbar .rbtn,.composer .rbtn{width:44px;height:44px;border-radius:14px}
+.jbar .rbtn.go,.composer .rbtn.go{background:var(--ink);color:var(--bg)}
+.composer{border:0;border-radius:20px;padding:6px 6px 6px 14px}
+.ireply{border:0;border-radius:20px}
+.cdock::before{content:"";position:absolute;left:-16px;right:-16px;bottom:-12px;top:-22px;z-index:-1;background:linear-gradient(to bottom,transparent,var(--bg) 40%);pointer-events:none}
+
+/* Receipts: neutral list, accent only on Undo */
+.rcpts{gap:0;background:var(--surface);border-radius:16px;padding:3px 0;box-shadow:0 0 0 1px var(--line)}
+.rcpt{background:transparent;border-radius:0;padding:8px 8px 8px 12px;border-top:1px solid var(--line)}
+.rcpt:first-child{border-top:0}
+.rcpt i{background:transparent;color:var(--ink);font-size:14px;width:18px;height:18px}
+.rcpt.off{background:transparent}
+.rcpt.off i{background:transparent;color:var(--faint)}
+
+/* Chat */
+.msg{border-radius:18px}
+.msg.user{background:var(--ink);color:var(--bg);border-bottom-right-radius:6px}
+.msg.ai{border:0;box-shadow:0 1px 2px rgba(0,0,0,.05);border-bottom-left-radius:6px}
+.orb-btn{width:min(44vw,170px)}
+.stage.small .orb-btn{width:104px}
+.stage h1{font-size:26px;margin-top:0}
+.stage p{font-size:14px}
+
+/* Tabs: five, Juno raised in the middle */
+.tabbar{padding:6px 6px calc(4px + env(safe-area-inset-bottom,0px));align-items:flex-start}
+.tab{font-size:11px;color:var(--faint)}
+.tab[aria-current="page"]{color:var(--ink);font-weight:600}
+.tab.tjuno{gap:4px}
+.tab .torb{width:52px;height:52px;border-radius:50%;margin-top:-22px;flex:none;
+  background:radial-gradient(circle at 34% 30%,color-mix(in srgb,var(--accent) 22%,#fff) 0,var(--accent) 55%,color-mix(in srgb,var(--accent) 45%,#000) 100%);
+  box-shadow:0 0 0 5px var(--bg),0 8px 22px color-mix(in srgb,var(--accent) 45%,transparent)}
+.tab.tjuno[aria-current="page"] .torb{box-shadow:0 0 0 5px var(--bg),0 0 0 7px color-mix(in srgb,var(--accent) 35%,transparent),0 8px 22px color-mix(in srgb,var(--accent) 45%,transparent)}
+@media (min-width:1100px){
+  .nav .tab{color:var(--muted)}
+  .nav .tab[aria-current="page"]{background:var(--sunk);color:var(--ink)}
+  .nav .tab .torb{width:19px;height:19px;margin:0;box-shadow:none}
+}
+
+/* Plan */
+.wstrip{display:flex;align-items:center;gap:2px}
+.wdays{flex:1;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.wd{height:60px;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11.5px;color:var(--muted);position:relative}
+.wd b{font-family:var(--display);font-weight:500;font-size:17px;color:var(--ink)}
+.wd i{position:absolute;bottom:7px;width:4px;height:4px;border-radius:50%;background:var(--faint)}
+.wd.today b{color:var(--accent)}
+.wd[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.wd[aria-pressed="true"] b{color:var(--bg)}
+.wd[aria-pressed="true"] i{background:var(--bg)}
+.wstrip .icon-btn{width:30px;height:30px}
+.plusbtn{width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;flex:none}
+.plusbtn svg{width:20px;height:20px}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ph h1{font-family:var(--display);font-weight:500;font-size:30px;letter-spacing:-0.035em}
+.proj{background:var(--surface);border-radius:20px;padding:15px 16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow)}
+.proj .pt{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.proj .pt b{font-family:var(--display);font-weight:500;font-size:17px;letter-spacing:-0.01em}
+.proj .pt span{font-size:13px;color:var(--muted);white-space:nowrap}
+.segbar{display:flex;gap:4px}
+.segbar i{flex:1;height:6px;border-radius:99px;background:var(--line)}
+.segbar i.on{background:var(--accent)}
+.proj p{font-size:13.5px;color:var(--muted)}
+.hrow{display:flex;align-items:center;gap:10px;padding:8px 0}
+.hrow .hn{flex:1;min-width:0;text-align:left;font-weight:500;overflow-wrap:anywhere;display:flex;flex-direction:column}
+.hrow .hn span{font-size:12.5px;color:var(--muted);font-weight:400}
+.hrow .hn span.on{color:var(--good)}
+.hweek{display:grid;grid-template-columns:repeat(7,24px);gap:5px}
+.hweek button{width:24px;height:24px;border-radius:7px;background:var(--line);display:block}
+.hweek button[aria-pressed="true"]{background:var(--ink)}
+.hweek button.today{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.hweek button.today[aria-pressed="false"]{background:transparent}
+.hweek button:disabled{opacity:.35;cursor:default}
+.hhead{display:grid;grid-template-columns:repeat(7,24px);gap:5px;font-size:10.5px;color:var(--faint);text-align:center}
+.goal{padding:12px 0;border-top:1px solid var(--line)}
+.flat > .goal:first-child{border-top:0}
+.bar i{background:var(--accent)}
+.linkbtn{font-size:13.5px;font-weight:500;color:var(--muted);padding:4px 0}
+.linkbtn:hover{color:var(--ink)}
+.addline{display:flex;gap:8px;margin-top:6px}
+.addline .field{flex:1}
 
 /* Unfolded foldable (iPhone Duo inner display). In the Claude app the page gets roughly 810 x 510 points,
    so this mode is a fixed, full-height app: two panes that scroll on their own, nothing clipped sideways,
@@ -387,11 +610,11 @@ input[type="date"].field{flex:0 1 150px}
   .srow span{font-size:23px}
   .rcard.news h3{font-size:16.5px}
   .rcard.news p{-webkit-line-clamp:2}
-  .composer{bottom:0}
+  .cdock{bottom:0}
   #view.split.flip > .pane:first-child{order:2}
   .pane.center{justify-content:safe center}
-  .pane > .composer{margin-top:auto}
-  .pane > .jbar{margin-top:auto;bottom:0}
+  .pane > .cdock{margin-top:auto}
+  .pane > .dock{margin-top:auto;bottom:0}
   .hello h1{font-size:27px}
   .nextup .big .title{font-size:21px}
   .stack{grid-template-columns:1fr}
@@ -408,6 +631,21 @@ input[type="date"].field{flex:0 1 150px}
   .juno{padding:15px 14px 14px;gap:10px}
   .tab{padding:5px 2px}
   .rcard{min-height:168px}
+}
+/* Redesign, unfolded Duo: the Juno orb sits in the right-hand rail */
+@media (min-width:700px) and (max-width:1099.98px){
+  .tab .torb{width:40px;height:40px;margin-top:0;box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 40%,transparent)}
+  .tab.tjuno[aria-current="page"] .torb{box-shadow:0 0 0 3px var(--bg),0 0 0 5px color-mix(in srgb,var(--accent) 35%,transparent)}
+  .tabbar{justify-content:center;gap:10px}
+  .pane > .dock::before,.pane > .cdock::before{display:none}
+  .hello h1{font-size:28px}
+  .wd{height:52px}
+  .wd i{bottom:4px}
+  .hweek,.hhead{grid-template-columns:repeat(7,19px);gap:4px}
+  .hweek button{width:19px;height:19px;border-radius:6px}
+  .hrow .hn span{display:none}
+  .pane{gap:18px}
+  .netpill[data-s]{display:none}
 }
 </style>
 </head>
@@ -431,8 +669,10 @@ input[type="date"].field{flex:0 1 150px}
 </div>
 <nav class="tabbar" id="nav-tabs" aria-label="Sections"></nav>
 <div class="status rail-status" data-status><i></i><span></span></div>
+<div class="status netpill" data-status role="status"><i></i><span></span></div>
 <div id="sheet-root"></div>
 <div id="toast-root" aria-live="polite"></div>
+<input type="file" id="photo-in" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/*" hidden>
 
 <script>
 (function(){
@@ -481,6 +721,12 @@ const ICON = {
   journal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6zM6 3v18M10 8h5M10 12h5"/></svg>',
   rundown:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13v13a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2zM17 9h3v9a2 2 0 0 1-4 0M7.5 9h6M7.5 12.5h6M7.5 16h4"/></svg>',
   check:'<svg viewBox="0 0 16 16" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  repeat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l3 3-3 3M4 11V9a4 4 0 0 1 4-4h12M7 22l-3-3 3-3M20 13v2a4 4 0 0 1-4 4H4"/></svg>',
+  camera:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg>',
+  speaker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>',
+  split:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h9M4 12h6M4 19h9M16 5l4 3.5-4 3.5M16 12.5l4 3.5-4 3.5"/></svg>',
+  close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   dots:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>',
   left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
   right:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>'
@@ -494,8 +740,9 @@ const AI = { sample: null, tools: false, turns: [], busy: false, partial: "", no
 let D = null;
 const UI = { feedFilter: "all", draft: "", listening: false, dictTarget: "", ready: false, slow: false, route: "home", taskFilter: "today", addPri: false, jTab: "journal", jDate: today(), noteQ: "", name: "", focusAfter: null };
 const store = { db: null, uid: null, mode: "loading" };
-const ROUTES = ["home", "assistant", "tasks", "habits", "journal", "rundown"];
-const LABEL = { home: "Today", assistant: "Assistant", tasks: "Tasks", habits: "Habits", journal: "Journal", rundown: "Rundown" };
+const ROUTES = ["home", "plan", "assistant", "journal", "rundown"];
+const ALIASES = { tasks: "plan", habits: "plan", today: "home", juno: "assistant" };
+const LABEL = { home: "Today", plan: "Plan", assistant: "Assistant", journal: "Journal", rundown: "Rundown" };
 const aiName = () => (CFG.assistantName || "Juno");
 
 /* ---------- saving ---------- */
@@ -638,9 +885,10 @@ async function boot(){
     window.claude.use("sample").then(async s => {
       if (!s) return;
       AI.sample = s;
-      try { AI.tools = !!(await s.limits()).tools; } catch (e) {}
+      try { const L = await s.limits(); AI.tools = !!L.tools; AI.imgOK = !!L.images; AI.imgMax = L.images ? L.images.maxInputBytes : 0; } catch (e) {}
       if (UI.ready) softRender();
     }).catch(() => {});
+    window.claude.use("tts").then(t => { if (t) { wireVoice(t); if (UI.ready) softRender(); } }).catch(() => {});
     window.claude.use("dictation").then(d => { if (d) { D = d; wireDictation(); if (UI.ready) softRender(); } }).catch(() => {});
   }
   try {
@@ -681,13 +929,17 @@ function taskSets(){
 
 /* ---------- render ---------- */
 function navHTML(){
-  return ROUTES.map(r => '<a class="tab" href="#' + r + '"' + (UI.route === r ? ' aria-current="page"' : '') + '>' + ICON[r === "home" ? "today" : r] + '<span>' + esc(r === "assistant" ? aiName() : LABEL[r]) + '</span></a>').join("");
+  return ROUTES.map(r => r === "assistant"
+    ? '<a class="tab tjuno" href="#assistant"' + (UI.route === r ? ' aria-current="page"' : '') + '><span class="torb" aria-hidden="true"></span><span>' + esc(aiName()) + '</span></a>'
+    : '<a class="tab" href="#' + r + '"' + (UI.route === r ? ' aria-current="page"' : '') + '>' + ICON[r === "home" ? "today" : r === "plan" ? "tasks" : r] + '<span>' + esc(LABEL[r]) + '</span></a>').join("");
 }
 function taskRow(t){
   const late = !t.done && t.due && t.due < today();
   const meta = [];
   if (t.due) meta.push('<span class="' + (late ? "late" : "") + '">' + esc(dueLabel(t.due)) + '</span>');
   if (t.pri && !t.done) meta.push('<span class="flag">High priority</span>');
+  if (t.repeat && REPEATS[t.repeat] && !t.done) meta.push('<span class="rep">' + ICON.repeat + esc(REPEATS[t.repeat]) + '</span>');
+  if (t.project) meta.push('<span class="proj">' + esc(t.project) + '</span>');
   if (t.note) meta.push('<span>Has a note</span>');
   return '<div class="row' + (t.done ? " done" : "") + '">' +
     '<button class="check' + (t.pri && !t.done ? " pri" : "") + '" data-act="toggleTask" data-id="' + t.id + '" aria-pressed="' + !!t.done + '" aria-label="' + (t.done ? "Mark not done" : "Mark done") + ': ' + esc(t.title) + '">' + ICON.check + '</button>' +
@@ -775,10 +1027,10 @@ function sun(){ const k = today(); if (SUN.day !== k) { const s = sunTimes(new D
 
 // Four moods. Light phases fade into each other over an hour; the switch to and from night is a short fade.
 const PAL = {
-  morning: { dark: 0, bg: "#FBF6EF", surface: "#FFFFFF", sunk: "#F3ECE2", ink: "#1F1A15", muted: "#6E645A", faint: "#A69B90", line: "#EAE0D4", accent: "#B4561A" },
-  day:     { dark: 0, bg: "#F4F6F7", surface: "#FFFFFF", sunk: "#ECEFF1", ink: "#141A1E", muted: "#5D6870", faint: "#97A1A8", line: "#DEE3E6", accent: "#2C47CF" },
-  evening: { dark: 0, bg: "#EEEAEE", surface: "#FBF9FA", sunk: "#E4DEE3", ink: "#1F1A22", muted: "#665E6A", faint: "#9D94A0", line: "#DCD5DB", accent: "#6A45C0" },
-  night:   { dark: 1, bg: "#101216", surface: "#181B21", sunk: "#20242B", ink: "#E8EBEF", muted: "#9AA1AB", faint: "#6A717B", line: "#2A2F37", accent: "#A9B1FF" }
+  morning: { dark: 0, bg: "#F8F4EC", surface: "#FFFFFF", sunk: "#F0EBE2", ink: "#1B1712", muted: "#665D52", faint: "#A69B8D", line: "#E7DFD2", accent: "#B4561A" },
+  day:     { dark: 0, bg: "#F6F5F1", surface: "#FFFFFF", sunk: "#EEECE6", ink: "#16181D", muted: "#5B606B", faint: "#A3A7AF", line: "#E4E1DA", accent: "#2F4BD8" },
+  evening: { dark: 0, bg: "#F3F0F3", surface: "#FFFFFF", sunk: "#EAE5EB", ink: "#1D1A21", muted: "#625B68", faint: "#A097A6", line: "#E0DAE2", accent: "#6A45C0" },
+  night:   { dark: 1, bg: "#111318", surface: "#1A1D24", sunk: "#22262E", ink: "#ECEEF2", muted: "#9AA1AB", faint: "#6A717B", line: "#2A2F38", accent: "#A9B1FF" }
 };
 const STATUS = [{ good: "#1D7A52", warn: "#A8650A", crit: "#B93A32" }, { good: "#5CC597", warn: "#E0A64B", crit: "#F0857C" }];
 const rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
@@ -956,58 +1208,221 @@ function gameStrip(){
     return '<a class="gstrip" href="#rundown"><div class="gt"><b>' + vs + '</b><span>' + (n.kind === "live" ? esc(g.detail || "In progress") : "In progress at last update") + '</span></div>' + sc + (n.kind === "live" ? '<span class="pill live">Live</span>' : "") + '</a>';
   return '<a class="gstrip" href="#rundown"><div class="gt"><b>' + vs + '</b><span>Final' + (ninersWon(g) ? " · 49ers win" : "") + '</span></div>' + sc + '</a>';
 }
+/* Weather, saved by the scheduled refresh twice a day. */
+function wxIcon(cond){
+  const s = String(cond || "").toLowerCase();
+  const k = /thunder|storm/.test(s) ? "storm" : /rain|shower|drizzle/.test(s) ? "rain" : /snow|sleet/.test(s) ? "snow" : /fog|mist|haze|smoke/.test(s) ? "fog" : /partly|mostly sunny|some sun/.test(s) ? "partly" : /cloud|overcast|dry/.test(s) ? "cloud" : "sun";
+  const P = {
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',
+    partly: '<path d="M8 3.5v1.5M3.5 8H5M4.8 4.8l1 1M12 8a4 4 0 0 0-7.4 1.8"/><path d="M8 20h9a4 4 0 1 0-1-7.9A5 5 0 0 0 6.2 14 3 3 0 0 0 8 20z"/>',
+    cloud: '<path d="M7 19h10a4.5 4.5 0 1 0-1.2-8.8A6 6 0 0 0 4.5 12.5 3.5 3.5 0 0 0 7 19z"/>',
+    rain: '<path d="M7 15h10a4.5 4.5 0 1 0-1.2-8.8A6 6 0 0 0 4.5 8.5 3.5 3.5 0 0 0 7 15z"/><path d="M8 18l-1 2.5M12 18l-1 2.5M16 18l-1 2.5"/>',
+    storm: '<path d="M7 14h10a4.5 4.5 0 1 0-1.2-8.8A6 6 0 0 0 4.5 7.5 3.5 3.5 0 0 0 7 14z"/><path d="M12.5 15.5l-2 3.5h3l-2 3"/>',
+    snow: '<path d="M7 14h10a4.5 4.5 0 1 0-1.2-8.8A6 6 0 0 0 4.5 7.5 3.5 3.5 0 0 0 7 14z"/><path d="M8 18h.01M12 19h.01M16 18h.01M10 21h.01M14 21h.01"/>',
+    fog: '<path d="M4 9h16M3 13h18M5 17h14"/>'
+  };
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + P[k] + '</svg>';
+}
+function wxDay(k){ const w = FEED && FEED.weather; return w && Array.isArray(w.days) ? w.days.find(d => d.date === k) || null : null; }
+function wxHTML(evening){
+  const w = FEED && FEED.weather; if (!w) return "";
+  const t = today(), d = wxDay(t), tm2 = wxDay(addDays(t, 1));
+  const fresh = w.updated && Date.now() - new Date(w.updated).getTime() < 6 * 36e5;
+  const deg = n => esc(Math.round(Number(n))) + "°";
+  const rain = x => x && Number(x.rain) >= 30 ? '<span class="wx-r">' + esc(Math.round(x.rain)) + '% rain</span>' : "";
+  // Evenings look ahead to tomorrow; daytime shows now (when recent) and today's range.
+  if (evening && tm2) return '<p class="wx">' + wxIcon(tm2.cond) + '<span><b>Tomorrow</b> ' + deg(tm2.hi) + ' / ' + deg(tm2.lo) + ' · ' + esc(tm2.cond || "") + '</span>' + rain(tm2) + '</p>';
+  if (!d && !(fresh && w.now)) return "";
+  const nowBit = fresh && w.now && w.now.temp != null ? '<b class="num">' + deg(w.now.temp) + '</b> ' + esc(w.now.cond || "") : esc((d && d.cond) || "");
+  return '<p class="wx">' + wxIcon((fresh && w.now && w.now.cond) || (d && d.cond)) + '<span>' + nowBit + (d ? ' · H ' + deg(d.hi) + ' L ' + deg(d.lo) : "") + '</span>' + rain(d) + '</p>';
+}
+const JHINTS = ["Remind me to call mom tomorrow", "Move the vendor email to Friday", "Log my run, then add stretch to tasks", "Save a note: birthday gift ideas", "Hoy me sentí bien, ponlo en el diario", "What's left for today?"];
+function inlineReply(){
+  if (!UI.inline) return "";
+  const n = esc(aiName());
+  let q = "", body = "", acts = "";
+  for (let i = AI.turns.length - 1; i >= 0; i--) if (AI.turns[i].role === "user") { q = AI.turns[i].content; break; }
+  const last = AI.turns[AI.turns.length - 1];
+  if (AI.busy) { body = '<p class="ir-a' + (AI.partial ? "" : " wait") + '" id="partial">' + esc(AI.partial || "Thinking...") + '</p>'; acts = receiptsHTML(RECEIPTS.pending); }
+  else if (last && last.role === "assistant") { body = '<p class="ir-a">' + esc(last.content) + '</p>'; acts = receiptsHTML(last.acts); }
+  else if (AI.note) body = '<p class="ir-a wait">' + esc(AI.note) + '</p>';
+  else return "";
+  const spk = !AI.busy && last && last.role === "assistant" ? speakBtn(AI.turns.length - 1) : "";
+  if (!AI.busy && AI.note && last && last.role === "assistant") body += '<p class="ir-a wait">' + esc(AI.note) + '</p>';
+  return '<section class="ireply" aria-live="polite"><div class="ir-h"><span class="jorb" data-jorb data-s="' + jorbState() + '" aria-hidden="true"></span><b>' + n + '</b>' +
+    (q ? '<span class="ir-q">' + esc(q) + '</span>' : '<span class="ir-q"></span>') +
+    spk + '<button class="icon-btn" data-act="closeInline" aria-label="Dismiss">' + ICON.close + '</button></div>' + body + acts +
+    '<a class="ir-more" href="#assistant">Open chat</a></section>';
+}
 const JPROMPTS = ["One line about today.", "What went well today?", "¿Qué fue lo mejor de hoy?", "What's worth remembering from today?", "Anything to let go of before tomorrow?"];
+/* ---------- Today (redesign) ---------- */
+const TEAMSTYLE = [[/49ers|niners/i, "#AA0000", "SF"], [/thunder|okc/i, "#007AC1", "OKC"], [/real madrid/i, "#3E2B84", "RM"]];
+function teamBadge(name){
+  const m = TEAMSTYLE.find(x => x[0].test(String(name || "")));
+  const ab = m ? m[2] : String(name || "?").split(/\s+/).map(w => w[0]).join("").slice(0, 3).toUpperCase();
+  return '<span class="badge" style="background:' + (m ? m[1] : "var(--muted)") + '" aria-hidden="true">' + esc(ab) + '</span>';
+}
+// One quiet row for your teams: a live game first, then a result from the last day and a half, then the next game.
+function teamRow(){
+  const teams = (FEED && Array.isArray(FEED.teams)) ? FEED.teams : []; if (!teams.length) return "";
+  const now = Date.now(), at = g => g && g.start ? new Date(g.start).getTime() : NaN;
+  const sc = g => g.away + " " + g.awayScore + ", " + g.home + " " + g.homeScore;
+  const nextBit = t => t.next ? "Next: " + (isNiners(t.next.home) || t.next.home === t.team ? t.next.away : "at " + t.next.home) + ", " + fmtWhen(t.next.start).replace(/^(\w{3}), \w{3} \d+,/, "$1") : "";
+  let pick = teams.find(t => t.live && liveFresh());
+  let line, sub, live = false;
+  if (pick) { line = sc(pick.live); sub = (pick.live.detail || "In progress"); live = true; }
+  else {
+    const recent = teams.filter(t => t.last && now - at(t.last) < 36 * 36e5).sort((a, b) => at(b.last) - at(a.last));
+    if (recent.length) { pick = recent[0]; line = sc(pick.last); sub = "Final" + (nextBit(pick) ? " · " + nextBit(pick) : ""); }
+    else {
+      const up = teams.filter(t => t.next && at(t.next) > now).sort((a, b) => at(a.next) - at(b.next));
+      if (!up.length) return "";
+      pick = up[0]; line = pick.next.away + " at " + pick.next.home; sub = fmtWhen(pick.next.start);
+    }
+  }
+  return '<a class="trow" href="#rundown">' + teamBadge(pick.team) + '<span class="tt"><b>' + esc(line) + '</b><span>' + esc(sub) + '</span></span>' +
+    (live ? '<span class="pill live">Live</span>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>') + '</a>';
+}
+function wxInline(evening){
+  const w = FEED && FEED.weather; if (!w) return "";
+  const t = today(), d = wxDay(evening ? addDays(t, 1) : t);
+  const fresh = w.updated && Date.now() - new Date(w.updated).getTime() < 6 * 36e5;
+  const deg = n => Math.round(Number(n)) + "°";
+  if (evening && d) return '<span class="dot"></span>' + wxIcon(d.cond) + '<span>Tomorrow ' + esc(deg(d.hi)) + ' / ' + esc(deg(d.lo)) + ' · ' + esc(d.cond || "") + '</span>';
+  if (fresh && w.now && w.now.temp != null) return '<span class="dot"></span>' + wxIcon(w.now.cond) + '<span>' + esc(deg(w.now.temp)) + ' · ' + esc(w.now.cond || "") + '</span>';
+  if (d) return '<span class="dot"></span>' + wxIcon(d.cond) + '<span>' + esc(deg(d.hi)) + ' / ' + esc(deg(d.lo)) + ' · ' + esc(d.cond || "") + '</span>';
+  return "";
+}
+function todaySub(c, open, evening){
+  const bits = [];
+  const d = wxDay(evening ? addDays(today(), 1) : today());
+  if (!evening) {
+    bits.push(open.length ? open.length + (open.length === 1 ? " thing today" : " things today") + (c.late ? ", " + c.late + " overdue" : "") : (c.doneT ? "Everything's done for today" : "Nothing due today"));
+    if (d && Number(d.rain) >= 30) bits.push(Math.round(d.rain) + "% chance of " + (/thunder|storm/i.test(d.cond || "") ? "storms" : "rain"));
+    let s = bits.join(", and a ") + ".";
+    if (c.sun.set > c.now && c.sun.set - c.now < 4 * 36e5) s += " Sunset at " + tm(c.sun.set) + ".";
+    return s;
+  }
+  if (d && Number(d.rain) >= 30) return "Tomorrow: " + Math.round(d.rain) + "% chance of rain. Plan for it.";
+  return c.doneT ? "Good day. Rest counts too." : "Winding down. Tomorrow is a fresh start.";
+}
 function viewToday(){
   const c = dayCtx(), t = today(), h = c.h;
   const sets = taskSets(), open = sets.today;
   const habitsDone = S.habits.filter(x => x.log && x.log[t]).length;
-  const total = open.length + sets.doneToday.length + S.habits.length, done = sets.doneToday.length + habitsDone;
   const evening = h >= 19 || h < 4;
   UI.todayMode = c.b + (evening ? "e" : "");
-  const sunBit = c.sun.set > c.now ? '<span class="sun"><i aria-hidden="true"></i>Sunset ' + esc(tm(c.sun.set)) + '</span>' : "";
-  const hello = '<header class="hello"><div><h1>' + esc(greetingText(c)) + '</h1><p class="dline"><span>' + esc(longDate(t)) + '</span>' + sunBit + '</p></div>' +
-    '<div class="score">' + (total ? ring(done, total) : "") + '<button class="icon-btn" data-act="settings" aria-label="Settings">' + ICON.gear + '</button></div></header>';
+  const initial = (UI.name || "").slice(0, 1).toUpperCase();
+  const top = '<div class="tline"><p class="tl-l"><b>' + esc(shortDate(t)) + '</b>' + wxInline(evening) + '</p>' +
+    '<button class="avatar" data-act="settings" aria-label="Settings">' + (initial ? esc(initial) : ICON.gear) + '</button></div>';
+  const hello = '<header class="hello"><h1>' + esc(greetingText(c)) + '</h1><p class="sub">' + esc(todaySub(c, open, evening)) + '</p></header>';
 
-  let plan;
+  let lead = "", rest = "";
   if (evening) {
     const entry = (S.days[t] && S.days[t].text) || "";
     const prompt = JPROMPTS[dparse(t).getDate() % JPROMPTS.length];
-    plan = '<section class="card nextup wrap" aria-label="How did today go"><span class="lab">How\'d today go?</span>' +
-      '<div class="stat"><div><b class="num">' + sets.doneToday.length + '</b><span>' + (sets.doneToday.length === 1 ? "task done" : "tasks done") + '</span></div>' +
-      (S.habits.length ? '<div><b class="num">' + habitsDone + ' of ' + S.habits.length + '</b><span>habits</span></div>' : "") +
-      (open.length ? '<div><b class="num">' + open.length + '</b><span>still open</span></div>' : "") + '</div>' +
-      (open.length ? '<div class="acts"><button class="btn ghost" data-act="rollOver">Move ' + (open.length === 1 ? "it" : "all " + open.length) + ' to tomorrow</button></div>' : '<p class="sub">Nothing left open. Nice.</p>') +
-      '<textarea class="entry" id="today-entry" data-input="entry" data-day="' + t + '" placeholder="' + esc(prompt) + '" aria-label="Today\'s journal entry">' + esc(entry) + '</textarea></section>' +
-      (open.length ? '<section class="sec"><div class="sec-h"><h2>Still open</h2><a class="more" href="#tasks">All tasks</a></div><div class="card">' + open.map(taskRow).join("") + '</div></section>' : "");
+    lead = '<section class="tiles" aria-label="How today went">' +
+      '<div class="tile"><b class="num">' + sets.doneToday.length + '</b><span>' + (sets.doneToday.length === 1 ? "task done" : "tasks done") + '</span></div>' +
+      '<div class="tile"><b class="num">' + (S.habits.length ? habitsDone + "/" + S.habits.length : "–") + '</b><span>habits</span></div>' +
+      '<div class="tile"><b class="num">' + open.length + '</b><span>still open</span></div></section>' +
+      (open.length ? '<div class="mv"><span class="sub" style="color:var(--muted);font-size:14.5px">' + (open.length === 1 ? "1 task is still open." : open.length + " tasks are still open.") + '</span><button class="btn ghost" data-act="rollOver">Move to tomorrow</button></div>' : "") +
+      '<section class="jcard"><span class="lab">JOURNAL</span><label class="q" for="today-entry">' + esc(prompt) + '</label>' +
+      '<textarea class="entry" id="today-entry" data-input="entry" data-day="' + t + '" placeholder="One line is enough"></textarea></section>';
+    lead = lead.replace('placeholder="One line is enough"></textarea>', 'placeholder="One line is enough">' + esc(entry) + '</textarea>');
+    if (open.length) rest = '<section class="sec"><div class="sec-h"><h2>Still open</h2><a class="more" href="#plan">Plan</a></div><div class="flat">' + open.map(taskRow).join("") + '</div></section>';
   } else {
     const nx = open[0], late = nx && nx.due < t;
-    plan = nx
-      ? '<section class="card nextup" aria-label="Next up"><span class="lab' + (late ? " late" : "") + '">' + (late ? "Overdue · next up" : "Next up") + '</span>' +
-        '<div class="big"><button class="check' + (nx.pri ? " pri" : "") + '" data-act="toggleTask" data-id="' + nx.id + '" aria-pressed="false" aria-label="Mark done: ' + esc(nx.title) + '">' + ICON.check + '</button>' +
-        '<button class="body" data-act="editTask" data-id="' + nx.id + '"><span class="title">' + esc(nx.title) + '</span>' +
-        ((nx.pri || late || nx.note) ? '<span class="meta">' + (late ? '<span class="late">Due ' + esc(dueLabel(nx.due)) + '</span>' : "") + (nx.pri ? '<span class="flag">High priority</span>' : "") + (nx.note ? '<span>Has a note</span>' : "") + '</span>' : "") + '</button></div>' +
+    lead = nx
+      ? '<section class="card nextup" aria-label="Next up"><span class="lab' + (late ? " late" : "") + '">' + (late ? "OVERDUE · NEXT UP" : "NEXT UP") + '</span>' +
+        '<div class="big"><button class="body" data-act="editTask" data-id="' + nx.id + '"><span class="title">' + esc(nx.title) + '</span>' +
+        ((nx.pri || late || nx.repeat || nx.project) ? '<span class="meta">' + (late ? '<span class="late">Due ' + esc(dueLabel(nx.due)) + '</span>' : "") + (nx.pri ? '<span class="flag">High priority</span>' : "") + (nx.repeat && REPEATS[nx.repeat] ? '<span class="rep">' + ICON.repeat + esc(REPEATS[nx.repeat]) + '</span>' : "") + (nx.project ? '<span class="proj">' + esc(nx.project) + '</span>' : "") + '</span>' : "") + '</button></div>' +
         '<div class="acts"><button class="btn" data-act="toggleTask" data-id="' + nx.id + '">Done</button><button class="btn ghost" data-act="later" data-id="' + nx.id + '">Tomorrow</button></div></section>'
-      : '<section class="card nextup" aria-label="Next up"><span class="lab">Next up</span><div class="big"><div class="body"><span class="title">' + (sets.doneToday.length ? "That's everything for today." : "Nothing due today.") + '</span></div></div>' +
-        '<p class="sub">' + (sets.doneToday.length ? "Nice work. Add more below if you want to keep going." : "Add something below, or enjoy the breathing room.") + '</p></section>';
-    const rest = open.slice(1).concat(sets.doneToday);
-    plan += '<section class="sec"><div class="sec-h"><h2>' + (rest.length ? "Rest of today" : "Add to today") + '</h2><a class="more" href="#tasks">All tasks</a></div><div class="card">' +
-      rest.map(taskRow).join("") +
-      '<form class="add" data-form="quickTask"><input class="field" id="quick-task" name="title" placeholder="Add a task for today" autocomplete="off" maxlength="200"><button class="btn" type="submit">Add</button></form></div></section>';
+      : '<section class="card nextup" aria-label="Next up"><span class="lab">NEXT UP</span><div class="big"><div class="body"><span class="title">' + (sets.doneToday.length ? "That's everything for today." : "Nothing due today.") + '</span></div></div>' +
+        '<div class="acts solo"><button class="btn ghost" data-act="newTask" data-day="' + t + '">Add a task</button></div></section>';
+    const later = open.slice(1).concat(sets.doneToday);
+    rest = '<section class="sec"><div class="sec-h"><h2>' + (later.length ? "Later today" : "Today") + '</h2><button class="more" data-act="newTask" data-day="' + t + '">+ Add</button></div>' +
+      (later.length ? '<div class="flat">' + later.map(taskRow).join("") + '</div>' : '<p class="hint" style="padding:2px 0">Tell ' + esc(aiName()) + ' what else is on your plate, or tap Add.</p>') + '</section>';
   }
 
-  const jbar = '<form class="jbar" data-form="ask"><span class="jorb" data-jorb data-s="' + jorbState() + '" aria-hidden="true"></span>' +
-    '<input id="ask-input" name="q" data-input="draft" placeholder="Tell ' + esc(aiName()) + ' something" autocomplete="off" maxlength="2000" value="' + esc(UI.draft) + '" aria-label="Message ' + esc(aiName()) + '">' +
-    micBtn("ask-input") + '<button class="rbtn go" type="submit" aria-label="Send">' + ICON.send + '</button></form>';
+  const jbar = '<div class="dock">' + inlineReply() + photoChip() + '<form class="jbar" data-form="ask"><span class="jorb" data-jorb data-s="' + jorbState() + '" aria-hidden="true"></span>' +
+    '<input id="ask-input" name="q" data-input="draft" placeholder="' + esc(evening ? "Tell " + aiName() + " about your day" : "Tell " + aiName() + " something") + '" autocomplete="off" maxlength="2000" value="' + esc(UI.draft) + '" aria-label="Tell ' + esc(aiName()) + ' something">' +
+    photoBtn() + micBtn("ask-input") + (AI.busy && UI.inline ? '<button class="rbtn go" type="button" data-act="stopAI" aria-label="Stop">' + ICON.stop + '</button>' : '<button class="rbtn go" type="submit" aria-label="Send">' + ICON.send + '</button>') + '</form></div>';
 
-  const habits = '<section class="sec"><div class="sec-h"><h2>Habits</h2><a class="more" href="#habits">' + (S.habits.length ? "This week" : "Set up") + '</a></div><div class="card">' +
-    (S.habits.length ? '<div class="hchips">' + S.habits.map(x => '<button class="hchip" data-act="toggleHabit" data-id="' + x.id + '" data-day="' + t + '" aria-pressed="' + !!(x.log && x.log[t]) + '"><i>' + ICON.check + '</i>' + esc(x.name) + '</button>').join("") + '</div>'
-      : '<div class="empty"><b>No habits yet</b>Pick one small thing to do every day.</div>') + '</div></section>';
-  const soonList = sets.upcoming.filter(x => diffDays(x.due, t) <= 3).slice(0, 5);
-  const soon = soonList.length ? '<section class="sec soon"><div class="sec-h"><h2>Coming up</h2><a class="more" href="#tasks">Upcoming</a></div><div class="card">' + soonList.map(taskRow).join("") + '</div></section>' : "";
-  const goals = S.goals.length ? '<section class="sec"><div class="sec-h"><h2>Goals</h2><a class="more" href="#habits">Update</a></div><div class="card">' + S.goals.map(g => goalRow(g, false)).join("") + '</div></section>' : "";
+  const habits = S.habits.length ? '<section class="sec"><div class="sec-h"><h2>Habits</h2><span class="more num">' + habitsDone + ' of ' + S.habits.length + '</span></div>' +
+    '<div class="hchips">' + S.habits.map(x => '<button class="hchip" data-act="toggleHabit" data-id="' + x.id + '" data-day="' + t + '" aria-pressed="' + !!(x.log && x.log[t]) + '"><i>' + ICON.check + '</i>' + esc(x.name) + '</button>').join("") + '</div></section>' : "";
+  const soonList = sets.upcoming.filter(x => diffDays(x.due, t) <= 3).slice(0, 4);
+  const soon = soonList.length ? '<section class="sec soon"><div class="sec-h"><h2>Coming up</h2><a class="more" href="#plan">Plan</a></div><div class="flat">' + soonList.map(taskRow).join("") + '</div></section>' : "";
+  const team = gameStrip() || teamRow();
 
-  return '<div class="pane">' + hello + gameStrip() + plan + jbar + '</div><div class="pane">' + habits + soon + goals + '</div>';
+  return '<div class="pane">' + top + hello + lead + jbar + '</div><div class="pane">' + rest + habits + team + (evening ? "" : soon) + otdHTML(onThisDay(t), true) + '</div>';
 }
+
+/* ---------- Plan: tasks, projects, habits and goals in one place ---------- */
+function weekStart(k){ const d = dparse(k); const back = (d.getDay() + 6) % 7; return addDays(k, -back); }
+function viewPlan(){
+  const t = today();
+  if (!UI.planDay) UI.planDay = t;
+  const day = UI.planDay, ws = addDays(weekStart(t), 7 * (UI.planWeek || 0));
+  const days = []; for (let i = 0; i < 7; i++) days.push(addDays(ws, i));
+  const open = S.tasks.filter(x => !x.done);
+  const dueOn = k => k === t ? open.filter(x => x.due && x.due <= t) : open.filter(x => x.due === k);
+  const strip = '<div class="wstrip"><button class="icon-btn" data-act="planWeek" data-n="-1" aria-label="Previous week">' + ICON.left + '</button><div class="wdays" role="group" aria-label="Pick a day">' +
+    days.map(k => { const d = dparse(k), n = dueOn(k).length; return '<button class="wd' + (k === t ? " today" : "") + '" data-act="planDay" data-day="' + k + '" aria-pressed="' + (k === day) + '" aria-label="' + esc(longDate(k)) + (n ? ", " + n + (n === 1 ? " task" : " tasks") : "") + '">' + WD[d.getDay()].slice(0, 3) + '<b class="num">' + d.getDate() + '</b>' + (n ? '<i></i>' : "") + '</button>'; }).join("") +
+    '</div><button class="icon-btn" data-act="planWeek" data-n="1" aria-label="Next week">' + ICON.right + '</button></div>';
+
+  const list = dueOn(day).sort(sortTasks).concat(S.tasks.filter(x => x.done && (day === t ? x.doneAt === t && x.due && x.due <= t : x.due === day)));
+  const nOpen = dueOn(day).length;
+  const dayLabel = day === t ? "Today" : day === addDays(t, 1) ? "Tomorrow" : WD[dparse(day).getDay()];
+  const daySec = '<section class="sec"><div class="sec-h"><h2>' + esc(dayLabel) + ' · ' + nOpen + (nOpen === 1 ? " task" : " tasks") + '</h2><button class="more" data-act="newTask" data-day="' + day + '">+ Add</button></div>' +
+    (list.length ? '<div class="flat">' + list.map(taskRow).join("") + '</div>' : '<p class="hint" style="padding:4px 0">' + (day < t ? "Nothing was due that day." : "Nothing planned. A good day to get ahead.") + '</p>') + '</section>';
+
+  // Projects: tasks Juno broke into steps, grouped by name
+  const pnames = [...new Set(S.tasks.filter(x => x.project).map(x => x.project))];
+  const projs = pnames.map(p => {
+    const all = S.tasks.filter(x => x.project === p).sort((a, b) => (a.due || "9") < (b.due || "9") ? -1 : 1);
+    const done = all.filter(x => x.done).length, nx = all.find(x => !x.done), last = all.map(x => x.due).filter(Boolean).sort().pop();
+    return { p, all, done, nx, last };
+  }).filter(x => x.nx || x.all.some(y => y.doneAt === t));
+  const projSec = projs.length ? '<section class="sec"><div class="sec-h"><h2>Projects</h2></div>' + projs.map(x =>
+    '<div class="proj"><div class="pt"><b>' + esc(x.p) + '</b><span>' + (x.last ? "Due " + esc(shortDate(x.last)) : "") + '</span></div>' +
+    '<div class="segbar" role="img" aria-label="' + x.done + ' of ' + x.all.length + ' steps done">' + x.all.slice(0, 12).map(s => '<i' + (s.done ? ' class="on"' : "") + '></i>').join("") + '</div>' +
+    '<p>' + (x.nx ? "Next: " + esc(x.nx.title) + (x.nx.due ? ", " + esc(dueLabel(x.nx.due)) : "") : "All steps done.") + ' · ' + x.done + ' of ' + x.all.length + '</p></div>').join("") + '</section>' : "";
+
+  // Habits this week, Monday to Sunday; future days can't be ticked yet
+  const hw = []; for (let i = 0; i < 7; i++) hw.push(addDays(weekStart(t), i));
+  const habitSec = '<section class="sec"><div class="sec-h"><h2>Habits this week</h2>' + (S.habits.length ? '<span class="hhead" aria-hidden="true">' + hw.map(k => '<span>' + WD[dparse(k).getDay()][0] + '</span>').join("") + '</span>' : "") + '</div>' +
+    (S.habits.length ? '<div class="flat">' + S.habits.map(hb => { const n = streak(hb);
+      return '<div class="hrow"><button class="hn" data-act="editHabit" data-id="' + hb.id + '">' + esc(hb.name) + '<span class="' + (n >= 2 ? "on" : "") + '">' + (n ? n + "-day streak" : "No streak yet") + '</span></button><div class="hweek">' +
+        hw.map(k => '<button' + (k === t ? ' class="today"' : "") + ' data-act="toggleHabit" data-id="' + hb.id + '" data-day="' + k + '" aria-pressed="' + !!(hb.log && hb.log[k]) + '" aria-label="' + esc(hb.name) + ', ' + esc(longDate(k)) + '"' + (k > t ? " disabled" : "") + '></button>').join("") + '</div></div>'; }).join("") + '</div>'
+      : '<p class="hint" style="padding:2px 0">Small and daily beats big and rare.</p><div class="hchips">' + ["Move for 20 minutes", "Read 10 pages", "Drink water first thing", "Lights out by 11"].map(s => '<button class="hchip" data-act="suggestHabit" data-name="' + esc(s) + '"><i>' + ICON.check + '</i>' + esc(s) + '</button>').join("") + '</div>') +
+    '<form class="addline" data-form="addHabit"><input class="field" id="new-habit" name="name" placeholder="New habit" autocomplete="off" maxlength="80" aria-label="New habit"><button class="btn ghost" type="submit">Add</button></form></section>';
+
+  const goalSec = '<section class="sec"><div class="sec-h"><h2>Goals</h2><button class="more" data-act="newGoal">+ New</button></div>' +
+    (S.goals.length ? '<div class="flat">' + S.goals.map(g => goalRow(g, true)).join("") + '</div>' : '<p class="hint" style="padding:2px 0">Give a goal a number, like 12 books or 100 miles.</p>') + '</section>';
+
+  const someday = open.filter(x => !x.due).sort(sortTasks);
+  const somedaySec = someday.length ? '<section class="sec"><div class="sec-h"><h2>Someday · no date</h2></div><div class="flat">' + someday.map(taskRow).join("") + '</div></section>' : "";
+  const doneAll = S.tasks.filter(x => x.done).sort((a, b) => (b.doneTs || 0) - (a.doneTs || 0));
+  const doneSec = doneAll.length ? '<section class="sec"><div class="sec-h"><h2>Completed · ' + doneAll.length + '</h2><button class="more" data-act="toggleDone">' + (UI.showDone ? "Hide" : "Show") + '</button></div>' +
+    (UI.showDone ? '<div class="flat">' + doneAll.slice(0, 40).map(taskRow).join("") + '</div><div><button class="linkbtn" data-act="clearDone">Delete completed tasks</button></div>' : "") + '</section>' : "";
+
+  const head = '<div class="ph"><h1>Plan</h1><button class="plusbtn" data-act="newTask" data-day="' + day + '" aria-label="Add a task">' + ICON.plus + '</button></div>';
+  return '<div class="pane">' + head + strip + daySec + somedaySec + '</div><div class="pane">' + projSec + habitSec + goalSec + doneSec + '</div>';
+}
+function newTaskSheet(day){
+  openSheet({ title: "New task", fields: [
+    { id: "title", label: "Task", placeholder: "What needs doing?" },
+    { id: "due", label: "Due date", type: "date", value: day || "", half: true },
+    { id: "repeat", label: "Repeats", type: "select", value: "", options: REPEAT_OPTS, half: true },
+    { id: "pri", label: "High priority", type: "checkbox", value: false },
+    { id: "note", label: "Note", type: "textarea", placeholder: "Details, links, next step" }
+  ], onSave(v){
+    if (!v.title) return "A task needs a name.";
+    addTask(v.title, v.due, v.pri, v.repeat);
+    if (v.note) { S.tasks[S.tasks.length - 1].note = v.note; saveTasks.schedule(); }
+  } });
+}
+
 function newsStack(){
   const news = (FEED && Array.isArray(FEED.headlines)) ? FEED.headlines : [];
   const f = UI.feedFilter;
@@ -1030,18 +1445,22 @@ function viewRundown(){
 }
 
 /* ---------- assistant ---------- */
+function withActs(m){ if (RECEIPTS.pending.length) { m.acts = RECEIPTS.pending; RECEIPTS.pending = []; } return m; }
 function threadHTML(){
-  let out = AI.turns.map(m => '<div class="msg ' + (m.role === "user" ? "user" : "ai") + '">' + esc(m.content) + '</div>').join("");
-  if (AI.busy) out += '<div class="msg ai' + (AI.partial ? "" : " wait") + '" id="partial">' + esc(AI.partial || "Thinking...") + '</div>';
+  let out = AI.turns.map((m, i) => m.role === "user"
+    ? '<div class="msg user">' + (m.photo ? '<span class="ptag">' + ICON.camera + 'Photo</span>' : "") + esc(m.content) + '</div>'
+    : '<div class="aiwrap"><div class="msg ai">' + esc(m.content) + '</div>' + speakBtn(i) + '</div>' + receiptsHTML(m.acts)).join("");
+  if (AI.busy) out += '<div class="msg ai' + (AI.partial ? "" : " wait") + '" id="partial">' + esc(AI.partial || "Thinking...") + '</div>' + receiptsHTML(RECEIPTS.pending);
   if (AI.note) out += '<div class="msg note">' + esc(AI.note) + '</div>';
   return out;
 }
-function orbState(){ return UI.listening ? "listen" : AI.busy ? (AI.partial ? "speak" : "think") : Date.now() < (UI.savedUntil || 0) ? "saved" : "idle"; }
+function orbState(){ return UI.listening ? "listen" : AI.busy ? (AI.partial ? "speak" : "think") : VOICE.state === "speaking" ? "talk" : Date.now() < (UI.savedUntil || 0) ? "saved" : "idle"; }
 function orbCaption(s){
   if (s === "listen") return "Listening...";
   if (s === "saved") return "Saved.";
   if (s === "think") return "Thinking...";
   if (s === "speak") return "Answering";
+  if (s === "talk") return "Speaking. Tap to stop.";
   if (!AI.sample) return "Chat works when this app is open in Claude.";
   return D ? "Tap the orb and talk." : "Ask me anything below.";
 }
@@ -1055,8 +1474,8 @@ function viewAssistant(){
     (empty ? '<div class="card"><div class="empty"><b>Try one of these</b>Or type anything below.</div><div class="chips">' +
       ["What should I focus on today?", "Add a task to call the dentist tomorrow", "How are my teams doing?", "Summarize the headlines"].map(q => '<button class="chip" data-act="suggest" data-q="' + esc(q) + '">' + esc(q) + '</button>').join("") + '</div></div>' : "") +
     '<div class="thread" id="thread" aria-live="polite">' + threadHTML() + '</div>' +
-    '<form class="composer" data-form="chat"><input id="chat-input" name="q" data-input="draft" placeholder="Message ' + esc(n) + '" autocomplete="off" maxlength="2000" value="' + esc(UI.draft) + '" aria-label="Message ' + esc(n) + '">' + micBtn("chat-input") +
-      (AI.busy ? '<button class="rbtn go" type="button" data-act="stopAI" aria-label="Stop">' + ICON.stop + '</button>' : '<button class="rbtn go" type="submit" aria-label="Send">' + ICON.send + '</button>') + '</form></div>';
+    '<div class="cdock">' + photoChip() + '<form class="composer" data-form="chat"><input id="chat-input" name="q" data-input="draft" placeholder="Message ' + esc(n) + '" autocomplete="off" maxlength="2000" value="' + esc(UI.draft) + '" aria-label="Message ' + esc(n) + '">' + photoBtn() + micBtn("chat-input") +
+      (AI.busy ? '<button class="rbtn go" type="button" data-act="stopAI" aria-label="Stop">' + ICON.stop + '</button>' : '<button class="rbtn go" type="submit" aria-label="Send">' + ICON.send + '</button>') + '</form></div></div>';
 }
 
 /* ---------- the orb ---------- */
@@ -1119,7 +1538,8 @@ function orbLoop(now){
   if (!cvs.length) { ORB.raf = 0; return; }
   const dt = Math.min(.05, ORB.last ? (now - ORB.last) / 1000 : .016); ORB.last = now;
   const s = orbState();
-  const tg = s === "listen" ? [.1, 2.2, 1] : s === "think" ? [.05, 3.2, .8] : s === "speak" ? [.06 + .1 * ORB.energy, 1.9, .9] : s === "saved" ? [.06, 1.4, 1] : [.035, .7, .55];
+  if (s === "talk") ORB.energy = Math.max(ORB.energy, .35 + .35 * Math.abs(Math.sin(ORB.t * 7.3) * Math.sin(ORB.t * 3.1)));
+  const tg = s === "talk" ? [.07 + .1 * ORB.energy, 1.6, .95] : s === "listen" ? [.1, 2.2, 1] : s === "think" ? [.05, 3.2, .8] : s === "speak" ? [.06 + .1 * ORB.energy, 1.9, .9] : s === "saved" ? [.06, 1.4, 1] : [.035, .7, .55];
   const k = Math.min(1, dt * 4);
   ORB.amp += (tg[0] - ORB.amp) * k; ORB.spd += (tg[1] - ORB.spd) * k; ORB.glow += (tg[2] - ORB.glow) * k;
   ORB.energy *= Math.pow(.2, dt); ORB.t += dt * ORB.spd;
@@ -1130,7 +1550,7 @@ function orbLoop(now){
 function startOrb(){ ORB.shown = ""; if (!ORB.raf && document.querySelector("canvas[data-orb]")) { ORB.last = 0; ORB.raf = requestAnimationFrame(orbLoop); } }
 function hubContext(){
   const t = today(), sets = taskSets();
-  const open = sets.today.concat(sets.upcoming, sets.nodate).slice(0, 40).map(x => ({ title: x.title, due: x.due || null, highPriority: !!x.pri }));
+  const open = sets.today.concat(sets.upcoming, sets.nodate).slice(0, 40).map(x => Object.assign({ title: x.title, due: x.due || null, highPriority: !!x.pri }, x.repeat ? { repeats: x.repeat } : {}, x.project ? { project: x.project } : {}));
   const ctx = {
     now: new Date().toString(), today: t, userFirstName: UI.name || null,
     openTasks: open, doneToday: sets.doneToday.map(x => x.title),
@@ -1139,6 +1559,8 @@ function hubContext(){
     journalToday: ((S.days[t] && S.days[t].text) || "").slice(0, 800),
     recentNotes: Object.keys(S.notes).map(id => S.notes[id]).sort((a, b) => (b.updated || 0) - (a.updated || 0)).slice(0, 12).map(n => ({ title: n.title, body: (n.body || "").slice(0, 300) })),
     followedTeams: CFG.teams, newsTopics: CFG.topics,
+    weather: FEED && FEED.weather ? FEED.weather : null,
+    tasksWithRepeat: S.tasks.filter(x => !x.done && x.repeat).map(x => ({ title: x.title, repeats: x.repeat })),
     savedFeed: FEED ? { savedAt: FEED.updated, teams: FEED.teams, headlines: (FEED.headlines || []).map(n => ({ topic: n.topic, title: n.title, source: n.source, summary: n.summary })) } : null
   };
   return JSON.stringify(ctx);
@@ -1146,57 +1568,242 @@ function hubContext(){
 function buildInput(){
   const rules = "You are " + aiName() + ", the personal assistant built into the user's Personal Hub app. Reply briefly, in plain text with no Markdown, because your words are shown as plain text on a phone. " +
     "You cannot browse the web or see anything live. The scores and headlines in savedFeed were saved at savedAt; if asked for anything newer or anything not in the data, say you can't check live and share what you have. " +
-    "When the user asks you to add, save, complete or check something, use a tool, then confirm in one short sentence. Never invent tasks, scores or facts about the user. Dates in tools are YYYY-MM-DD.\n\nHub data (JSON):\n" + hubContext();
+    "You can act on the user's hub with your tools: add, complete, reschedule, rename or delete tasks; save and search notes; write to or read the journal; check off or add habits; log goal progress. " +
+    "When the user says something they need to do, treat it as a task and add it without asking first. When they say something worth remembering, save a note. When they describe their day or how they feel, add it to the journal in their words. One message can need several tools; do them all. " +
+    "Work out dates from now (\"tomorrow\", \"Friday\", \"next week\" means next Monday) and pass them as YYYY-MM-DD. Delete only when they clearly ask. " +
+    "For anything recurring (\"every Monday\", \"daily\", \"on the 1st\"), add one task with repeat set; finishing it schedules the next one. " +
+    "When they ask to break something down, plan a project or an assignment, or a task is big and has a deadline, use add_plan with 3 to 10 concrete steps dated back from the deadline; if it came from an existing task, pass replaces_task. " +
+    "When a photo is attached, read it closely. If the user said what to do, do that. Otherwise: action items or dates become tasks (with due dates you can see), and anything else worth keeping becomes a note with the important text written out. Then say in one sentence what you took from it. " +
+    "Your replies may be read aloud, so write them the way you would say them: short, natural sentences, no lists or symbols. " +
+    "After acting, reply in one short sentence; the app shows a receipt with an Undo button for each change, so don't list every detail. If a tool says nothing matched, ask which one they meant. The user may write in English or Spanish; reply in the language they used. " +
+    "Never invent tasks, scores or facts about the user.\n\nHub data (JSON):\n" + hubContext();
   return [{ role: "user", content: rules }].concat(AI.turns.slice(-16).map(m => ({ role: m.role, content: m.content })));
 }
 function matchBy(arr, key, q){
   q = String(q || "").trim().toLowerCase(); if (!q) return null;
   return arr.find(x => String(x[key]).toLowerCase() === q) || arr.find(x => String(x[key]).toLowerCase().includes(q)) || null;
 }
+/* Every change Juno makes is recorded as a receipt with an undo, shown under its reply. */
+const RECEIPTS = { pending: [], undo: {} };
+function did(kind, label, undo){
+  const id = uid();
+  RECEIPTS.pending.push({ id, kind, label: String(label).slice(0, 120) });
+  if (undo) RECEIPTS.undo[id] = undo;
+  flashSaved();
+  if (UI.ready && !typing()) { const v = UI.route; if (v === "home" || v === "assistant") softRender(); }
+}
+const isDay = s => /^\d{4}-\d{2}-\d{2}$/.test(String(s || ""));
+const dueBit = d => d ? " · " + dueLabel(d) : "";
+const snap = o => JSON.parse(JSON.stringify(o));
+function restoreTask(id, before){
+  const t = find(S.tasks, id); if (!t) return;
+  Object.keys(t).forEach(k => delete t[k]); Object.assign(t, snap(before)); saveTasks.schedule();
+}
+function openTaskBy(title){
+  const t = matchBy(S.tasks.filter(x => !x.done), "title", title);
+  if (!t) throw new Error("No open task matches \"" + String(title || "") + "\". Open tasks: " + S.tasks.filter(x => !x.done).slice(0, 25).map(x => x.title).join("; "));
+  return t;
+}
 function buildTools(){
   return [
-    { name: "add_task", description: "Add a task to the user's task list. Returns a confirmation.", inputSchema: { type: "object", properties: { title: { type: "string" }, due: { type: "string", description: "YYYY-MM-DD, optional" }, high_priority: { type: "boolean" } }, required: ["title"] },
-      execute(i){ const due = /^\d{4}-\d{2}-\d{2}$/.test(String(i.due || "")) ? String(i.due) : ""; if (!addTask(String(i.title || "").slice(0, 200), due, !!i.high_priority)) throw new Error("A task needs a title."); return "Added task" + (due ? " due " + due : ""); } },
-    { name: "complete_task", description: "Mark an open task as done, matched by its title. Returns a confirmation or an error if no open task matches.", inputSchema: { type: "object", properties: { title: { type: "string" } }, required: ["title"] },
-      execute(i){ const t = matchBy(S.tasks.filter(x => !x.done), "title", i.title); if (!t) throw new Error("No open task matches that title."); t.done = true; t.doneAt = today(); t.doneTs = Date.now(); saveTasks.schedule(); flashSaved(); return "Completed: " + t.title; } },
-    { name: "add_note", description: "Save a note in the user's Notes. Returns a confirmation.", inputSchema: { type: "object", properties: { title: { type: "string" }, body: { type: "string" } }, required: ["body"] },
-      execute(i){ const body = String(i.body || "").slice(0, 20000); if (!body.trim()) throw new Error("A note needs some text."); const id = uid(); S.notes[id] = { title: String(i.title || "").slice(0, 200), body, pinned: false, updated: Date.now() }; saveNote(id); flashSaved(); return "Note saved"; } },
-    { name: "add_to_journal", description: "Append text to today's journal entry. Returns a confirmation.", inputSchema: { type: "object", properties: { text: { type: "string" } }, required: ["text"] },
-      execute(i){ const txt = String(i.text || "").trim(); if (!txt) throw new Error("Nothing to add."); const k = today(); const cur = (S.days[k] && S.days[k].text) || ""; S.days[k] = { text: (cur ? cur.replace(/\s+$/, "") + "\n\n" : "") + txt, updated: Date.now() }; saveDay(k); flashSaved(); return "Added to today's journal"; } },
-    { name: "check_habit", description: "Mark one of the user's habits as done for today, matched by name. Returns a confirmation or an error if no habit matches.", inputSchema: { type: "object", properties: { name: { type: "string" } }, required: ["name"] },
-      execute(i){ const hb = matchBy(S.habits, "name", i.name); if (!hb) throw new Error("No habit matches that name."); hb.log = hb.log || {}; hb.log[today()] = 1; saveHabits.schedule(); flashSaved(); return "Checked off: " + hb.name; } }
+    { name: "add_task", description: "Add a task. Use due for any day the user mentions (today, tomorrow, Friday) as YYYY-MM-DD. For things that recur (every day, weekdays, every Monday, monthly) set repeat and put the first date in due. Returns a confirmation.", inputSchema: { type: "object", properties: { title: { type: "string", description: "Short, starts with a verb" }, due: { type: "string", description: "YYYY-MM-DD, optional" }, high_priority: { type: "boolean" }, note: { type: "string", description: "Optional details" }, repeat: { type: "string", enum: ["none", "day", "weekday", "week", "biweek", "month"] } }, required: ["title"] },
+      execute(i){
+        const due = isDay(i.due) ? String(i.due) : "", title = String(i.title || "").trim().slice(0, 200), rep = REPEATS[i.repeat] ? String(i.repeat) : "";
+        if (!addTask(title, due, !!i.high_priority, rep)) throw new Error("A task needs a title.");
+        const t = S.tasks[S.tasks.length - 1]; if (i.note) { t.note = String(i.note).slice(0, 2000); saveTasks.schedule(); }
+        did("task", "Added " + title + dueBit(t.due) + (rep ? " · " + REPEATS[rep].toLowerCase() : ""), () => { S.tasks = S.tasks.filter(x => x.id !== t.id); saveTasks.schedule(); });
+        return "Added task" + (t.due ? " due " + t.due : "") + (rep ? ", repeats " + REPEATS[rep] : "");
+      } },
+    { name: "add_plan", description: "Break a bigger goal or project into steps: adds several tasks at once, each with its own due date, grouped under a short project name. Spread dates realistically, working back from any deadline, and keep the last step on or before it. Use 3 to 10 steps.", inputSchema: { type: "object", properties: { project: { type: "string", description: "Short project name, 1 to 4 words" }, steps: { type: "array", items: { type: "object", properties: { title: { type: "string" }, due: { type: "string", description: "YYYY-MM-DD" } }, required: ["title"] } }, replaces_task: { type: "string", description: "Optional: title of an existing open task these steps replace; it is removed" } }, required: ["project", "steps"] },
+      execute(i){
+        const project = String(i.project || "").trim().slice(0, 40), steps = Array.isArray(i.steps) ? i.steps.slice(0, 12) : [];
+        if (!project || !steps.length) throw new Error("Pass a project name and at least one step.");
+        const ids = [];
+        steps.forEach((s, n) => {
+          const title = String((s && s.title) || "").trim().slice(0, 200); if (!title) return;
+          const t = { id: uid(), title, due: isDay(s.due) ? String(s.due) : "", pri: false, done: false, created: Date.now() + n, project };
+          S.tasks.push(t); ids.push(t.id);
+        });
+        let removed = null, at = -1;
+        if (i.replaces_task) { const old = matchBy(S.tasks.filter(x => !x.done && !ids.includes(x.id)), "title", i.replaces_task); if (old) { removed = snap(old); at = S.tasks.indexOf(old); S.tasks = S.tasks.filter(x => x !== old); } }
+        saveTasks.schedule();
+        did("plan", project + ": " + ids.length + " steps added" + (removed ? ", replacing the original task" : ""), () => { S.tasks = S.tasks.filter(x => !ids.includes(x.id)); if (removed) S.tasks.splice(Math.max(0, Math.min(at, S.tasks.length)), 0, removed); saveTasks.schedule(); });
+        return "Added " + ids.length + " steps under " + project;
+      } },
+    { name: "complete_task", description: "Mark an open task done, matched by title. Repeating tasks schedule their next one automatically. If none matches, the error lists open tasks.", inputSchema: { type: "object", properties: { title: { type: "string" } }, required: ["title"] },
+      execute(i){
+        const t = openTaskBy(i.title);
+        const nx = completeTask(t); saveTasks.schedule();
+        did("done", "Completed " + t.title + (nx ? " · next " + dueLabel(nx.due).replace(/^(Today|Tomorrow)$/, s => s.toLowerCase()) : ""), () => { uncompleteTask(t); saveTasks.schedule(); });
+        return "Completed: " + t.title + (nx ? ". Next one is due " + nx.due : "");
+      } },
+    { name: "update_task", description: "Change an open task, matched by its current title: rename it, move its due date (YYYY-MM-DD, or empty string to clear), set priority, set its note, or make it repeat (repeat \"none\" stops repeating). Use this to reschedule.", inputSchema: { type: "object", properties: { title: { type: "string", description: "Current title" }, new_title: { type: "string" }, due: { type: "string" }, high_priority: { type: "boolean" }, note: { type: "string" }, repeat: { type: "string", enum: ["none", "day", "weekday", "week", "biweek", "month"] } }, required: ["title"] },
+      execute(i){
+        const t = openTaskBy(i.title), before = snap(t), ch = [];
+        if (typeof i.repeat === "string") { if (REPEATS[i.repeat]) { t.repeat = i.repeat; if (!t.due) t.due = today(); ch.push("repeats " + REPEATS[i.repeat].toLowerCase()); } else if (i.repeat === "none" && t.repeat) { delete t.repeat; ch.push("no longer repeats"); } }
+        if (i.new_title && String(i.new_title).trim()) { t.title = String(i.new_title).trim().slice(0, 200); ch.push("renamed"); }
+        if (i.due !== undefined) { if (isDay(i.due)) { t.due = String(i.due); ch.push("moved to " + dueLabel(t.due).replace(/^(Today|Tomorrow)$/, s => s.toLowerCase())); } else if (i.due === "" || i.due === null) { t.due = ""; ch.push("date cleared"); } }
+        if (typeof i.high_priority === "boolean") { t.pri = i.high_priority; ch.push(t.pri ? "high priority" : "normal priority"); }
+        if (typeof i.note === "string") { t.note = i.note.slice(0, 2000); ch.push("note updated"); }
+        if (!ch.length) throw new Error("Nothing to change. Pass new_title, due, high_priority or note.");
+        saveTasks.schedule();
+        did("edit", t.title + ": " + ch.join(", "), () => restoreTask(t.id, before));
+        return "Updated: " + t.title + " (" + ch.join(", ") + ")";
+      } },
+    { name: "delete_task", description: "Delete a task, matched by title. Only when the user clearly asks to remove or delete it.", inputSchema: { type: "object", properties: { title: { type: "string" } }, required: ["title"] },
+      execute(i){
+        const t = matchBy(S.tasks, "title", i.title); if (!t) throw new Error("No task matches that title.");
+        const before = snap(t), at = S.tasks.indexOf(t);
+        S.tasks = S.tasks.filter(x => x !== t); saveTasks.schedule();
+        did("del", "Deleted " + before.title, () => { S.tasks.splice(Math.min(at, S.tasks.length), 0, before); saveTasks.schedule(); });
+        return "Deleted: " + before.title;
+      } },
+    { name: "add_note", description: "Save a note in Notes, for ideas, lists and anything to remember that is not a task. Returns a confirmation.", inputSchema: { type: "object", properties: { title: { type: "string", description: "Up to 6 words" }, body: { type: "string" } }, required: ["body"] },
+      execute(i){
+        const body = String(i.body || "").slice(0, 20000); if (!body.trim()) throw new Error("A note needs some text.");
+        const id = uid(), title = String(i.title || "").slice(0, 200);
+        S.notes[id] = { title, body, pinned: false, updated: Date.now() }; saveNote(id);
+        did("note", "Saved note " + (title || body.slice(0, 40)), () => { delete S.notes[id]; saveNote(id); });
+        return "Note saved";
+      } },
+    { name: "find_notes", description: "Search the user's notes by words. Returns up to 8 matching notes with title and text.", inputSchema: { type: "object", properties: { query: { type: "string" } }, required: ["query"] },
+      execute(i){
+        const words = String(i.query || "").toLowerCase().split(/\s+/).filter(Boolean);
+        const hits = Object.keys(S.notes).map(id => S.notes[id]).filter(n => { const s = ((n.title || "") + " " + (n.body || "")).toLowerCase(); return words.some(w => s.includes(w)); });
+        return hits.slice(0, 8).map(n => ({ title: n.title || "Untitled", text: (n.body || "").slice(0, 600) }));
+      } },
+    { name: "add_to_journal", description: "Add text to today's journal entry, in the user's own words. Returns a confirmation.", inputSchema: { type: "object", properties: { text: { type: "string" } }, required: ["text"] },
+      execute(i){
+        const txt = String(i.text || "").trim(); if (!txt) throw new Error("Nothing to add.");
+        const k = today(), prev = S.days[k] ? snap(S.days[k]) : null, cur = (prev && prev.text) || "";
+        S.days[k] = { text: (cur ? cur.replace(/\s+$/, "") + "\n\n" : "") + txt, updated: Date.now() }; saveDay(k);
+        did("journal", "Added to today's journal", () => { if (prev) S.days[k] = prev; else delete S.days[k]; saveDay(k); });
+        return "Added to today's journal";
+      } },
+    { name: "read_journal", description: "Read the journal entry for one day (YYYY-MM-DD). Returns its text, or empty if none.", inputSchema: { type: "object", properties: { date: { type: "string" } }, required: ["date"] },
+      execute(i){ if (!isDay(i.date)) throw new Error("Use YYYY-MM-DD."); return ((S.days[String(i.date)] || {}).text || "").slice(0, 4000); } },
+    { name: "check_habit", description: "Mark a habit done (or not done) for today or another day, matched by name.", inputSchema: { type: "object", properties: { name: { type: "string" }, done: { type: "boolean", description: "Default true" }, date: { type: "string", description: "YYYY-MM-DD, default today" } }, required: ["name"] },
+      execute(i){
+        const hb = matchBy(S.habits, "name", i.name); if (!hb) throw new Error("No habit matches. Habits: " + S.habits.map(x => x.name).join("; "));
+        const k = isDay(i.date) ? String(i.date) : today(), on = i.done !== false; hb.log = hb.log || {};
+        const was = !!hb.log[k]; if (on) hb.log[k] = 1; else delete hb.log[k]; saveHabits.schedule();
+        did("habit", (on ? "Checked off " : "Unchecked ") + hb.name + (k !== today() ? " · " + dueLabel(k) : ""), () => { hb.log = hb.log || {}; if (was) hb.log[k] = 1; else delete hb.log[k]; saveHabits.schedule(); });
+        return (on ? "Checked off: " : "Unchecked: ") + hb.name;
+      } },
+    { name: "add_habit", description: "Start tracking a new daily habit.", inputSchema: { type: "object", properties: { name: { type: "string" } }, required: ["name"] },
+      execute(i){
+        const name = String(i.name || "").trim().slice(0, 80); if (!addHabit(name)) throw new Error("A habit needs a name.");
+        const h = S.habits[S.habits.length - 1];
+        did("habit", "New habit " + name, () => { S.habits = S.habits.filter(x => x.id !== h.id); saveHabits.schedule(); });
+        return "Now tracking: " + name;
+      } },
+    { name: "update_goal", description: "Log progress on a goal, matched by title. Use add for an amount to add (\"read 30 more pages\"), or set for the new total.", inputSchema: { type: "object", properties: { title: { type: "string" }, add: { type: "number" }, set: { type: "number" } }, required: ["title"] },
+      execute(i){
+        const g = matchBy(S.goals, "title", i.title); if (!g) throw new Error("No goal matches. Goals: " + S.goals.map(x => x.title).join("; "));
+        const was = Number(g.current) || 0;
+        let v = typeof i.set === "number" ? i.set : typeof i.add === "number" ? was + i.add : NaN;
+        if (!isFinite(v)) throw new Error("Pass add or set.");
+        g.current = Math.max(0, Math.round(v * 100) / 100); saveHabits.schedule();
+        did("goal", g.title + ": " + g.current + " of " + g.target + (g.unit ? " " + g.unit : ""), () => { g.current = was; saveHabits.schedule(); });
+        return g.title + " is now " + g.current + " of " + g.target;
+      } }
   ];
 }
-const AI_COPY = { rate_limited: "That hit a usage limit. Try again in a bit.", session_expired: "Sign in to Claude again, then retry.", not_granted: "Allow this app to use Claude to chat with your assistant.", sampling_disabled: "Claude isn't available for this account here.", prompt_too_large: "That was too much to send at once. Try clearing the chat.", empty_completion: "No answer came back. Try rewording it." };
+function undoReceipt(id){
+  const fn = RECEIPTS.undo[id]; if (!fn) return;
+  try { fn(); } catch (e) {}
+  delete RECEIPTS.undo[id];
+  AI.turns.forEach(m => (m.acts || []).forEach(a => { if (a.id === id) a.undone = true; }));
+  saveChat.schedule(); render(); toast("Undone");
+}
+const RICON = { task: "+", done: "✓", edit: "↻", del: "−", note: "✎", journal: "✎", habit: "✓", goal: "↑", plan: "≡" };
+function receiptsHTML(acts){
+  if (!acts || !acts.length) return "";
+  return '<div class="rcpts">' + acts.map(a => '<div class="rcpt' + (a.undone ? " off" : "") + '"><i aria-hidden="true">' + (RICON[a.kind] || "✓") + '</i><span>' + esc(a.label) + '</span>' +
+    (a.undone ? '<em>Undone</em>' : RECEIPTS.undo[a.id] ? '<button data-act="undo" data-id="' + esc(a.id) + '">Undo</button>' : "") + '</div>').join("") + '</div>';
+}
+const AI_COPY = { image_rejected: "That photo couldn't be read. Try a JPEG or PNG under 20 MB.", images_unavailable: "Photos can't be sent from this view, but text works.", rate_limited: "That hit a usage limit. Try again in a bit.", session_expired: "Sign in to Claude again, then retry.", not_granted: "Allow this app to use Claude to chat with your assistant.", sampling_disabled: "Claude isn't available for this account here.", prompt_too_large: "That was too much to send at once. Try clearing the chat.", empty_completion: "No answer came back. Try rewording it." };
 function scrollChat(){ if (UI.route === "assistant") { window.scrollTo(0, document.documentElement.scrollHeight); const v = $("#view"); v.scrollTop = v.scrollHeight; const th = $("#thread"), p = th && th.closest(".pane"); if (p) p.scrollTop = p.scrollHeight; } }
 async function ask(text){
   text = String(text || "").trim();
-  if (!text || AI.busy) return;
-  UI.draft = "";
-  if (UI.route !== "assistant") { UI.route = "assistant"; try { history.replaceState(null, "", "#assistant"); } catch (e) { location.hash = "assistant"; } }
+  const photo = UI.photo;
+  if ((!text && !photo) || AI.busy) return;
+  if (!text) text = "Here's a photo.";
+  const viaVoice = UI.viaVoice; UI.viaVoice = false;
+  UI.draft = ""; UI.photo = null;
+  if (VOICE.T && VOICE.state !== "idle") VOICE.T.stop();
+  // From Today, Juno answers in place so quick commands never pull you off your plan.
+  UI.inline = UI.route === "home";
+  if (!UI.inline && UI.route !== "assistant") { UI.route = "assistant"; try { history.replaceState(null, "", "#assistant"); } catch (e) { location.hash = "assistant"; } }
   if (!AI.sample) { AI.note = aiName() + " can't answer in this view. Open the app in Claude to chat."; render(); return; }
-  AI.turns.push({ role: "user", content: text });
-  AI.busy = true; AI.partial = ""; AI.note = ""; AI.ctl = new AbortController();
+  AI.turns.push(photo ? { role: "user", content: text, photo: true } : { role: "user", content: text });
+  AI.busy = true; AI.partial = ""; AI.note = ""; AI.ctl = new AbortController(); RECEIPTS.pending = [];
+  if (photo) { try { URL.revokeObjectURL(photo.url); } catch (e) {} }
   render(); scrollChat();
   try {
     const opts = { cache: false, signal: AI.ctl.signal, modelTier: CFG.tier === "thorough" ? "default" : "quick",
       onText: u => { ORB.energy = Math.min(1, ORB.energy + .4); AI.partial = u.text; const el = document.getElementById("partial"); if (el) { el.textContent = u.text; el.classList.remove("wait"); } scrollChat(); } };
     if (AI.tools) opts.tools = buildTools();
+    if (photo) opts.images = [photo.blob];
     const res = await AI.sample(buildInput(), opts);
-    AI.turns.push({ role: "assistant", content: res.text });
+    AI.turns.push(withActs({ role: "assistant", content: res.text }));
     if (res.truncated) AI.note = "That answer was cut short.";
+    if (VOICE.T && (VOICE.mode === "all" || (VOICE.mode === "voice" && viaVoice))) speak(res.text);
   } catch (e) {
     const code = e && e.code;
+    if (code === "images_unavailable" || code === "image_rejected") { AI.imgOK = code === "image_rejected" ? AI.imgOK : false; }
     if (code === "refused") AI.note = aiName() + " declined that one. Try asking differently.";
-    else {
-      if (e && e.text) AI.turns.push({ role: "assistant", content: e.text });
-      if (code !== "cancelled") AI.note = AI_COPY[code] || "Something went wrong reaching Claude. Try again.";
-    }
+    else if (e && e.text) AI.turns.push(withActs({ role: "assistant", content: e.text }));
+    if (code !== "refused" && code !== "cancelled") AI.note = AI_COPY[code] || "Something went wrong reaching Claude. Try again.";
+    // Changes made before a failure still happened; keep their receipts visible.
+    if (RECEIPTS.pending.length) AI.turns.push(withActs({ role: "assistant", content: "Done." }));
   }
   AI.busy = false; AI.partial = ""; AI.ctl = null;
   if (AI.turns.length > 60) AI.turns = AI.turns.slice(-60);
   saveChat.schedule();
   pendingRender = false; render(); scrollChat();
+}
+
+/* ---------- Juno's voice ---------- */
+// mode: "voice" = answer aloud when you spoke to it, "all" = always, "off" = never. Kept per device.
+const VOICE = { T: null, state: "idle", mode: "voice", idx: -1 };
+try { const m = localStorage.getItem("hub-voice"); if (m === "all" || m === "off" || m === "voice") VOICE.mode = m; } catch (e) {}
+function speakable(s){ return String(s || "").replace(/[*_#`>]+/g, "").replace(/\s+\n/g, "\n").trim().slice(0, 2000); }
+function speak(text, idx){
+  if (!VOICE.T) return;
+  const s = speakable(text); if (!s) return;
+  VOICE.idx = idx == null ? AI.turns.length - 1 : idx;
+  VOICE.T.speak(s).catch(e => {
+    if (e && (e.code === "not_granted" || e.code === "unavailable")) { VOICE.T = null; softRender(); }
+    else if (e && e.code === "rate_limited") toast(aiName() + " can't talk right now. Try again in a bit.");
+  });
+}
+function wireVoice(t){
+  VOICE.T = t;
+  t.onState(e => {
+    VOICE.state = e.state;
+    if (e.state === "idle") { VOICE.idx = -1; if (e.reason === "not_granted" || e.reason === "unavailable") VOICE.T = null; }
+    syncOrbs();
+    document.querySelectorAll("[data-act='speak']").forEach(b => { const on = VOICE.state !== "idle" && Number(b.dataset.i) === VOICE.idx; b.setAttribute("aria-pressed", on); b.setAttribute("aria-label", on ? "Stop reading" : "Read aloud"); });
+  });
+}
+function speakBtn(i){
+  if (!VOICE.T) return "";
+  const on = VOICE.state !== "idle" && VOICE.idx === i;
+  return '<button class="spk" data-act="speak" data-i="' + i + '" aria-pressed="' + on + '" aria-label="' + (on ? "Stop reading" : "Read aloud") + '">' + ICON.speaker + '</button>';
+}
+
+/* ---------- photos ---------- */
+function photoBtn(){ return AI.sample && AI.imgOK ? '<button class="rbtn" type="button" data-act="photo" aria-label="Add a photo">' + ICON.camera + '</button>' : ""; }
+function photoChip(){ return UI.photo ? '<div class="pchip"><img src="' + esc(UI.photo.url) + '" alt=""><span>Photo attached. Add a note or just send.</span><button class="icon-btn" type="button" data-act="dropPhoto" aria-label="Remove photo">' + ICON.close + '</button></div>' : ""; }
+function takePhoto(file){
+  if (!file) return;
+  if (!/^image\//.test(file.type || "image/")) { toast("That isn't a photo."); return; }
+  if (AI.imgMax && file.size > AI.imgMax) { toast("That photo is too large. Try a smaller one."); return; }
+  if (UI.photo) { try { URL.revokeObjectURL(UI.photo.url); } catch (e) {} }
+  UI.photo = { blob: file, url: URL.createObjectURL(file) };
+  UI.focusAfter = UI.route === "assistant" ? "chat-input" : "ask-input";
+  render();
 }
 
 /* ---------- dictation ---------- */
@@ -1215,10 +1822,15 @@ function wireDictation(){
     const s = document.getElementById("vn-status");
     if (s) { s.classList.toggle("on", UI.listening); s.lastElementChild.textContent = UI.listening ? "Listening. Speak now." : "Not listening."; }
     const vb = document.getElementById("vn-mic"); if (vb) vb.textContent = UI.listening ? "Stop listening" : "Start listening";
+    // Talking to Juno from Today: when you stop speaking, it sends.
+    if (e.state === "idle" && UI.dictTarget === "ask-input" && (e.reason === "stopped" || e.reason === "viewer_stopped")) {
+      const inp = document.getElementById("ask-input");
+      if (inp && inp.value.trim()) { UI.viaVoice = true; ask(inp.value); }
+    }
     if (e.state === "idle" && UI.orbTalk) {
       UI.orbTalk = false;
       const inp = document.getElementById("chat-input");
-      if (inp && inp.value.trim() && (e.reason === "stopped" || e.reason === "viewer_stopped")) ask(inp.value);
+      if (inp && inp.value.trim() && (e.reason === "stopped" || e.reason === "viewer_stopped")) { UI.viaVoice = true; ask(inp.value); }
     }
     if (e.state === "idle" && (e.reason === "not_granted" || e.reason === "unavailable")) toast("Voice input isn't allowed here. You can still type.");
     if (e.state === "idle" && e.reason === "upstream_error") toast("Voice input stopped. Try again.");
@@ -1262,6 +1874,7 @@ function viewTasks(){
     '<div class="card"><form class="add" data-form="addTask">' +
       '<input class="field" id="new-task" name="title" placeholder="What needs doing?" autocomplete="off" maxlength="200">' +
       '<input class="field" id="new-task-due" name="due" type="date" aria-label="Due date" value="' + (f === "today" ? today() : "") + '">' +
+      '<select class="field" name="repeat" aria-label="Repeats">' + REPEAT_OPTS.map(o => '<option value="' + o[0] + '">' + o[1] + '</option>').join("") + '</select>' +
       '<button class="toggle" type="button" data-act="addPri" aria-pressed="' + UI.addPri + '">High priority</button>' +
       '<button class="btn" type="submit">Add</button></form></div>' +
     '<div class="seg" role="group" aria-label="Filter tasks">' + tabs.map(x => '<button data-act="taskFilter" data-f="' + x[0] + '" aria-pressed="' + (f === x[0]) + '">' + x[1] + '<span class="n num">' + x[2] + '</span></button>').join("") + '</div></div>' +
@@ -1315,11 +1928,27 @@ function viewJournal(){
       '<button class="icon-btn" data-act="jStep" data-n="1" aria-label="Next day"' + (k >= t ? " disabled style=\"opacity:.3\"" : "") + '>' + ICON.right + '</button></div>' +
       '<textarea class="entry" id="journal-entry" data-input="entry" data-day="' + k + '" placeholder="Write about your day." aria-label="Journal entry for ' + esc(longDate(k)) + '">' + esc(text) + '</textarea>' +
       '<div class="jfoot"><span id="wc" class="num">' + wc(text) + '</span>' + (k !== t ? '<button data-act="jToday" style="color:var(--accent);font-weight:500">Back to today</button>' : "<span></span>") + '</div></div></div><div class="pane">' +
+    otdHTML(onThisDay(k), false) +
     (past.length ? '<section class="sec"><div class="sec-h"><h2>Earlier entries</h2></div><div class="card">' + past.map(d => '<button class="past" data-act="jOpen" data-day="' + d + '"><b>' + esc(longDate(d)) + (d.slice(0, 4) !== t.slice(0, 4) ? ", " + d.slice(0, 4) : "") + '</b><span>' + esc(S.days[d].text.trim().slice(0, 220)) + '</span></button>').join("") + '</div></section>' : '<section class="sec"><div class="sec-h"><h2>Earlier entries</h2></div><div class="card"><div class="empty"><b>Nothing earlier yet</b>Past days show up here once you have written a few.</div></div></section>') + '</div>';
 }
 function notesList(list, q){
   if (!list.length) return '<div class="card"><div class="empty"><b>' + (q ? "No notes match that search" : "No notes yet") + '</b>' + (q ? "Try a different word." : "Ideas, lists, things to remember. Start with New note.") + '</div></div>';
   return '<div class="notes">' + list.map(n => '<button class="card note" data-act="editNote" data-id="' + n.id + '">' + (n.pinned ? "<em>Pinned</em>" : "") + '<b>' + esc(n.title || "Untitled") + '</b><span>' + esc((n.body || "").slice(0, 260)) + '</span></button>').join("") + '</div>';
+}
+/* On this day: what you wrote a week, a month, and a year (or more) ago. */
+function monthsAgo(k, n){ const d = dparse(k), day = d.getDate(); const m = new Date(d.getFullYear(), d.getMonth() - n, 1); if (day > new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate()) return null; m.setDate(day); return dkey(m); }
+function onThisDay(k){
+  k = k || today();
+  const out = [], has = d => d && S.days[d] && S.days[d].text && S.days[d].text.trim();
+  for (let y = 1; y <= 10; y++) { const d = monthsAgo(k, 12 * y); if (has(d)) out.push({ k: d, label: y === 1 ? "A year ago" : y + " years ago" }); }
+  [[6, "6 months ago"], [1, "A month ago"]].forEach(x => { const d = monthsAgo(k, x[0]); if (has(d)) out.push({ k: d, label: x[1] }); });
+  const w = addDays(k, -7); if (has(w)) out.push({ k: w, label: "A week ago" });
+  return out;
+}
+function otdHTML(list, compact){
+  if (!list.length) return "";
+  return '<section class="sec otd"><div class="sec-h"><h2>On this day</h2></div><div class="card">' + list.slice(0, compact ? 1 : 4).map(x =>
+    '<button class="past" data-act="otd" data-day="' + x.k + '"><b><span class="otd-l">' + esc(x.label) + '</span>' + esc(longDate(x.k)) + (x.k.slice(0, 4) !== today().slice(0, 4) ? ", " + x.k.slice(0, 4) : "") + '</b><span>' + esc(S.days[x.k].text.trim().slice(0, 260)) + '</span></button>').join("") + '</div></section>';
 }
 const wc = s => { const n = (s.trim().match(/\S+/g) || []).length; return n + (n === 1 ? " word" : " words"); };
 
@@ -1335,8 +1964,8 @@ function render(){
     v.className = "col"; v.innerHTML = '<p class="loading">' + (UI.slow ? "Your saved data can't be reached yet. This page keeps trying; check your connection." : "Loading your hub.") + '</p>';
     return;
   }
-  v.innerHTML = UI.route === "tasks" ? viewTasks() : UI.route === "habits" ? viewHabits() : UI.route === "journal" ? viewJournal() : UI.route === "assistant" ? viewAssistant() : UI.route === "rundown" ? viewRundown() : viewToday();
-  const split = UI.route === "home" || UI.route === "rundown" || UI.route === "tasks" || UI.route === "habits" || (UI.route === "journal" && UI.jTab === "journal") || UI.route === "assistant";
+  v.innerHTML = UI.route === "plan" ? viewPlan() : UI.route === "journal" ? viewJournal() : UI.route === "assistant" ? viewAssistant() : UI.route === "rundown" ? viewRundown() : viewToday();
+  const split = UI.route === "home" || UI.route === "plan" || UI.route === "rundown" || UI.route === "tasks" || UI.route === "habits" || (UI.route === "journal" && UI.jTab === "journal") || UI.route === "assistant";
   v.className = "col" + (split ? " split" : "") + (UI.route === "assistant" ? " flip" : "");
   startOrb();
   v.querySelectorAll("textarea.entry").forEach(grow);
@@ -1356,6 +1985,8 @@ function openSheet(cfg){
   sheet = cfg;
   const f = cfg.fields.map(x => {
     if (x.type === "checkbox") return '<label class="inline"><input type="checkbox" id="sf-' + x.id + '"' + (x.value ? " checked" : "") + '> ' + esc(x.label) + '</label>';
+    if (x.type === "select") return '<label>' + esc(x.label) + '<select class="field" id="sf-' + x.id + '">' + x.options.map(o => '<option value="' + esc(o[0]) + '"' + (o[0] === (x.value || "") ? " selected" : "") + '>' + esc(o[1]) + '</option>').join("") + '</select></label>';
+    if (x.type === "button") return '<button type="button" class="btn ghost wide" data-act="' + esc(x.act) + '">' + (x.icon ? ICON[x.icon] : "") + esc(x.label) + '</button>';
     if (x.type === "textarea") return '<label>' + esc(x.label) + '<textarea class="field" id="sf-' + x.id + '" placeholder="' + esc(x.placeholder || "") + '">' + esc(x.value || "") + '</textarea></label>';
     return '<label>' + esc(x.label) + '<input class="field" id="sf-' + x.id + '" type="' + (x.type || "text") + '" value="' + esc(x.value == null ? "" : x.value) + '" placeholder="' + esc(x.placeholder || "") + '"' + (x.type === "number" ? ' inputmode="decimal" step="any"' : ' maxlength="200"') + ' autocomplete="off"></label>';
   });
@@ -1371,16 +2002,47 @@ function openSheet(cfg){
 function closeSheet(){ if (D && UI.listening) D.stop().catch(() => {}); sheet = null; $("#sheet-root").innerHTML = ""; pendingRender = false; render(); }
 function sheetValues(){
   const o = {};
-  sheet.fields.forEach(x => { const el = $("#sf-" + x.id); o[x.id] = x.type === "checkbox" ? el.checked : el.value.trim(); });
+  sheet.fields.forEach(x => { if (x.type === "button") return; const el = $("#sf-" + x.id); o[x.id] = x.type === "checkbox" ? el.checked : el.value.trim(); });
   return o;
 }
 
 /* ---------- actions ---------- */
 const find = (arr, id) => arr.find(x => x.id === id);
-function addTask(title, due, pri){
+function addTask(title, due, pri, repeat){
   title = title.trim(); if (!title) return false;
-  S.tasks.push({ id: uid(), title, due: due || "", pri: !!pri, done: false, created: Date.now() });
+  const t = { id: uid(), title, due: due || "", pri: !!pri, done: false, created: Date.now() };
+  if (REPEATS[repeat]) { t.repeat = repeat; if (!t.due) t.due = today(); }
+  S.tasks.push(t);
   saveTasks.schedule(); flashSaved(); return true;
+}
+/* Repeating tasks: finishing one schedules the next. */
+const REPEATS = { day: "Daily", weekday: "Weekdays", week: "Weekly", biweek: "Every 2 weeks", month: "Monthly" };
+const REPEAT_OPTS = [["", "Doesn't repeat"]].concat(Object.keys(REPEATS).map(k => [k, REPEATS[k]]));
+function stepDue(k, rep){
+  if (rep === "day") return addDays(k, 1);
+  if (rep === "week") return addDays(k, 7);
+  if (rep === "biweek") return addDays(k, 14);
+  if (rep === "weekday") { let n = addDays(k, 1); while ([0, 6].includes(dparse(n).getDay())) n = addDays(n, 1); return n; }
+  if (rep === "month") { const d = dparse(k), day = d.getDate(); const m = new Date(d.getFullYear(), d.getMonth() + 1, 1); m.setDate(Math.min(day, new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate())); return dkey(m); }
+  return addDays(k, 1);
+}
+function nextDue(k, rep){
+  let n = stepDue(k || today(), rep);
+  for (let i = 0; n <= today() && i < 400; i++) n = stepDue(n, rep);
+  return n;
+}
+function completeTask(t){
+  t.done = true; t.doneAt = today(); t.doneTs = Date.now();
+  if (!t.repeat || !REPEATS[t.repeat]) return null;
+  const nx = { id: uid(), title: t.title, due: nextDue(t.due, t.repeat), pri: !!t.pri, done: false, created: Date.now(), repeat: t.repeat };
+  if (t.note) nx.note = t.note;
+  if (t.project) nx.project = t.project;
+  S.tasks.push(nx); t.spawned = nx.id;
+  return nx;
+}
+function uncompleteTask(t){
+  t.done = false; delete t.doneAt; delete t.doneTs;
+  if (t.spawned) { const nx = find(S.tasks, t.spawned); if (nx && !nx.done) S.tasks = S.tasks.filter(x => x !== nx); delete t.spawned; }
 }
 function addHabit(name){
   name = name.trim(); if (!name) return false;
@@ -1424,7 +2086,8 @@ const ACT = {
       { id: "teams", label: "Teams to follow (separate with commas)", value: CFG.teams.join(", "), placeholder: "49ers, Thunder, Real Madrid" },
       { id: "topics", label: "News topics (separate with commas)", value: CFG.topics.join(", "), placeholder: "Tech and AI, World news" },
       { id: "thorough", label: "Thorough answers (slower)", type: "checkbox", value: CFG.tier === "thorough" }
-    ], onSave(v){
+    ].concat(VOICE.T ? [{ id: "voice", label: aiName() + " reads replies aloud (this device)", type: "select", value: VOICE.mode, options: [["voice", "When I talk to it"], ["all", "Always"], ["off", "Never"]] }] : []), onSave(v){
+      if (v.voice) { VOICE.mode = v.voice; try { localStorage.setItem("hub-voice", v.voice); } catch (e) {} }
       const before = JSON.stringify([CFG.teams, CFG.topics]);
       CFG = { assistantName: (v.assistantName || "Juno").slice(0, 20), teams: splitList(v.teams), topics: splitList(v.topics), tier: v.thorough ? "thorough" : "fast" };
       saveCfg.schedule();
@@ -1450,12 +2113,31 @@ const ACT = {
   mic(el){ toggleMic(el.dataset.mic); },
   orb(){
     if (AI.busy) { if (AI.ctl) AI.ctl.abort(); return; }
+    if (VOICE.T && VOICE.state !== "idle") { VOICE.T.stop(); return; }
     if (D) { UI.orbTalk = !UI.listening; toggleMic("chat-input"); }
     else { const el = $("#chat-input"); if (el) el.focus(); }
   },
   quick(el){ ask(el.dataset.q === "plan" ? "Look at my tasks, habits and goals and give me a short plan for the rest of today." : "Give me a quick rundown of how my teams are doing and the headlines you have saved."); },
   suggest(el){ ask(el.dataset.q); },
   stopAI(){ if (AI.ctl) AI.ctl.abort(); },
+  undo(el){ undoReceipt(el.dataset.id); },
+  newTask(el){ newTaskSheet(el.dataset.day || ""); },
+  planDay(el){ UI.planDay = el.dataset.day; render(); },
+  planWeek(el){ UI.planWeek = (UI.planWeek || 0) + Number(el.dataset.n); const ws = addDays(weekStart(today()), 7 * UI.planWeek); UI.planDay = UI.planWeek ? ws : today(); render(); },
+  toggleDone(){ UI.showDone = !UI.showDone; render(); },
+  speak(el){
+    const i = Number(el.dataset.i);
+    if (VOICE.T && VOICE.state !== "idle" && VOICE.idx === i) { VOICE.T.stop(); return; }
+    const m = AI.turns[i]; if (m) speak(m.content, i);
+  },
+  photo(){ const f = $("#photo-in"); if (f) { f.value = ""; f.click(); } },
+  dropPhoto(){ if (UI.photo) { try { URL.revokeObjectURL(UI.photo.url); } catch (e) {} } UI.photo = null; render(); },
+  breakDown(){
+    const t = find(S.tasks, UI.editing); if (!t) return;
+    const q = "Break \"" + t.title + "\" into steps" + (t.due ? " (due " + shortDate(t.due) + ")" : "") + "." + (t.note ? " Details: " + t.note.slice(0, 600) : "");
+    closeSheet(); ask(q);
+  },
+  closeInline(){ if (AI.busy) return; UI.inline = false; AI.note = ""; render(); },
   clearChat(el){
     if (el.dataset.sure) { AI.turns = []; AI.note = ""; saveChat.schedule(); render(); }
     else { el.dataset.sure = "1"; el.textContent = "Tap again to clear"; }
@@ -1482,20 +2164,26 @@ const ACT = {
   },
   toggleTask(el){
     const t = find(S.tasks, el.dataset.id); if (!t) return;
-    t.done = !t.done;
-    if (t.done) { t.doneAt = today(); t.doneTs = Date.now(); } else { delete t.doneAt; delete t.doneTs; }
+    if (t.done) uncompleteTask(t);
+    else { const nx = completeTask(t); if (nx) setTimeout(() => toast("Next one: " + dueLabel(nx.due)), 30); }
     saveTasks.schedule(); render();
   },
   editTask(el){
     const t = find(S.tasks, el.dataset.id); if (!t) return;
-    openSheet({ title: "Edit task", noFocus: true, fields: [
+    const fields = [
       { id: "title", label: "Task", value: t.title },
-      { id: "due", label: "Due date", type: "date", value: t.due },
+      { id: "due", label: "Due date", type: "date", value: t.due, half: true },
+      { id: "repeat", label: "Repeats", type: "select", value: t.repeat || "", options: REPEAT_OPTS, half: true },
       { id: "pri", label: "High priority", type: "checkbox", value: t.pri },
       { id: "note", label: "Note", type: "textarea", value: t.note, placeholder: "Details, links, next step" }
-    ], onSave(v){
+    ];
+    if (!t.done && AI.sample && AI.tools) fields.push({ id: "bd", type: "button", act: "breakDown", icon: "split", label: "Break it into steps with " + aiName() });
+    UI.editing = t.id;
+    openSheet({ title: "Edit task", noFocus: true, fields, onSave(v){
       if (!v.title) return "A task needs a name.";
-      t.title = v.title; t.due = v.due; t.pri = v.pri; t.note = v.note; saveTasks.schedule();
+      t.title = v.title; t.due = v.due; t.pri = v.pri; t.note = v.note;
+      if (REPEATS[v.repeat]) { t.repeat = v.repeat; if (!t.due) t.due = today(); } else delete t.repeat;
+      saveTasks.schedule();
     }, onDelete(){ S.tasks = S.tasks.filter(x => x !== t); saveTasks.schedule(); } });
   },
   addPri(){ UI.addPri = !UI.addPri; const b = $('[data-act="addPri"]'); if (b) b.setAttribute("aria-pressed", UI.addPri); },
@@ -1528,6 +2216,7 @@ const ACT = {
   jStep(el){ const k = addDays(UI.jDate, Number(el.dataset.n)); if (k <= today()) { UI.jDate = k; render(); } },
   jToday(){ UI.jDate = today(); render(); },
   jOpen(el){ UI.jDate = el.dataset.day; render(); window.scrollTo({ top: 0 }); },
+  otd(el){ UI.jDate = el.dataset.day; UI.jTab = "journal"; if (UI.route === "journal") { render(); window.scrollTo({ top: 0 }); } else location.hash = "journal"; },
   newNote(){ noteSheet(null); },
   editNote(el){ noteSheet(el.dataset.id); },
   scrim(el, e){ if (e.target === el) closeSheet(); },
@@ -1542,7 +2231,7 @@ const FORMS = {
   chat(f){ ask(f.q.value); },
   noop(){},
   quickTask(f){ if (addTask(f.title.value, today(), false)) { UI.focusAfter = "quick-task"; render(); } },
-  addTask(f){ if (addTask(f.title.value, f.due.value, UI.addPri)) { UI.addPri = false; UI.focusAfter = "new-task"; render(); } },
+  addTask(f){ if (addTask(f.title.value, f.due.value, UI.addPri, f.repeat.value)) { UI.addPri = false; UI.focusAfter = "new-task"; render(); } },
   addHabit(f){ if (addHabit(f.name.value)) { UI.focusAfter = "new-habit"; render(); } },
   sheet(){ if (!sheet || sheet.custom) return; const err = sheet.onSave(sheetValues()); if (err) toast(err); else closeSheet(); }
 };
@@ -1571,10 +2260,13 @@ document.addEventListener("input", e => {
     $("#note-list").innerHTML = notesList(list, q);
   }
 });
-document.addEventListener("keydown", e => { if (e.key === "Escape" && sheet) closeSheet(); });
+// Escape closes a sheet without also cutting off Juno mid-sentence.
+document.addEventListener("keydown", e => { if (e.key === "Escape" && sheet) { e.preventDefault(); closeSheet(); } });
+document.addEventListener("change", e => { if (e.target.id === "photo-in") takePhoto(e.target.files && e.target.files[0]); });
 
 function route(){
-  const h = location.hash.replace("#", "");
+  let h = location.hash.replace("#", "");
+  if (ALIASES[h]) { h = ALIASES[h]; try { history.replaceState(null, "", "#" + h); } catch (e) {} }
   UI.route = ROUTES.includes(h) ? h : "home";
   if (UI.route === "journal") UI.jDate = UI.jDate > today() ? today() : UI.jDate;
   render(); if (UI.route === "assistant") scrollChat(); else window.scrollTo({ top: 0 });
@@ -1600,11 +2292,9 @@ setInterval(() => {
 }, 60e3);
 applyTheme();
 
-UI.route = ROUTES.includes(location.hash.replace("#", "")) ? location.hash.replace("#", "") : "home";
+{ const h0 = location.hash.replace("#", ""); UI.route = ROUTES.includes(h0) ? h0 : ALIASES[h0] || "home"; }
 boot();
 })();
 </script>
 </body>
 </html>
-
-</body></html>
